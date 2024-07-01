@@ -53,6 +53,7 @@ A continuación ennumeramos las tablas y agregamos una breve descripción.
         - poliza_nro (FK)
         - licitador (FK)
         - vehiculo(FK)
+        - observaciones
 
 2. #### `TIPOS_SINIESTROS`
     - Describe el tipo de siniestro, si fuera rueda de posición, auxilio u otros detalles específicos del tipo de llanta que fuera equipo original.
@@ -155,3 +156,14 @@ Se pude visualizar de forma ampliada clickeando en la imagen o en el siguiente l
 <center>
 <img src="https://github.com/leodaviri/repositor_ruedas/blob/main/imagenes/Diagrama%20E-R.jpg?raw=true" style="width: 100% ; aspect-ratio:12/9">
 </center>
+
+#### VALIDACIÓN:
+
+Print del DER resultante una vez creada la base de datos en SQL.
+
+<center>
+<img src="https://github.com/leodaviri/repositor_ruedas/blob/main/imagenes/DER%20SQL.jpg?raw=true" style="width: 100% ; aspect-ratio:12/9">
+</center>
+
+
+**Hipervínculo al script SQL** [(click aquí)](https://github.com/leodaviri/repositor_ruedas/blob/main/Repositor_ruedas_Iriarte_Leonardo.sql)
