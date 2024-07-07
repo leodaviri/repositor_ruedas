@@ -22,7 +22,7 @@ Importante grupo concesionario necesita el desarrollo y estructura de una base d
 
 #### DESARROLLO:
 
-Trabajaremos con el objetivo de identificar los grupos de mayor relevancia para el proyecto, los mismos se separan en 4 segmentos:
+Trabajaremos con el objetivo de identificar los grupos de mayor relevancia para el proyecto, los mismos se separan en 5 segmentos:
 
 - **`Siniestros:`** necesitamos una base de datos que permita registrar los casos según siniestros, cantidad de ruedas a reponer, compañías aseguradoras y vehículos involucrados.
 
@@ -31,6 +31,8 @@ Trabajaremos con el objetivo de identificar los grupos de mayor relevancia para 
 - **`Pólizas:`** requeriremos almacenar campos puntuales sobre los tipos de pólizas y detalles de coberturas ya que cada siniestro puede diferir su porcentaje dependiendo si es total o parcial. También precisaremos información de contacto de los asegurados.
 
 - **`Vehículos:`** es importante considerar la descripción de marca, modelo y utilidad de cada vehículo, ya que las ruedas de equipamiento original varían según dichos campos y debemos asegurarnos de tener el conocimiento previo a la reposición.
+
+- **`Facturas:`** mediante la facturación podremos mantener los registros de inventarios y cuentas, llevando así el control de stock relacionado directamente a los montos de las ruedas, actualización de precios y cuentas corrientes a las compañías de seguros.
 
 ___
 
@@ -93,7 +95,7 @@ A continuación ennumeramos las tablas y agregamos una breve descripción.
         - cobertura
         - asegurado (FK)
 
-7. #### `ASEGURADO`
+7. #### `ASEGURADOS`
     - Describe nombre y datos de contacto del/la titular de póliza.
     - Atributos:
         - asegurado_id (PK)
@@ -102,7 +104,7 @@ A continuación ennumeramos las tablas y agregamos una breve descripción.
         - asegurado_telefono
         - asegurado_mail
 
-8. #### `LICITADOR`
+8. #### `LICITADORES`
     - Especifica el ente o compañía encargada de las licitaciones de los siniestros.
     - Atributos:
         - licitador_id (PK)
@@ -117,23 +119,63 @@ A continuación ennumeramos las tablas y agregamos una breve descripción.
         - vehiculo_modelo (FK)
         - vehiculo_utilidad (FK)
 
-10. #### `MARCAS`
+10. #### `MARCAS_VEH`
     - Detalla ID y nombre de la marca fabricante del vehículo.
     - Atributos:
         - marca_id (PK)
         - marca_nombre
 
-11. #### `MODELO`
+11. #### `MODELOS`
     - Detalla ID y descripción del modelo de vehículo.
     - Atributos:
         - modelo_id (PK)
         - modelo_descripcion
 
-12. #### `UTILIDAD`
+12. #### `UTILIDADES`
     - Detalla ID y descripción de la utilidad del vehículo.
     - Atributos:
         - utilidad_id (PK)
         - utilidad_descripcion
+
+13. #### `FACTURAS`
+    - Describe los datos de facturación y la numeración, así como también las ruedas entregadas.
+    - Atributos:
+        - factura_id (PK)
+        - factura_tipo
+        - factura_fecha
+        - factura_pdv
+        - factura_numero
+        - rueda_item (FK)
+        - rueda_precio
+        - rueda_cantidad
+        - factura_precio
+
+14. #### `FACTURAS_TIPOS`
+    - Especifica el tipo de emisión de factura según monto y cuit del cliente.
+    - Atributos:
+        - factura_tipo_id (PK)
+        - factura_tipo_descripción
+
+15. #### `RUEDAS`
+    - Muestra una breve descripción de la rueda, llanta, rodado y marca de cubierta.
+    - Atributos:
+        - rueda_id (PK)
+        - rueda_descripcion
+        - cubierta_marca
+        - rodado_llanta
+
+16. #### `MARCAS_CUB`
+    - Describe solamente la marca de la cubierta, ya que las llantas son por defecto equipo original.
+    - Atributos:
+        - marca_id (PK)
+        - marca_descripcion
+
+16. #### `LINK_FACTURAS_RUEDAS`
+    - Para evitar una relación de muchos a muchos, se crea una tabla vínculo entre **FACTURAS** y **RUEDAS**.
+    - Atributos:
+        - id_facturas (PK)
+        - id_ruedas (PK)
+        - cantidad
 
 #### CONEXIÓN DE TABLAS:
 
@@ -151,7 +193,7 @@ ___
 
 El diagrama fue desarrollado en excalidraw, muestra en rombos la relación que conecta las entidades y el tipo de conexión.
 
-Se pude visualizar de forma ampliada clickeando en la imagen o en el siguiente link: [(clik aquí)](https://excalidraw.com/#json=zG4PKW6rE1MpW6cB-couZ,Bt155auhT9OB2TZUnMUp_g)
+Se pude visualizar de forma ampliada clickeando en la imagen o en el siguiente link: [(clik aquí)](https://excalidraw.com/#json=58WAnFDVuz632v2A2sq0F,H6KwFhnDlN64ij9bGPKb0w)
 
 <center>
 <img src="https://github.com/leodaviri/repositor_ruedas/blob/main/imagenes/Diagrama%20E-R.jpg?raw=true" style="width: 100% ; aspect-ratio:12/9">
@@ -159,7 +201,8 @@ Se pude visualizar de forma ampliada clickeando en la imagen o en el siguiente l
 
 #### VALIDACIÓN:
 
-Print del DER resultante una vez creada la base de datos en SQL.
+Print del DER resultante una vez creada la base de datos en SQL.\
+En el mismo se puede ver la conexión a la tabla vínculo que no figura en las imágenes anteriores.
 
 <center>
 <img src="https://github.com/leodaviri/repositor_ruedas/blob/main/imagenes/DER%20SQL.jpg?raw=true" style="width: 100% ; aspect-ratio:12/9">
