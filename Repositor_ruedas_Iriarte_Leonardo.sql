@@ -19,13 +19,14 @@ CREATE DATABASE
 __________________________________________________________________
 -- Creación de tablas
 
-USE repositor_ruedas;
+USE repositor_ruedas
 
--- Tabla de hechos, resumen de siniestros
+-- Tablas de hechos, resumen de siniestros y facturas
 CREATE TABLE
 	IF NOT EXISTS siniestros(
 	siniestro_id INT NOT NULL COMMENT 'numero de siniestro real segun compañia',
-	fecha DATETIME NOT NULL,
+	siniestro_fecha DATETIME NOT NULL,
+	factura_nro VARCHAR(20) NOT NULL,
 	siniestro_tipo VARCHAR(50) NOT NULL,
 	cantidad_ruedas INT NOT NULL,
 	seguro_cia INT NOT NULL,
@@ -37,7 +38,30 @@ CREATE TABLE
 	COMMENT 'Tabla de hechos destinada a asignar los casos por siniestros, NO ADMITE NULOS'
 );
 
+CREATE TABLE
+	IF NOT EXISTS facturas(
+	factura_id VARCHAR(20) NOT NULL,
+	factura_tipo VARCHAR(10) NOT NULL COMMENT 'tipo de emision segun cuit y monto',
+	factura_fecha DATETIME DEFAULT (current_timestamp),
+	factura_pdv INT NOT NULL,
+	factura_nro INT NOT NULL,
+	rueda_item INT NOT NULL,
+	rueda_precio DECIMAL NOT NULL,
+	rueda_cantidad INT NOT NULL DEFAULT 1,
+	factura_precio DECIMAL NOT NULL,
+	PRIMARY KEY (factura_id)
+	COMMENT 'Tabla de hechos que describen datos de facturación y ruedas, NO ADMITE NULOS'
+);
+
 -- Tablas dimensionales
+CREATE TABLE 
+	IF NOT EXISTS facturas_tipos(
+	factura_tipo_id VARCHAR(10) NOT NULL,
+	factura_tipo_descripcion VARCHAR(50) NOT NULL,
+	PRIMARY KEY (factura_tipo_id)
+	COMMENT 'Tipo de factura emitida segun cuit y monto'
+);
+
 CREATE TABLE 
 	IF NOT EXISTS tipos_siniestros(
 	siniestro_tipo_id VARCHAR(50) NOT NULL,
@@ -101,7 +125,7 @@ CREATE TABLE
 	IF NOT EXISTS licitadores(
 	licitador_id INT NOT NULL AUTO_INCREMENT,
 	licitador_nombre VARCHAR(50) NOT NULL UNIQUE,
-	licitador_web VARCHAR(50) UNIQUE DEFAULT 'pendiente aseigar web',
+	licitador_web VARCHAR(50) UNIQUE DEFAULT 'pendiente asigar web',
 	PRIMARY KEY (licitador_id)
 	COMMENT 'Datos de utilidad sobre los entes licitadores'
 );
@@ -117,7 +141,7 @@ CREATE TABLE
 );
 
 CREATE TABLE 
-	IF NOT EXISTS marcas(
+	IF NOT EXISTS marcas_veh(
 	marca_id INT NOT NULL AUTO_INCREMENT,
 	marca_nombre VARCHAR(50) NOT NULL,
 	PRIMARY KEY (marca_id)
@@ -125,7 +149,7 @@ CREATE TABLE
 );
 
 CREATE TABLE 
-	IF NOT EXISTS modelo(
+	IF NOT EXISTS modelos(
 	modelo_id INT NOT NULL AUTO_INCREMENT,
 	modelo_descripcion VARCHAR(100) NOT NULL COMMENT 'refiere a modelo, NO anio de fabricacion',
 	PRIMARY KEY (modelo_id)
@@ -133,11 +157,29 @@ CREATE TABLE
 );
 
 CREATE TABLE 
-	IF NOT EXISTS utilidad(
+	IF NOT EXISTS utilidades(
 	utilidad_id INT NOT NULL AUTO_INCREMENT,
 	utilidad_descripcion VARCHAR(100) NOT NULL DEFAULT 'pendiente asignar utilidad',
 	PRIMARY KEY (utilidad_id)
 	COMMENT 'Especificaciones de uso del vehiculo'
+);
+
+CREATE TABLE 
+	IF NOT EXISTS ruedas(
+	rueda_id INT NOT NULL,
+	rueda_descripcion VARCHAR(50) NOT NULL DEFAULT 'pendiente asignar descripcion',
+	cubierta_marca INT NOT NULL,
+	rodado_llanta INT NOT NULL,
+	PRIMARY KEY (rueda_id)
+	COMMENT 'Caracteristicas basicas de la rueda'
+);
+
+CREATE TABLE 
+	IF NOT EXISTS marcas_cub(
+	marca_id INT NOT NULL,
+	marca_descripcion VARCHAR(50) NOT NULL,
+	PRIMARY KEY (marca_id)
+	COMMENT 'Marca fabricante de la cubierta'
 );
 	
 __________________________________________________________________
@@ -148,41 +190,73 @@ ALTER TABLE siniestros
 	FOREIGN KEY (siniestro_tipo) REFERENCES tipos_siniestros(siniestro_tipo_id);
 
 ALTER TABLE siniestros
-	ADD CONSTRAINT fk_siniestro_seguro
+	ADD CONSTRAINT fk_siniestros_facturas
+	FOREIGN KEY (siniestro_tipo) REFERENCES facturas(factura_id);
+
+ALTER TABLE siniestros
+	ADD CONSTRAINT fk_siniestros_seguros
 	FOREIGN KEY (seguro_cia) REFERENCES seguros(seguro_id);
 	
 ALTER TABLE siniestros
-	ADD CONSTRAINT fk_siniestro_poliza
+	ADD CONSTRAINT fk_siniestros_polizas
 	FOREIGN KEY (poliza_nro) REFERENCES polizas(poliza_id);
 	
 ALTER TABLE siniestros
-	ADD CONSTRAINT fk_siniestro_licitador
+	ADD CONSTRAINT fk_siniestros_licitadores
 	FOREIGN KEY (licitador) REFERENCES licitadores(licitador_id);
 	
 ALTER TABLE siniestros
-	ADD CONSTRAINT fk_siniestro_vehiculo
+	ADD CONSTRAINT fk_siniestros_vehiculos
 	FOREIGN KEY (vehiculo) REFERENCES vehiculos(vehiculo_id);
 	
 ALTER TABLE seguros
-	ADD CONSTRAINT fk_seguro_ciudad
+	ADD CONSTRAINT fk_seguros_ciudades
 	FOREIGN KEY (seguro_ciudad) REFERENCES ciudades(ciudad_id);
 	
 ALTER TABLE seguros
-	ADD CONSTRAINT fk_seguro_provincia
+	ADD CONSTRAINT fk_seguros_provincias
 	FOREIGN KEY (seguro_provincia) REFERENCES provincias(provincia_id);
 	
 ALTER TABLE polizas
-	ADD CONSTRAINT fk_poliza_asegurado
+	ADD CONSTRAINT fk_polizas_asegurados
 	FOREIGN KEY (asegurado) REFERENCES asegurados(asegurado_id);
 	
 ALTER TABLE vehiculos
-	ADD CONSTRAINT fk_vehiculo_marca
-	FOREIGN KEY (vehiculo_marca) REFERENCES marcas(marca_id);
+	ADD CONSTRAINT fk_vehiculos_marcas_veh
+	FOREIGN KEY (vehiculo_marca) REFERENCES marcas_veh(marca_id);
 	
 ALTER TABLE vehiculos
-	ADD CONSTRAINT fk_vehiculo_modelo
-	FOREIGN KEY (vehiculo_modelo) REFERENCES modelo(modelo_id);
+	ADD CONSTRAINT fk_vehiculos_modelos
+	FOREIGN KEY (vehiculo_modelo) REFERENCES modelos(modelo_id);
 	
 ALTER TABLE vehiculos
-	ADD CONSTRAINT fk_vehiculo_utilidad
-	FOREIGN KEY (vehiculo_utilidad) REFERENCES utilidad(utilidad_id);
+	ADD CONSTRAINT fk_vehiculo_utilidades
+	FOREIGN KEY (vehiculo_utilidad) REFERENCES utilidades(utilidad_id);
+	
+ALTER TABLE facturas
+	ADD CONSTRAINT fk_facturas_tipos
+	FOREIGN KEY (factura_tipo) REFERENCES facturas_tipos(factura_tipo_id);
+	
+ALTER TABLE ruedas
+	ADD CONSTRAINT fk_ruedas_marcas
+	FOREIGN KEY (cubierta_marca) REFERENCES marcas_cub(marca_id);
+	
+__________________________________________________________________
+-- Creación de tabla vínculo entre facturas y ruedas para evitar relación de muchos a muchos
+
+CREATE TABLE 
+	IF NOT EXISTS link_facturas_ruedas(
+	id_facturas VARCHAR(20) NOT NULL,
+	id_ruedas INT NOT NULL, 
+	cantidad INT NOT NULL DEFAULT 1,
+	PRIMARY KEY (id_facturas, id_ruedas)
+	COMMENT 'Tabla vinculo entre facturas y ruedas'
+);
+
+ALTER TABLE link_facturas_ruedas
+	ADD CONSTRAINT fk_facturas_ruedas
+	FOREIGN KEY (id_ruedas) REFERENCES ruedas(rueda_id);
+	
+ALTER TABLE link_facturas_ruedas
+	ADD CONSTRAINT fk_ruedas_facturas
+	FOREIGN KEY (id_facturas) REFERENCES facturas(factura_id);
