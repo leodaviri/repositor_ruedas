@@ -20,7 +20,7 @@ USE repositor_ruedas;
 -- Tablas de hechos, resumen de siniestros y facturas
 CREATE TABLE
 	IF NOT EXISTS siniestros(
-	siniestro_id INT NOT NULL COMMENT 'numero de siniestro real según compañía',
+	siniestro_id INT NOT NULL COMMENT 'número de siniestro real según compañía',
 	siniestro_fecha DATETIME NOT NULL,
 	factura_nro VARCHAR(20) NOT NULL,
 	siniestro_tipo VARCHAR(50) NOT NULL,
@@ -97,7 +97,7 @@ CREATE TABLE
 
 CREATE TABLE 
 	IF NOT EXISTS polizas(
-	poliza_id INT NOT NULL COMMENT 'numero de póliza real según compañía',
+	poliza_id INT NOT NULL COMMENT 'número de póliza real según compañía',
 	poliza_tipo VARCHAR(50) NOT NULL DEFAULT 'falta asignar tipo de póliza', 
 	cobertura DECIMAL(10,2) NOT NULL COMMENT 'porcentaje de cobertura',
 	asegurado INT NOT NULL,
