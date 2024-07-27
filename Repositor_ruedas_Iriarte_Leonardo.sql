@@ -20,13 +20,13 @@ USE repositor_ruedas;
 -- Tablas de hechos, resumen de siniestros y facturas
 CREATE TABLE
 	IF NOT EXISTS siniestros(
-	siniestro_id INT NOT NULL COMMENT 'numero de siniestro real segun compañía',
+	siniestro_id INT NOT NULL COMMENT 'numero de siniestro real según compañía',
 	siniestro_fecha DATETIME NOT NULL,
 	factura_nro VARCHAR(20) NOT NULL,
 	siniestro_tipo VARCHAR(50) NOT NULL,
 	cantidad_ruedas INT NOT NULL,
 	seguro_cia INT NOT NULL,
-	poliza_nro INT NOT NULL COMMENT 'número de póliza real segun compañía',
+	poliza_nro INT NOT NULL COMMENT 'número de póliza real según compañía',
 	licitador INT NOT NULL,
 	vehiculo INT NOT NULL,
 	observaciones TEXT COMMENT 'para especificaciones puntuales y necesarias',
@@ -37,7 +37,7 @@ CREATE TABLE
 CREATE TABLE
 	IF NOT EXISTS facturas(
 	factura_id VARCHAR(20) NOT NULL,
-	factura_tipo VARCHAR(10) NOT NULL COMMENT 'tipo de emisión de factura segun cuit y monto',
+	factura_tipo VARCHAR(10) NOT NULL COMMENT 'tipo de emisión de factura según cuit y monto',
 	factura_fecha DATETIME DEFAULT (current_timestamp),
 	factura_pdv INT NOT NULL,
 	factura_nro INT NOT NULL,
@@ -55,7 +55,7 @@ CREATE TABLE
 	factura_tipo_id VARCHAR(10) NOT NULL,
 	factura_tipo_descripcion VARCHAR(50) NOT NULL,
 	PRIMARY KEY (factura_tipo_id))
-	COMMENT 'Tipo de factura emitida segun cuit y monto';
+	COMMENT 'Tipo de factura emitida según cuit y monto';
 
 CREATE TABLE 
 	IF NOT EXISTS tipos_siniestros(
@@ -97,7 +97,7 @@ CREATE TABLE
 
 CREATE TABLE 
 	IF NOT EXISTS polizas(
-	poliza_id INT NOT NULL COMMENT 'numero de póliza real segun compañía',
+	poliza_id INT NOT NULL COMMENT 'numero de póliza real según compañía',
 	poliza_tipo VARCHAR(50) NOT NULL DEFAULT 'falta asignar tipo de póliza', 
 	cobertura DECIMAL(10,2) NOT NULL COMMENT 'porcentaje de cobertura',
 	asegurado INT NOT NULL,
