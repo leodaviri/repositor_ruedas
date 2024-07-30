@@ -46,8 +46,9 @@ A continuación ennumeramos las tablas y agregamos una breve descripción.
 
 1. #### `SINIESTROS`
     - Tabla de hechos, contiene información de cada siniestro, fecha y cantidad de ruedas a reponer, así como referencias FK que conectan al resto de tablas dimensionales.
-    - Atributos:
+    - Atributos: 
         - siniestro_id (PK)
+        - siniestro_nro
         - fecha
         - siniestro_tipo (FK)
         - cantidad_ruedas
