@@ -208,4 +208,8 @@ En el mismo se puede ver la conexión a la tabla vínculo que no figura en las i
 <img src="https://github.com/leodaviri/repositor_ruedas/blob/main/imagenes/DER%20SQL.jpg?raw=true" style="width: 100% ; aspect-ratio:12/9">
 </center>
 
-
+___
+### COMO CORRER MI CÓDIGO:
+ ```bash
+    make
+ ```
