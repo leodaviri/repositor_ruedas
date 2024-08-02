@@ -210,4 +210,4 @@ En el mismo se puede ver la conexión a la tabla vínculo que no figura en las i
 </center>
 
 
-**Hipervínculo al script SQL** [(click aquí)](https://github.com/leodaviri/repositor_ruedas/blob/main/Repositor_ruedas_Iriarte_Leonardo.sql)
+**Hipervínculo al script SQL** [(click aquí)](https://github.com/leodaviri/repositor_ruedas/blob/main/pre_entrega_01/Repositor_ruedas_Iriarte_Leonardo.sql)
