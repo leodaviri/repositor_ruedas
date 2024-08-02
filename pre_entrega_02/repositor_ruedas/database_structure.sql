@@ -1,11 +1,5 @@
 -- ESTRUCTURACIÓN DE BASE DE DATOS PARA GRUPO CONCESIONARIO
 
--- Alumno: Iriarte Leonardo David
--- Comisión: #57190
--- Proofesor: Anderson M. Torres
--- Tutor: Ariel Annone
-
-
 -- Creación de bases de datos 
 
 DROP DATABASE IF EXISTS repositor_ruedas;
