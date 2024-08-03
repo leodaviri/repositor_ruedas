@@ -211,7 +211,7 @@ En el mismo se puede ver la conexión a la tabla vínculo que no figura en las i
 ___
 ### IMPORTACIÓN DE DATOS:
 
-Para la correcta importación de datos desde archivos planos, es necesario previamente habilitar los permisos en servidor y cliente, así como también la edición del archivo 'my.ini' o 'my.cnf', insertando el comando local_infile=1 debajo de una termnación específica:
+Para la correcta importación de datos desde archivos planos, es necesario previamente habilitar los permisos en servidor y cliente, así como también la edición del archivo 'my.ini' o 'my.cnf', insertando el comando local_infile=1 debajo de una terminación específica:
 ```
 [mysqld]
 local_infile=1
