@@ -44,6 +44,16 @@ BEGIN
     END IF;
 
 
+-- Para que la inserción funcione, hubo que agregar un valor genérico en 'facturas'
+
+INSERT INTO facturas
+(factura_id, factura_tipo, factura_pdv, factura_nro,
+rueda_item, rueda_precio, rueda_cantidad, factura_precio)
+VALUES
+('Pendiente', 'FA', 0, 0, 0, 0, 0, 0);
+
+
+
 -- Procedimiento para ingresar una nueva factura
 -- Dicho registro además actualizará campos en 'siniestros' y 'link_facturas_ruedas'
 
