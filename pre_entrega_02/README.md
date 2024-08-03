@@ -10,9 +10,9 @@
 
 **Profesor:** Anderson M. Torres
 
-**Tutor**: Ariel Annone
+**Tutor:** Ariel Annone
 
-**Lenguaje utilizado**: [SQL](https://dev.mysql.com/)
+**Lenguaje utilizado:** [SQL](https://dev.mysql.com/)
 
 ___
 
@@ -209,7 +209,254 @@ En el mismo se puede ver la conexión a la tabla vínculo que no figura en las i
 </center>
 
 ___
-### COMO CORRER MI CÓDIGO:
- ```bash
-    make
- ```
+### IMPORTACIÓN DE DATOS:
+
+Para la correcta importación de datos desde archivos planos, es necesario previamente habilitar los permisos en servidor y cliente, así como también la edición del archivo 'my.ini' o 'my.cnf', insertando el comando local_infile=1 debajo de una termnación específica:
+```
+[mysqld]
+local_infile=1
+```
+Los permisos fueron activados mediante 2 comandos adicionales:
+* **SET GLOBAL local_infile = TRUE;** (en el script).
+* **local-infile=1** posterior a los datos de inicio en server (consola, cmd).
+
+Posterior a la habilitación, se procede a ejecutar el mismo comando de importación local por cada tabla y en el orden en que fueron creadas las tablas:
+```
+LOAD DATA LOCAL INFILE 'ruta/al/archivo/nombre_archivo.csv'
+INTO TABLE nombre_tabla
+FIELDS TERMINATED BY ',' 
+LINES TERMINATED BY '\n'
+IGNORE 1 LINES;
+```
+___
+### OBJETOS DE LA BASE DE DATOS:
+
+A continuación se detalla una lista con breve descripción de cada objeto creado para la optimización y agilización de la base de datos.
+
+### VISTAS:
+
+1. #### `VIEW_TAXES`
+    - Vista para determinar el IVA (21%) e IIBB (3%) mensual según monto y provincia.
+
+    - Columnas:
+        - Mes
+        - IVA 21%
+        - IIBB
+        - Provincia
+    - Ejemplo de uso:
+```
+SELECT * FROM repositor_ruedas.view_taxes
+    ORDER BY mes ASC;
+```
+2. #### `VIEW_RUEDAS`
+    - Vista para determinar el movimiento de stock según cantidad, rodado de llanta y marca de cubierta.
+    
+    - Columnas:
+        - Cantidad
+        - Llanta
+        - Marca_cubierta
+    - Ejemplo de uso:
+```
+SELECT * FROM repositor_ruedas.view_ruedas
+    ORDER BY Cantidad DESC;
+```
+3. #### `VIEW_REINCIDENCIAS`
+    - Vista para las compañías, ayudará al control de reincidencias por alta siniestralidad.
+
+    - Columnas:
+        - Poliza
+        - Reincidencias
+        - Asegurado
+    - Ejemplo de uso:
+```
+SELECT * FROM repositor_ruedas.view_reincidencias
+	ORDER BY reincidencias DESC;
+```
+4. #### `VIEW_SINIESTROS_VEHICULOS`
+    - Vista para control de reposiciones, ayudará a determinar las compras a concecionarias oficiales considerando marca y modelo de vehículos.
+
+    - Columnas:
+        - Suma_siniestros
+        - Modelo
+        - Marca
+        - Cant_ruedas
+    - Ejemplo de uso:
+```
+SELECT * FROM repositor_ruedas.view_siniestros_vehiculos;
+	ORDER BY cant_ruedas DESC;
+```
+5. #### `VIEW_CIA_PROM`
+    - Vista para llevar control del promedio de ordenes que asigna cada seguro. A fines prácticos, considera solamente el último mes de participación.
+
+    - Columnas:
+        - Compania
+        - Promedio_orden
+        - Ultimo_mes
+    Ejemplo de uso:
+```
+SELECT * FROM repositor_ruedas.view_cia_prom;
+```
+**(la propia vista ordena de forma ascendente para considerar estrategias alternativas sobre los clientes menos frecuentes)*
+
+___
+### TRIGGERS:
+
+1. #### `CHECK_FACTURA_FECHA`
+
+    - Creado sobre tabla 'facturas' para evitar que la fecha de una nueva factura sea anterior a la del siniestro que le corresponde registrado previamente.
+
+    - Ejemplo de uso y mensaje SIGNAL SQLSTATE '45000':
+```
+CALL agregar_factura(
+    1259,				  	-- nro factura
+    '2024-07-10 00:00:00'	-- VALOR ERRÓNEO
+    'FA',				  	-- tipo FC
+    3,					  	-- punto de venta
+    69055,					-- FC nro
+    51,						-- rueda item
+    1880000,				-- precio
+    1						-- cantidad
+);
+
+ERROR 1644 (45000): La fecha de la factura no puede ser anterior a la fecha del siniestro.
+```
+2. #### `CANT_X_SINIESTRO`
+
+    - Creado sobre tabla 'siniestros' para evitar errores de tipeo, en éste caso, la cantidad de ruedas máxima de ruedas que pueda poseer cualquier vehículo del segmento trabajado, el cual no incluye transportes o taras más granes.
+
+    - Ejemplo de uso y mensaje SIGNAL SQLSTATE '45000':
+```
+INSERT INTO siniestros
+	(siniestro_nro, siniestro_fecha, siniestro_tipo,
+    cantidad_ruedas, seguro_cia, poliza_nro, licitador,
+    vehiculo)
+VALUES
+	(2554738, NOW(), 'AUPOAL', 6, '30-50004717-4',
+	169601, 2, 11);
+
+ERROR 1644 (45000): La cantidad de ruedas no puede superar las 5 unidades
+```
+3. #### `ASEGURADO_TEL`
+
+    - Creado sobre tabla 'asegurados' con devolución de mensaje de advertencia o warning en caso que no se haya asignado un número de teléfono de contacto.
+
+    - Ejemplo de uso y mensaje SIGNAL SQLSTATE '01000':
+```
+INSERT INTO asegurados
+	(asegurado_id, asegurado_nombre, asegurado_apellido)
+VALUES
+	(1260, 'Rosario', 'Pileyra');
+
+Warning Code: 1000
+Recuerde registrar un contacto telefónico
+```
+
+___
+### FUNCIONES:
+
+1. #### `GANANCIA_NETA`
+
+    - Calcula la ganancia neta, restando -21% (iva) y -3% (IIBB) al valor de las facturas. Determina la ganancia con un cálculo simple del precio *0,79 *0,03 y concatena el resultado con un símbolo $.
+
+    - Ejemplo de uso:
+```
+SELECT 
+    factura_id AS Factura,
+    factura_precio AS Precio,
+    repositor_ruedas.ganancia_neta(factura_precio) AS Ganancia_neta
+FROM 
+    facturas;
+```
+2. #### `CANT_X_CIA`
+
+    - Toma como parámetro el alias de las compañías para ejecutar la función, la cual calcula de forma simple el total de ruedas entregadas a cada seguro.
+
+    - Ejemplo de uso (unitario simple y en lista, por período):
+```
+-- simple
+SELECT repositor_ruedas.cant_x_cia('ALLIANZ') AS Total_ruedas;
+
+-- por período
+SELECT
+    se.seguro_alias,
+    SUM(si.cantidad_ruedas) AS Total_ruedas
+FROM siniestros AS si
+JOIN seguros AS se
+	ON si.seguro_cia = se.seguro_id
+WHERE
+    si.siniestro_fecha BETWEEN '2024-06-01' AND '2024-06-30'
+GROUP BY se.seguro_alias
+ORDER BY Total_ruedas DESC;
+```
+3. #### `PORCENT_LICITADOR`
+
+    - Determina el índice de participación de cada licitador. Considera el total de los siniestros, cuenta la cantidad de veces que aparece cada ente y transforma el valor a porcentual (cuenta / total * 100), modificando también el resultado a decimal y concatenando un símbolo % al final.
+
+    - Ejemplo de uso:
+```
+SELECT
+    licitador_nombre AS Licitador,
+    repositor_ruedas.porcent_licitador(licitador_nombre) AS Participación
+FROM
+    licitadores
+ORDER BY
+	Participación DESC;
+```
+
+___
+### PROCEDIMIENTOS:
+
+1. #### `INGRESO_SINIESTRO`
+
+    - Posibilita el ingreso de nuevos registros en la tabla 'siniestros', determinando validaciones con mensajes SQLSTATE '45000' para 5 de los 11 atributos.
+    - Se determinan los campos a completar y finaliza con una query simple que muestra el último registro.
+    - La idea es simplificar el proceso y posibilitar un nulo dentro del campo de nro de factura, ya que es FK pero no siempre se factura al mismo momento.
+    
+    - Ejemplo de uso:
+```
+CALL ingreso_siniestro(
+    2003506792, 			-- siniestro_nro
+    '2024-08-02 12:45:00', 	-- siniestro_fecha
+    'AUCH',				 	-- siniestro_tipo
+    4, 						-- cantidad_ruedas
+    '30-50004946-0', 		-- seguro_cia
+    167559,					-- poliza_nro
+    2, 						-- licitador
+    33,						-- vehiculo
+    );
+```
+2. #### `AGREGAR_FACTURA`
+
+    - Optimiza el ingreso de una nueva factura, ya que no sólo permite la inserción en la tabla 'facturas', sino que además considera el nro de siniestro al que corresponde, previamente cargado en su respectiva tabla y actualiza el campo de la tabla 'siniestros', es decir, pasa de estar en FC 'Pendiente' a llevar el nro de FC que estamos asignando.
+    - Inicialmente valida que el siniestro exista y que tenga estado 'Pendiente' en FC, caso contrario devuelve un mensaje SQLSTATE '45000' como 'Siniestro inexistente'.
+    - Agiliza el proceso ya que el valor en ID (PK) se concatena de forma automática, así como también se automatiza el valor del campo que determina el precio final de la factura.
+    - Lo más importante es que además de actualizar el nro de FC en la tabla 'siniestros', actualiza los registros completos en la tabla link que existe entre ambas.
+    - Por último, también devuelve una query simple que muestra la carga exitosa del registro.
+    
+    - Ejemplo de uso:
+```
+CALL agregar_factura(
+    1258,      -- siniestro_id
+    'FA',      -- factura_tipo
+    3,         -- factura_pdv
+    69050,     -- factura_nro
+    60,        -- rueda_item
+    220000,    -- rueda_precio
+    2          -- rueda_cantidad
+    );
+```
+
+___
+### CÓMO CORRER MI CÓDIGO:
+
+En la terminal, colocar los comandos:
+- `make` _si te da un error de que no conexion al socket, volver al correr el comando `make`_
+- `make clean-db` limpiar la base de datos
+- `make test-db` para mirar los datos de cada tabla
+- `make backup-db` para realizar un backup de mi base de datos
+- `make access-db` para acceder a la base de datos
+
+___
+### VERSIONES PREVIAS:
+
+[Pre entrega 01](https://github.com/leodaviri/repositor_ruedas/tree/main/pre_entrega_01)
