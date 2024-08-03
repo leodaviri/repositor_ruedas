@@ -6,7 +6,6 @@ USE repositor_ruedas;
 DROP FUNCTION IF EXISTS repositor_ruedas.ganancia_neta;
 
 DELIMITER //
-
 CREATE FUNCTION repositor_ruedas.ganancia_neta
 (precio DECIMAL(10,2))
 	RETURNS VARCHAR(20)
@@ -27,7 +26,6 @@ BEGIN
     
     RETURN resultado;
 END //
-
 DELIMITER ;
 
 
@@ -41,11 +39,12 @@ FROM
     facturas;
     
 
+   
+-- Función que calcula la suma de cantidad de ruedas entregadas a cada seguro
 
 DROP FUNCTION IF EXISTS repositor_ruedas.cant_x_cia;
 
 DELIMITER //
-
 CREATE FUNCTION repositor_ruedas.cant_x_cia
 (seguro_alias_param VARCHAR(50))
 	RETURNS INT
@@ -54,7 +53,7 @@ CREATE FUNCTION repositor_ruedas.cant_x_cia
 BEGIN
     DECLARE total_cantidad INT;
 
-    -- Calcula la suma de cantidad de ruedas para cada seguro
+   	-- Cálculo de cantidad por cada seguro
     SELECT SUM(s.cantidad_ruedas)
     INTO total_cantidad
     FROM siniestros AS s
@@ -64,7 +63,6 @@ BEGIN
 
     RETURN total_cantidad;
 END //
-
 DELIMITER ;
 
 
@@ -90,9 +88,45 @@ ORDER BY Total_ruedas DESC;
 DROP FUNCTION IF EXISTS repositor_ruedas.porcent_licitador;
 
 DELIMITER //
+CREATE FUNCTION repositor_ruedas.porcent_licitador
+(licitador_nombre VARCHAR(50))
+RETURNS VARCHAR(10)
+DETERMINISTIC
+READS SQL DATA
+BEGIN
+    DECLARE total_siniestros INT;
+    DECLARE licitador_count INT;
+    DECLARE porcentaje DECIMAL(5,2);
+    DECLARE RESULT VARCHAR(10);
 
-CREATE FUNCTION repositor_ruedas.porcent_licitador()
-	
+    -- Cuenta el total de siniestros
+    SELECT COUNT(*)
+    INTO total_siniestros
+    FROM siniestros;
+
+    -- Cuenta la cantidad de veces que aparece un licitador determinado
+    SELECT COUNT(*)
+    INTO licitador_count
+    FROM siniestros sin
+    JOIN licitadores lic ON sin.licitador = lic.licitador_id
+    WHERE lic.licitador_nombre = licitador_nombre;
+
+    -- Calcular el porcentaje
+    SET porcentaje = (licitador_count / total_siniestros) * 100;
+
+    -- Cambia el valor del resultado, 2 decimales y agrega símbolo %
+    SET RESULT = CONCAT(FORMAT(porcentaje, 2), '%');
+
+    RETURN RESULT;
 END //
-
 DELIMITER ;
+
+
+-- Ejemplo de uso, lista de licitadores y su participación porcentual 
+SELECT
+    licitador_nombre AS Licitador,
+    repositor_ruedas.porcent_licitador(licitador_nombre) AS Participación
+FROM
+    licitadores
+ORDER BY
+	Participación DESC;
