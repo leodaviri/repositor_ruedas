@@ -25,22 +25,6 @@ BEGIN
 END //
 DELIMITER ;
 
--- Ejemplo de uso con el procedimiento correspondiente para ingresar una factura
-
-CALL agregar_factura(
-    1259,				  	-- nro factura
-    '2024-07-10 00:00:00'	-- VALOR ERRÓNEO
-    'FA',				  	-- tipo FC
-    3,					  	-- punto de venta
-    69055,					-- FC nro
-    51,						-- rueda item
-    1880000,				-- precio
-    1						-- cantidad
-);
-
--- ERROR 1644 (45000): La fecha de la factura no puede ser anterior a la fecha del siniestro.
-
-
 
 -- Trigger para evitar errores de tipeo, en éste caso, la cantidad de ruedas máxima de todo vehículo
 
@@ -58,20 +42,7 @@ BEGIN
         SET MESSAGE_TEXT = 'La cantidad de ruedas no puede superar las 5 unidades';
     END IF;
 END //
-DELIMITER ;
-
-
-
-INSERT INTO siniestros
-	(siniestro_nro, siniestro_fecha, siniestro_tipo,
-    cantidad_ruedas, seguro_cia, poliza_nro, licitador,
-    vehiculo)
-VALUES
-	(2554738, NOW(), 'AUPOAL', 6, '30-50004717-4',
-	169601, 2, 11);
-
--- ERROR 1644 (45000): La cantidad de ruedas no puede superar las 5 unidades
-	
+DELIMITER ;	
 
 
 -- Trigger con devolución de mensaje de advertencia sobre teléfono de asegurado
@@ -91,13 +62,3 @@ BEGIN
     END IF;
 END //
 DELIMITER ;
-
--- Ejemplo de uso
-
-INSERT INTO asegurados
-	(asegurado_id, asegurado_nombre, asegurado_apellido)
-VALUES
-	(1260, 'Rosario', 'Pileyra');
-
--- Warning Code: 1000
--- Recuerde registrar un contacto telefónico

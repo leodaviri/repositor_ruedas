@@ -27,18 +27,7 @@ BEGIN
     RETURN resultado;
 END //
 DELIMITER ;
-
-
--- Ejemplo de uso
-
-SELECT 
-    factura_id,
-    factura_precio,
-    repositor_ruedas.ganancia_neta(factura_precio) AS Ganancia_neta
-FROM 
-    facturas;
     
-
    
 -- Función que calcula la suma de cantidad de ruedas entregadas a cada seguro
 
@@ -66,24 +55,7 @@ END //
 DELIMITER ;
 
 
--- Ejemplo simple de uso (entre paréntesis, cambiar el seguro a consultar)
-
-SELECT repositor_ruedas.cant_x_cia('ALLIANZ') AS Total_ruedas;
-
--- Ejemplo de uso por período, enlistando todas las compañías
-
-SELECT
-    se.seguro_alias,
-    SUM(si.cantidad_ruedas) AS Total_ruedas
-FROM siniestros AS si
-JOIN seguros AS se
-	ON si.seguro_cia = se.seguro_id
-WHERE
-    si.siniestro_fecha BETWEEN '2024-06-01' AND '2024-06-30'
-GROUP BY se.seguro_alias
-ORDER BY Total_ruedas DESC;
-
-
+-- Función que muestra de manera porcentual la participación de los licitadores
 
 DROP FUNCTION IF EXISTS repositor_ruedas.porcent_licitador;
 
@@ -120,13 +92,3 @@ BEGIN
     RETURN RESULT;
 END //
 DELIMITER ;
-
-
--- Ejemplo de uso, lista de licitadores y su participación porcentual 
-SELECT
-    licitador_nombre AS Licitador,
-    repositor_ruedas.porcent_licitador(licitador_nombre) AS Participación
-FROM
-    licitadores
-ORDER BY
-	Participación DESC;

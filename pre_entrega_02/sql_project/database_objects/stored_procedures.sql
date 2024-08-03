@@ -43,46 +43,6 @@ BEGIN
         SET MESSAGE_TEXT = 'Debe indicar un vehículo';
     END IF;
 
-    -- Determinamos campos para insertar nuevo registro
-    INSERT INTO siniestros (
-        siniestro_nro, siniestro_fecha, siniestro_tipo, cantidad_ruedas,
-        seguro_cia, poliza_nro, licitador, vehiculo, observaciones)
-        VALUES (
-        p_siniestro_nro, p_siniestro_fecha, p_siniestro_tipo, p_cantidad_ruedas,
-        p_seguro_cia, p_poliza_nro, p_licitador, p_vehiculo, p_observaciones
-       );
-     
-    -- Mostramos el último registro insertado
-    SELECT * FROM siniestros
-    ORDER BY siniestro_fecha DESC
-    LIMIT 1;
-END //
-DELIMITER ;
-
-
--- Para que la inserción funcione, hubo que agregar un valor genérico en 'facturas'
-
-INSERT INTO facturas
-(factura_id, factura_tipo, factura_pdv, factura_nro,
-rueda_item, rueda_precio, rueda_cantidad, factura_precio)
-VALUES
-('Pendiente', 'FA', 0, 0, 0, 0, 0, 0);
-
--- Llamamos al procedimiento
-
-CALL ingreso_siniestro(
-    2003506792, 			-- siniestro_nro
-    '2024-08-02 12:45:00', 	-- siniestro_fecha
-    'AUCH',				 	-- siniestro_tipo
-    4, 						-- cantidad_ruedas
-    '30-50004946-0', 		-- seguro_cia
-    167559,					-- poliza_nro
-    2, 						-- licitador
-    33,						-- vehiculo
-    'Reposición concretada' -- observaciones
-);
-
-
 
 -- Procedimiento para ingresar una nueva factura
 -- Dicho registro además actualizará campos en 'siniestros' y 'link_facturas_ruedas'
@@ -154,34 +114,3 @@ BEGIN
     END IF;
 END //
 DELIMITER ;
-
-
--- Llamamos al procedimiento
--- (quizás sea necesario desactivar temporalmente SQL_SAFE_UPDATES)
-
-SET SQL_SAFE_UPDATES = 0;
-
-CALL agregar_factura(
-    1258,      -- siniestro_id
-    'FA',      -- factura_tipo
-    3,         -- factura_pdv
-    69050,     -- factura_nro
-    60,        -- rueda_item
-    220000,    -- rueda_precio
-    2          -- rueda_cantidad
-);
-
-SET SQL_SAFE_UPDATES = 1;
-
--- Finalmente corroboramos las tablas relacionadas
-
-SELECT * FROM facturas
-ORDER BY factura_fecha DESC
-LIMIT 10;
-
-SELECT * FROM siniestros
-ORDER BY siniestro_fecha DESC
-LIMIT 10;
-
-SELECT * FROM link_facturas_ruedas
-WHERE id_facturas = 'FA-3-69050';

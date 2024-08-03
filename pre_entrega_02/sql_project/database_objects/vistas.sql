@@ -1,7 +1,5 @@
 USE repositor_ruedas;
 
--- CREACIÓN DE VISTAS
-
 -- Vista para determinar el IVA e IIBB mensual según monto y provincia
 
 CREATE OR REPLACE VIEW 
