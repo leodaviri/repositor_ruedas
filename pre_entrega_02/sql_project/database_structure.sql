@@ -1,5 +1,11 @@
 -- ESTRUCTURACIÓN DE BASE DE DATOS PARA GRUPO CONCESIONARIO
 
+-- Alumno: Iriarte Leonardo David
+-- Comisión: #57190
+-- Proofesor: Anderson M. Torres
+-- Tutor: Ariel Annone
+
+
 -- Creación de bases de datos 
 
 DROP DATABASE IF EXISTS repositor_ruedas;
@@ -17,7 +23,7 @@ CREATE TABLE
 	siniestro_id INT NOT NULL AUTO_INCREMENT,
 	siniestro_nro BIGINT NOT NULL COMMENT 'número de siniestro real según compañía',
 	siniestro_fecha DATETIME NOT NULL,
-	factura_nro VARCHAR(10) NOT NULL,
+	factura_nro VARCHAR(10) DEFAULT 'Pendiente',
 	siniestro_tipo VARCHAR(50) NOT NULL,
 	cantidad_ruedas INT NOT NULL,
 	seguro_cia VARCHAR(20) NOT NULL,
@@ -26,7 +32,7 @@ CREATE TABLE
 	vehiculo INT NOT NULL,
 	observaciones TEXT COMMENT 'para especificaciones puntuales y necesarias',
 	PRIMARY KEY (siniestro_id))
-	COMMENT 'Tabla de hechos destinada a asignar los casos por siniestros, NO ADMITE NULOS'
+	COMMENT 'Tabla de hechos destinada a asignar los casos por siniestros, fc puede quedar pendiente'
 	;
 
 CREATE TABLE
@@ -134,7 +140,7 @@ CREATE TABLE
 CREATE TABLE 
 	IF NOT EXISTS marcas_veh(
 	marca_id INT NOT NULL AUTO_INCREMENT,
-	marca_nombre VARCHAR(50) NOT NULL,
+	marca_nombre VARCHAR(50) DEFAULT 'Pendiente asignar marca';
 	PRIMARY KEY (marca_id))
 	COMMENT 'Marca fabricante del vehículo'
 	;
@@ -142,7 +148,7 @@ CREATE TABLE
 CREATE TABLE 
 	IF NOT EXISTS modelos(
 	modelo_id INT NOT NULL AUTO_INCREMENT,
-	modelo_descripcion VARCHAR(100) NOT NULL COMMENT 'refiere a modelo, NO año de fabricación',
+	modelo_descripcion VARCHAR(100) DEFAULT 'Pendiente asignar descripcion' COMMENT 'refiere a modelo, NO año de fabricación';
 	PRIMARY KEY (modelo_id))
 	COMMENT 'Especificaciones de modelo del vehículo'
 	;
@@ -182,7 +188,7 @@ ALTER TABLE siniestros
 
 ALTER TABLE siniestros
 	ADD CONSTRAINT fk_siniestros_facturas
-	FOREIGN KEY (siniestro_tipo) REFERENCES facturas(factura_id);
+	FOREIGN KEY (factura_nro) REFERENCES facturas(factura_id);
 
 ALTER TABLE siniestros
 	ADD CONSTRAINT fk_siniestros_seguros
