@@ -456,6 +456,7 @@ En la terminal, colocar los comandos:
 - `make backup-db` para realizar un backup de mi base de datos
 - `make access-db` para acceder a la base de datos
 
+También está la posibilidad de ver el script con el código completo en el siguiente link: [click aquí](https://github.com/leodaviri/repositor_ruedas/blob/main/pre_entrega_02/Repositor_ruedas_Iriarte_Leonardo(v2).sql)
 ___
 ### VERSIONES PREVIAS:
 
