@@ -460,5 +460,5 @@ También está la posibilidad de ver el script con el código completo en el sig
 ___
 ### VERSIONES PREVIAS:
 
-[Pre entrega 01](https://github.com/leodaviri/repositor_ruedas/tree/main/pre_entrega_01)
+[Pre entrega 01](https://github.com/leodaviri/repositor_ruedas/tree/main/pre_entrega_01)\
 [Pre entrega 02](https://github.com/leodaviri/repositor_ruedas/tree/main/pre_entrega_02)
