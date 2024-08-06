@@ -220,12 +220,12 @@ Los permisos fueron activados mediante 2 comandos adicionales:
 * **SET GLOBAL local_infile = TRUE;** (en el script).
 * **local-infile=1** posterior a los datos de inicio en server (consola, cmd).
 
-Posterior a la habilitación, se procede a ejecutar el mismo comando de importación local por cada tabla y en el orden en que fueron creadas las tablas:
+Posterior a la habilitación, se procede a ejecutar el mismo comando de importación local por cada tabla y en el orden en que fueron creadas las mismas:
 ```
 LOAD DATA LOCAL INFILE 'ruta/al/archivo/nombre_archivo.csv'
 INTO TABLE nombre_tabla
 FIELDS TERMINATED BY ',' 
-LINES TERMINATED BY '\n'
+LINES TERMINATED BY '\r\n'
 IGNORE 1 LINES;
 ```
 ___
@@ -286,7 +286,7 @@ SELECT * FROM repositor_ruedas.view_siniestros_vehiculos;
 	ORDER BY cant_ruedas DESC;
 ```
 5. #### `VIEW_CIA_PROM`
-    - Vista para llevar control del promedio de ordenes que asigna cada seguro. A fines prácticos, considera solamente el último mes de participación.
+    - Vista para llevar control del promedio de órdenes que asigna cada seguro. A fines prácticos, considera solamente el último mes de participación.
 
     - Columnas:
         - Compania
@@ -322,7 +322,7 @@ ERROR 1644 (45000): La fecha de la factura no puede ser anterior a la fecha del 
 ```
 2. #### `CANT_X_SINIESTRO`
 
-    - Creado sobre tabla 'siniestros' para evitar errores de tipeo, en éste caso, la cantidad de ruedas máxima de ruedas que pueda poseer cualquier vehículo del segmento trabajado, el cual no incluye transportes o taras más granes.
+    - Creado sobre tabla 'siniestros' para evitar errores de tipeo, en éste caso, la cantidad de ruedas máxima de ruedas que pueda poseer cualquier vehículo del segmento trabajado, el cual no incluye transportes o taras más grandes.
 
     - Ejemplo de uso y mensaje SIGNAL SQLSTATE '45000':
 ```
