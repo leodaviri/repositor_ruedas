@@ -221,7 +221,7 @@ Los permisos fueron activados mediante 2 comandos adicionales:
 * **local-infile=1** posterior a los datos de inicio en server (consola, cmd).
 
 Posterior a la habilitación, se procede a ejecutar el mismo comando de importación local por cada tabla y en el orden en que fueron creadas las mismas:
-```
+```sql
 LOAD DATA LOCAL INFILE 'ruta/al/archivo/nombre_archivo.csv'
 INTO TABLE nombre_tabla
 FIELDS TERMINATED BY ',' 
@@ -244,7 +244,7 @@ A continuación se detalla una lista con breve descripción de cada objeto cread
         - IIBB
         - Provincia
     - Ejemplo de uso:
-```
+```sql
 SELECT * FROM repositor_ruedas.view_taxes
     ORDER BY mes ASC;
 ```
@@ -256,7 +256,7 @@ SELECT * FROM repositor_ruedas.view_taxes
         - Llanta
         - Marca_cubierta
     - Ejemplo de uso:
-```
+```sql
 SELECT * FROM repositor_ruedas.view_ruedas
     ORDER BY Cantidad DESC;
 ```
@@ -268,7 +268,7 @@ SELECT * FROM repositor_ruedas.view_ruedas
         - Reincidencias
         - Asegurado
     - Ejemplo de uso:
-```
+```sql
 SELECT * FROM repositor_ruedas.view_reincidencias
 	ORDER BY reincidencias DESC;
 ```
@@ -281,7 +281,7 @@ SELECT * FROM repositor_ruedas.view_reincidencias
         - Marca
         - Cant_ruedas
     - Ejemplo de uso:
-```
+```sql
 SELECT * FROM repositor_ruedas.view_siniestros_vehiculos;
 	ORDER BY cant_ruedas DESC;
 ```
@@ -293,7 +293,7 @@ SELECT * FROM repositor_ruedas.view_siniestros_vehiculos;
         - Promedio_orden
         - Ultimo_mes
     Ejemplo de uso:
-```
+```sql
 SELECT * FROM repositor_ruedas.view_cia_prom;
 ```
 **(la propia vista ordena de forma ascendente para considerar estrategias alternativas sobre los clientes menos frecuentes)*
@@ -306,7 +306,7 @@ ___
     - Creado sobre tabla 'facturas' para evitar que la fecha de una nueva factura sea anterior a la del siniestro que le corresponde registrado previamente.
 
     - Ejemplo de uso y mensaje SIGNAL SQLSTATE '45000':
-```
+```sql
 CALL agregar_factura(
     1259,				  	-- nro factura
     '2024-07-10 00:00:00'	-- VALOR ERRÓNEO
@@ -325,7 +325,7 @@ ERROR 1644 (45000): La fecha de la factura no puede ser anterior a la fecha del 
     - Creado sobre tabla 'siniestros' para evitar errores de tipeo, en éste caso, la cantidad de ruedas máxima de ruedas que pueda poseer cualquier vehículo del segmento trabajado, el cual no incluye transportes o taras más grandes.
 
     - Ejemplo de uso y mensaje SIGNAL SQLSTATE '45000':
-```
+```sql
 INSERT INTO siniestros
 	(siniestro_nro, siniestro_fecha, siniestro_tipo,
     cantidad_ruedas, seguro_cia, poliza_nro, licitador,
@@ -341,7 +341,7 @@ ERROR 1644 (45000): La cantidad de ruedas no puede superar las 5 unidades
     - Creado sobre tabla 'asegurados' con devolución de mensaje de advertencia o warning en caso que no se haya asignado un número de teléfono de contacto.
 
     - Ejemplo de uso y mensaje SIGNAL SQLSTATE '01000':
-```
+```sql
 INSERT INTO asegurados
 	(asegurado_id, asegurado_nombre, asegurado_apellido)
 VALUES
@@ -359,7 +359,7 @@ ___
     - Calcula la ganancia neta, restando -21% (iva) y -3% (IIBB) al valor de las facturas. Determina la ganancia con un cálculo simple del precio *0,79 *0,03 y concatena el resultado con un símbolo $.
 
     - Ejemplo de uso:
-```
+```sql
 SELECT 
     factura_id AS Factura,
     factura_precio AS Precio,
@@ -372,7 +372,7 @@ FROM
     - Toma como parámetro el alias de las compañías para ejecutar la función, la cual calcula de forma simple el total de ruedas entregadas a cada seguro.
 
     - Ejemplo de uso (unitario simple y en lista, por período):
-```
+```sql
 -- simple
 SELECT repositor_ruedas.cant_x_cia('ALLIANZ') AS Total_ruedas;
 
@@ -393,7 +393,7 @@ ORDER BY Total_ruedas DESC;
     - Determina el índice de participación de cada licitador. Considera el total de los siniestros, cuenta la cantidad de veces que aparece cada ente y transforma el valor a porcentual (cuenta / total * 100), modificando también el resultado a decimal y concatenando un símbolo % al final.
 
     - Ejemplo de uso:
-```
+```sql
 SELECT
     licitador_nombre AS Licitador,
     repositor_ruedas.porcent_licitador(licitador_nombre) AS Participación
@@ -413,7 +413,7 @@ ___
     - La idea es simplificar el proceso y posibilitar un nulo dentro del campo de nro de factura, ya que es FK pero no siempre se factura al mismo momento.
     
     - Ejemplo de uso:
-```
+```sql
 CALL ingreso_siniestro(
     2003506792, 			-- siniestro_nro
     '2024-08-02 12:45:00', 	-- siniestro_fecha
@@ -434,7 +434,7 @@ CALL ingreso_siniestro(
     - Por último, también devuelve una query simple que muestra la carga exitosa del registro.
     
     - Ejemplo de uso:
-```
+```sql
 CALL agregar_factura(
     1258,      -- siniestro_id
     'FA',      -- factura_tipo
