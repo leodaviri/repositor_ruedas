@@ -292,7 +292,7 @@ SELECT * FROM repositor_ruedas.view_siniestros_vehiculos;
         - Compania
         - Promedio_orden
         - Ultimo_mes
-    Ejemplo de uso:
+    - Ejemplo de uso:
 ```sql
 SELECT * FROM repositor_ruedas.view_cia_prom;
 ```
