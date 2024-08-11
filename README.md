@@ -12,7 +12,11 @@
 
 **Tutor:** Ariel Annone
 
-**Lenguaje utilizado:** [SQL](https://dev.mysql.com/)
+**Lenguaje utilizado:** [SQL](https://es.wikipedia.org/wiki/SQL)
+
+**Sistema de Gestión:** [MySQL](https://dev.mysql.com/)
+
+**Aplicación/Interfaz:** [DBeaver](https://dbeaver.io/)
 
 ___
 
@@ -38,14 +42,14 @@ ___
 
 ### TABLAS:
 
-La elección del formato de entidades se centra en una tabla de hechos desde la cual se comienzan a separar los datos potencialmente categóricos en nuevas tablas con la idea de optimizar el uso y facilitar las consultas. Cada tabla tiene en el nombre de la mayoría de sus atributos una referencia inicial al nombre de la tabla a la que pertenecen, de ésta manera lograremos simplificar las consultas externas.
+La elección del formato de entidades se centra en 2 tablas de hechos (siniestros y facturas) desde las cuales se comienzan a separar los datos potencialmente categóricos en nuevas tablas con la idea de optimizar el uso y facilitar las consultas. Cada tabla tiene en el nombre de la mayoría de sus atributos una referencia inicial al nombre de la tabla a la que pertenecen, de ésta manera lograremos simplificar las consultas externas.
 
 #### DESCRIPCIÓN DE TABLAS:
 
 A continuación ennumeramos las tablas y agregamos una breve descripción.
 
 1. #### `SINIESTROS`
-    - Tabla de hechos, contiene información de cada siniestro, fecha y cantidad de ruedas a reponer, así como referencias FK que conectan al resto de tablas dimensionales.
+    - Tabla de hechos principal, contiene información de cada siniestro, fecha y cantidad de ruedas a reponer, así como referencias FK que conectan al resto de tablas dimensionales.
     - Atributos:
         - siniestro_id (PK)
         - fecha
@@ -138,7 +142,7 @@ A continuación ennumeramos las tablas y agregamos una breve descripción.
         - utilidad_descripcion
 
 13. #### `FACTURAS`
-    - Describe los datos de facturación y la numeración, así como también las ruedas entregadas.
+    - Tabla de hechos adicional, describe los datos de facturación y la numeración, así como también las ruedas entregadas.
     - Atributos:
         - factura_id (PK)
         - factura_tipo
@@ -179,7 +183,7 @@ A continuación ennumeramos las tablas y agregamos una breve descripción.
 
 #### CONEXIÓN DE TABLAS:
 
-En la imagen de puede ver las estructuras de tablas, la definición de PK y FK, la conexión entre las mismas y los tipos de valores designados en cada campo. Se organiza de manera calculada, la tabla de hechos (*SINIESTROS*) al centro y el resto alrededor, las vinculaciones entre tablas externas se pueden notar fácilmente ya que no se cruza ninguna flecha, todo ello a fin de que sea visualmente prolija y comprensible.
+En la imagen de puede ver las estructuras de tablas, la definición de PK y FK, la conexión entre las mismas y los tipos de valores designados en cada campo. Se organiza de manera calculada, la tabla de hechos principal (*SINIESTROS*) al centro y el resto alrededor, las vinculaciones entre tablas externas se pueden notar fácilmente ya que no se cruza ninguna flecha, todo ello a fin de que sea visualmente prolija y comprensible.
 
 **para una vista ampliada de la imagen se puede hacer click en la misma.*
 
