@@ -9,5 +9,6 @@ services:
     volumes:
       # - ./mysql:/var/lib/mysql
       - ./sql_project:/sql_project
+      - ./back-up:/back-up
     ports:
       - "3306:3306"
