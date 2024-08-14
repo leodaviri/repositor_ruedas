@@ -4,10 +4,6 @@ USE repositor_ruedas;
 
 SET GLOBAL local_infile = TRUE;
 
--- Chequeamos dicha habilitación
-
-SHOW GLOBAL VARIABLES LIKE 'local_infile';
-
 
 -- Procedemos a importar datos considerando el orden en que fueron creadas las tablas
 
