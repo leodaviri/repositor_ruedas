@@ -43,7 +43,7 @@ CREATE TABLE
 	factura_pdv INT NOT NULL,
 	factura_nro INT NOT NULL,
 	rueda_item INT NOT NULL,
-	rueda_precio DECIMAL NOT NULL,
+	rueda_precio DECIMAL(10,2) NOT NULL,
 	rueda_cantidad INT NOT NULL DEFAULT 1,
 	factura_precio DECIMAL NOT NULL,
 	PRIMARY KEY (factura_id))
@@ -101,7 +101,7 @@ CREATE TABLE
 	IF NOT EXISTS polizas(
 	poliza_id INT NOT NULL COMMENT 'número de póliza real según compañía',
 	poliza_tipo VARCHAR(50) NOT NULL DEFAULT 'falta asignar tipo de póliza', 
-	cobertura DECIMAL(10,2) NOT NULL COMMENT 'porcentaje de cobertura',
+	cobertura VARCHAR(5) NOT NULL DEFAULT '100%' COMMENT 'porcentaje de cobertura',
 	asegurado INT NOT NULL,
 	PRIMARY KEY (poliza_id))
 	COMMENT 'Información específica de pólizas según siniestros'
