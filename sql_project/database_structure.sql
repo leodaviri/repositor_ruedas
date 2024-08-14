@@ -132,7 +132,7 @@ CREATE TABLE
 CREATE TABLE 
 	IF NOT EXISTS marcas_veh(
 	marca_id INT NOT NULL AUTO_INCREMENT,
-	marca_nombre VARCHAR(50) DEFAULT 'Pendiente asignar marca';
+	marca_nombre VARCHAR(50) DEFAULT 'Pendiente asignar marca',
 	PRIMARY KEY (marca_id))
 	COMMENT 'Marca fabricante del vehículo'
 	;
@@ -140,7 +140,7 @@ CREATE TABLE
 CREATE TABLE 
 	IF NOT EXISTS modelos(
 	modelo_id INT NOT NULL AUTO_INCREMENT,
-	modelo_descripcion VARCHAR(100) DEFAULT 'Pendiente asignar descripcion' COMMENT 'refiere a modelo, NO año de fabricación';
+	modelo_descripcion VARCHAR(100) DEFAULT 'Pendiente asignar descripcion' COMMENT 'refiere a modelo, NO año de fabricación',
 	PRIMARY KEY (modelo_id))
 	COMMENT 'Especificaciones de modelo del vehículo'
 	;
