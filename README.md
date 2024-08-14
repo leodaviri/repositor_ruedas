@@ -453,6 +453,10 @@ CALL agregar_factura(
 ___
 ### CÓMO CORRER MI CÓDIGO:
 
+```bash
+   make
+```
+
 En la terminal, colocar los comandos:
 - `make` _si te da un error de que no conexion al socket, volver al correr el comando `make`_
 - `make clean-db` limpiar la base de datos
