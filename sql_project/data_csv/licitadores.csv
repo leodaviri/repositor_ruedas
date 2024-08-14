@@ -1,9 +1,9 @@
-licitador_id;licitador_nombre;licitador_web
-1;Orden Manual;Web del seguro
-2;Appsolut Innboxes;https://prestador.innboxes.com/login
-3;Claims Services;https://claimservices.com.ar/login.php
-4;Coris Siniestros;https://corissiniestros.com.ar/
-5;Grant Insurance;https://grant.net.ar/site/login
-6;Orion Cesvicom;https://sistema-orion.com/Portal/
-7;Train Data;https://traindata.com.ar/#
-8;Valua Siniestros;https://www.sistemavalua.com/
+licitador_id,licitador_nombre,licitador_web
+1,Orden Manual,Web del seguro
+2,Appsolut Innboxes,https://prestador.innboxes.com/login
+3,Claims Services,https://claimservices.com.ar/login.php
+4,Coris Siniestros,https://corissiniestros.com.ar/
+5,Grant Insurance,https://grant.net.ar/site/login
+6,Orion Cesvicom,https://sistema-orion.com/Portal/
+7,Train Data,https://traindata.com.ar/#
+8,Valua Siniestros,https://www.sistemavalua.com/

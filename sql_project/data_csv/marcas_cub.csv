@@ -1,28 +1,28 @@
-marca_id;marca_descripcion
-1;Atlas
-2;Bf Goodrich
-3;Bridgestone
-4;Continental
-5;Dunlop
-6;Fate
-7;Firemax
-8;Firestone
-9;Formula
-10;Goodyear
-11;Greentrac
-12;Hankook
-13;Kenda
-14;Kumho
-15;Ling Long
-16;Marshall
-17;Maxisport
-18;Maxxis
-19;Michelin
-20;Nexen
-21;Pace
-22;Pirelli
-23;Powergy
-24;Toyo
-25;Triangle
-26;Windforce
-27;Yokohama
+marca_id,marca_descripcion
+1,Atlas
+2,Bf Goodrich
+3,Bridgestone
+4,Continental
+5,Dunlop
+6,Fate
+7,Firemax
+8,Firestone
+9,Formula
+10,Goodyear
+11,Greentrac
+12,Hankook
+13,Kenda
+14,Kumho
+15,Ling Long
+16,Marshall
+17,Maxisport
+18,Maxxis
+19,Michelin
+20,Nexen
+21,Pace
+22,Pirelli
+23,Powergy
+24,Toyo
+25,Triangle
+26,Windforce
+27,Yokohama

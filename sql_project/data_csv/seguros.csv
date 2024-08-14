@@ -1,46 +1,46 @@
-seguro_id;seguro_nombre;seguro_alias;seguro_ciudad;seguro_provincia;seguro_web;seguro_telefono;seguro_mail
-30-50003721-7;Allianz Argentina Compania De Seguros S.A.;ALLIANZ;4;1;https://allianz.com.ar/;8102222243;proveedorescordoba@allianz.com.ar
-30-50005130-9;Antartida Compania Argentina De Seguros S.A.;ANTARTIDA;4;1;https://antartidaseguros.com.ar/;1152635500;conforme@antartidaseguros.com.ar
-30-69940815-4;Atm Compania De Seguros S.A.;ATM;4;1;https://atmseguros.com.ar/;1152393867;proveedores@atmseguros.com.ar
-30-50003578-8;Berkley International Seguros S.A.;BERKLEY;46;20;https://berkley.com.ar/;3414104200;mcabral@berkley.com.ar
-30-50000111-5;Boston Compania Argentina De Seguros S.A.;BOSTON;4;1;https://boston.com.ar/;8102220020;gnievas@boston.com.ar
-30-50003967-8;Caledonia Argentina Compania De Seguros S.A.;CALEDONIA;4;1;https://caledoniaseguros.com.ar/new-site/;1152521010;kmercado@caledoniaseguros.com.ar
-30-51830942-7;Caruso Cia Arg De Seguros S.A.;CARUSO;16;5;https://carusoseguros.com.ar/;3514268888;lmanca@caruso.com.ar
-30-50001626-0;Chubb Seguros Argentina S.A.;CHUBB;4;1;https://chubb.com/ar-es/;1141144000;damian.riccio@chubb.com
-30-50004717-4;Cooperacion Mutual Patronal Sociedad Mutual De Seguros Gles;COOPERACION;68;20;https://cooperacionseguros.com.ar/;3462435100;proveedores_siniestros@cooperacionseguros.com.ar
-30-50004045-5;Compania De Seguros El Norte S.A.;EL NORTE;51;5;https://elnorte.com.ar/;3564475700;atencionalcliente@elnorte.com.ar
-30-71459054-1;Experta Seguros S.A.U.;EXPERTA;4;1;https://experta.com.ar/;1147041830;fpellitero@experta.com.ar
-33-70736658-9;Federacion Patronal Seguros S.A.U.;FEDERACION PATRONAL;26;1;https://fedpat.com.ar/;2214290200;lmolina@fedpat.com, namaya@fedpat.com
-30-71439519-6;Galeno Seguros S.A.;GALENO;4;1;https://galenoseguros.com.ar/;8007775433;cionem@galenoseguros.com.ar
-33-50003806-9;La Holando Sudamericana Compania De Seguros S.A.;HOLANDO;4;1;https://laholando.com/;1143217600;eivollenweider@laholando.com
-30-70496198-3;Integrity Seguros Argentina S.A.;INTEGRITY;4;1;https://integrityseguros.com.ar/;1141040000;amermillod@integrityseguros.com.ar
-30-66320562-1;Caja De Seguros S.A.;LA CAJA;4;1;https://seguros.lacaja.com.ar/;1148577777;facturacionproveedores@lacaja.com.ar
-30-51541976-0;La Equitativa Del Plata S.A. De Seguros;EQUITATIVA;4;1;https://laequitativa.com.ar/;1150703000;laequitativacordoba@gmail.com
-30-50001770-4;La Segunda Cooperativa Ltda De Seguros Generales;LA SEGUNDA;46;20;https://lasegunda.com.ar/home;3413019055;ntallone@lasegunda.com.ar
-30-71233282-0;Libra Compania Argentina De Seguros S.A.;LIBRA;4;1;https://libraseguros.com.ar/;1126499551;proveedores@libraseguros.com.ar
-30-50005949-0;Liderar Compania General De Seguros S.A.;LIDERAR;4;1;https://liderarseguros.seg.ar/;1143112133;jcmedina@liderarseguros.com.ar
-30-50000753-9;Mapfre Argentina Seguros S.A.;MAPFRE;31;1;https://mapfre.com.ar/;1123320911;proveedores@mapfre.com.ar
-30-50003691-1;Compania De Seguros La Mercantil Andina S.A.;MERCANTIL;4;1;https://mercantilandina.com.ar/;1161656262;ana.perales@lamercantil.com.ar
-30-50005116-3;La Meridional Cia Arg De Seguros S.A.;MERIDIONAL;4;1;https://meridionalseguros.seg.ar/;1149097173;mmuino@meridionalseguros.com.ar
-30-50006133-9;Metropol Cia Argentina De Seguros S.A.;METROPOL;24;1;https://metropolseguros.com.ar/;1153009726;l.raco@metropolseguros.com.ar
-30-67856116-5;Nacion Seguros S.A.;NACION;4;1;https://nacion-seguros.com.ar/;1135600489;sherrera@nacion-seguros.com.ar
-30-69067464-1;Nivel Seguros S.A.;NIVEL;48;16;https://nivelseguros.com.ar/;3874267000;btejerina@nivelseguros.com.ar
-30-50005666-1;Orbis Compania Argentina De Seguros S.A.;ORBIS;4;1;https://orbiseguros.com.ar/;1141803682;nberra@orbiseguros.com.ar
-30-50005710-2;Parana S.A. De Seguros;PARANA;4;1;https://www.paranaseguros.com.ar/;8002227272;silvina.scaglione@paranaseguros.com.ar
-30-50003288-6;La Perseverancia Seguros S.A.;PERSEVERANCIA;66;1;https://www.lps.com.ar/;1128080012;fernandamiguez@lps.com.ar
-30-50005918-0;Productores De Frutas Argentinas Cooperativa De Seguros Ltda;PROF;4;1;https://autogestion.profru.com/;1137519900;fpereyra@grupoprof.com
-30-67729047-8;Providencia Compania Argentina De Seguros S.A.;PROVIDENCIA;4;1;http://providencia.com.ar/;1169957905;laterram@providencia.com.ar
-30-52750816-5;Provincia Seguros S.A.;PROVINCIA;4;1;https://www.provinciaseguros.com.ar/;1121837633;solucioninmediata@pseguros.com.ar
-30-50004359-4;Prudencia Compania Argentina De Seguros Generales S.A.;PRUDENCIA;4;1;https://www.prudenciaseguros.com.ar/;1156377483;info.stros.autos@prudenciaseguros.com.ar
-30-50006171-1;Rio Uruguay Cooperativa De Seguros Ltda;RIO URUGUAY;14;7;https://www.riouruguay.com.ar/;8008887787;gustavo.carnero@riouruguay.com.ar
-30-50005031-0;Seguros Bernardino Rivadavia Cooperativa Ltda;RIVADAVIA;26;1;https://www.segurosrivadavia.com/;1139898000;siniestrosmenores@segurosrivadavia.com
-34-50004533-9;San Cristobal Sociedad Mutual De Seguros Generales;SAN CRISTOBAL;46;20;https://www.sancristobal.com.ar/;3414202000;juan.esteybar@gruposancristobal.com
-30-50004946-0;Sancor Cooperativa De Seguros Ltda;SANCOR;61;20;https://www.sancorseguros.com.ar/;3493510404;mtorre@ext.sancorseguros.com
-30-50005536-3;Segurometal Cooperativa De Seguros Ltda;SEGUROMETAL;46;20;https://www.segurometal.com/;3414229100;tibaldisegurometal@yahoo.com
-30-50003196-0;SMG Compania Argentina De Seguros S.A.;SMG;4;1;https://www.swissmedicalseguros.com/;8103333013;smgsegurosproveedores@swissmedical.com.ar
-30-50000012-7;Seguros Sura S.A.;GALICIA (EX SURA);4;1;https://www.galicia.ar/personas;1144398558;cristina.arias@galiciaseguros.com.ar
-30-70801747-3;TPC Compania De Seguros S.A.;TPC;4;1;https://tpcseguros.com/;1136676629;fjuan@tpcseguros.com
-30-50006577-6;Triunfo Cooperativa De Seguros Ltda;TRIUNFO;30;12;https://triunfoseguros.com/;1149770233;dgordillo@triunfoseguros.com
-30-50003226-6;Compania Argentina De Seguros Victoria S.A.;VICTORIA;4;1;https://www.victoria.com.ar/;1150681100;carnero@victoria.com.ar
-30-50003639-3;Zurich Aseguradora Argentina S.A.;QBE ZURICH;4;1;https://www.zurichqbe.com.ar/;1148191000;gestiondeproveedores@zurichqbe.com
-30-50004977-0;Zurich Argentina Compania De Seguros S.A.;ZURICH;4;1;https://www.zurich.com.ar/;1148191000;gestiondeproveedores@zurich.com
+seguro_id,seguro_nombre,seguro_alias,seguro_ciudad,seguro_provincia,seguro_web,seguro_telefono,seguro_mail
+30-50003721-7,Allianz Argentina Compania De Seguros S.A.,ALLIANZ,4,1,https://allianz.com.ar/,8102222243,proveedorescordoba@allianz.com.ar
+30-50005130-9,Antartida Compania Argentina De Seguros S.A.,ANTARTIDA,4,1,https://antartidaseguros.com.ar/,1152635500,conforme@antartidaseguros.com.ar
+30-69940815-4,Atm Compania De Seguros S.A.,ATM,4,1,https://atmseguros.com.ar/,1152393867,proveedores@atmseguros.com.ar
+30-50003578-8,Berkley International Seguros S.A.,BERKLEY,46,20,https://berkley.com.ar/,3414104200,mcabral@berkley.com.ar
+30-50000111-5,Boston Compania Argentina De Seguros S.A.,BOSTON,4,1,https://boston.com.ar/,8102220020,gnievas@boston.com.ar
+30-50003967-8,Caledonia Argentina Compania De Seguros S.A.,CALEDONIA,4,1,https://caledoniaseguros.com.ar/new-site/,1152521010,kmercado@caledoniaseguros.com.ar
+30-51830942-7,Caruso Cia Arg De Seguros S.A.,CARUSO,16,5,https://carusoseguros.com.ar/,3514268888,lmanca@caruso.com.ar
+30-50001626-0,Chubb Seguros Argentina S.A.,CHUBB,4,1,https://chubb.com/ar-es/,1141144000,damian.riccio@chubb.com
+30-50004717-4,Cooperacion Mutual Patronal Sociedad Mutual De Seguros Gles,COOPERACION,68,20,https://cooperacionseguros.com.ar/,3462435100,proveedores_siniestros@cooperacionseguros.com.ar
+30-50004045-5,Compania De Seguros El Norte S.A.,EL NORTE,51,5,https://elnorte.com.ar/,3564475700,atencionalcliente@elnorte.com.ar
+30-71459054-1,Experta Seguros S.A.U.,EXPERTA,4,1,https://experta.com.ar/,1147041830,fpellitero@experta.com.ar
+33-70736658-9,Federacion Patronal Seguros S.A.U.,FEDERACION PATRONAL,26,1,https://fedpat.com.ar/,2214290200,lmolina@fedpat.com, namaya@fedpat.com
+30-71439519-6,Galeno Seguros S.A.,GALENO,4,1,https://galenoseguros.com.ar/,8007775433,cionem@galenoseguros.com.ar
+33-50003806-9,La Holando Sudamericana Compania De Seguros S.A.,HOLANDO,4,1,https://laholando.com/,1143217600,eivollenweider@laholando.com
+30-70496198-3,Integrity Seguros Argentina S.A.,INTEGRITY,4,1,https://integrityseguros.com.ar/,1141040000,amermillod@integrityseguros.com.ar
+30-66320562-1,Caja De Seguros S.A.,LA CAJA,4,1,https://seguros.lacaja.com.ar/,1148577777,facturacionproveedores@lacaja.com.ar
+30-51541976-0,La Equitativa Del Plata S.A. De Seguros,EQUITATIVA,4,1,https://laequitativa.com.ar/,1150703000,laequitativacordoba@gmail.com
+30-50001770-4,La Segunda Cooperativa Ltda De Seguros Generales,LA SEGUNDA,46,20,https://lasegunda.com.ar/home,3413019055,ntallone@lasegunda.com.ar
+30-71233282-0,Libra Compania Argentina De Seguros S.A.,LIBRA,4,1,https://libraseguros.com.ar/,1126499551,proveedores@libraseguros.com.ar
+30-50005949-0,Liderar Compania General De Seguros S.A.,LIDERAR,4,1,https://liderarseguros.seg.ar/,1143112133,jcmedina@liderarseguros.com.ar
+30-50000753-9,Mapfre Argentina Seguros S.A.,MAPFRE,31,1,https://mapfre.com.ar/,1123320911,proveedores@mapfre.com.ar
+30-50003691-1,Compania De Seguros La Mercantil Andina S.A.,MERCANTIL,4,1,https://mercantilandina.com.ar/,1161656262,ana.perales@lamercantil.com.ar
+30-50005116-3,La Meridional Cia Arg De Seguros S.A.,MERIDIONAL,4,1,https://meridionalseguros.seg.ar/,1149097173,mmuino@meridionalseguros.com.ar
+30-50006133-9,Metropol Cia Argentina De Seguros S.A.,METROPOL,24,1,https://metropolseguros.com.ar/,1153009726,l.raco@metropolseguros.com.ar
+30-67856116-5,Nacion Seguros S.A.,NACION,4,1,https://nacion-seguros.com.ar/,1135600489,sherrera@nacion-seguros.com.ar
+30-69067464-1,Nivel Seguros S.A.,NIVEL,48,16,https://nivelseguros.com.ar/,3874267000,btejerina@nivelseguros.com.ar
+30-50005666-1,Orbis Compania Argentina De Seguros S.A.,ORBIS,4,1,https://orbiseguros.com.ar/,1141803682,nberra@orbiseguros.com.ar
+30-50005710-2,Parana S.A. De Seguros,PARANA,4,1,https://www.paranaseguros.com.ar/,8002227272,silvina.scaglione@paranaseguros.com.ar
+30-50003288-6,La Perseverancia Seguros S.A.,PERSEVERANCIA,66,1,https://www.lps.com.ar/,1128080012,fernandamiguez@lps.com.ar
+30-50005918-0,Productores De Frutas Argentinas Cooperativa De Seguros Ltda,PROF,4,1,https://autogestion.profru.com/,1137519900,fpereyra@grupoprof.com
+30-67729047-8,Providencia Compania Argentina De Seguros S.A.,PROVIDENCIA,4,1,http://providencia.com.ar/,1169957905,laterram@providencia.com.ar
+30-52750816-5,Provincia Seguros S.A.,PROVINCIA,4,1,https://www.provinciaseguros.com.ar/,1121837633,solucioninmediata@pseguros.com.ar
+30-50004359-4,Prudencia Compania Argentina De Seguros Generales S.A.,PRUDENCIA,4,1,https://www.prudenciaseguros.com.ar/,1156377483,info.stros.autos@prudenciaseguros.com.ar
+30-50006171-1,Rio Uruguay Cooperativa De Seguros Ltda,RIO URUGUAY,14,7,https://www.riouruguay.com.ar/,8008887787,gustavo.carnero@riouruguay.com.ar
+30-50005031-0,Seguros Bernardino Rivadavia Cooperativa Ltda,RIVADAVIA,26,1,https://www.segurosrivadavia.com/,1139898000,siniestrosmenores@segurosrivadavia.com
+34-50004533-9,San Cristobal Sociedad Mutual De Seguros Generales,SAN CRISTOBAL,46,20,https://www.sancristobal.com.ar/,3414202000,juan.esteybar@gruposancristobal.com
+30-50004946-0,Sancor Cooperativa De Seguros Ltda,SANCOR,61,20,https://www.sancorseguros.com.ar/,3493510404,mtorre@ext.sancorseguros.com
+30-50005536-3,Segurometal Cooperativa De Seguros Ltda,SEGUROMETAL,46,20,https://www.segurometal.com/,3414229100,tibaldisegurometal@yahoo.com
+30-50003196-0,SMG Compania Argentina De Seguros S.A.,SMG,4,1,https://www.swissmedicalseguros.com/,8103333013,smgsegurosproveedores@swissmedical.com.ar
+30-50000012-7,Seguros Sura S.A.,GALICIA (EX SURA),4,1,https://www.galicia.ar/personas,1144398558,cristina.arias@galiciaseguros.com.ar
+30-70801747-3,TPC Compania De Seguros S.A.,TPC,4,1,https://tpcseguros.com/,1136676629,fjuan@tpcseguros.com
+30-50006577-6,Triunfo Cooperativa De Seguros Ltda,TRIUNFO,30,12,https://triunfoseguros.com/,1149770233,dgordillo@triunfoseguros.com
+30-50003226-6,Compania Argentina De Seguros Victoria S.A.,VICTORIA,4,1,https://www.victoria.com.ar/,1150681100,carnero@victoria.com.ar
+30-50003639-3,Zurich Aseguradora Argentina S.A.,QBE ZURICH,4,1,https://www.zurichqbe.com.ar/,1148191000,gestiondeproveedores@zurichqbe.com
+30-50004977-0,Zurich Argentina Compania De Seguros S.A.,ZURICH,4,1,https://www.zurich.com.ar/,1148191000,gestiondeproveedores@zurich.com

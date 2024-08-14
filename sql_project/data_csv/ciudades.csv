@@ -1,73 +1,73 @@
-ciudad_id;ciudad_nombre
-1;Andalgala
-2;Bahia Blanca
-3;Belen
-4;CABA
-5;Caleta Olivia
-6;Caucete
-7;Centenario
-8;Chilecito
-9;Chimbas
-10;Cipolletti
-11;Clorinda
-12;Comodoro Rivadavia
-13;Concepcion
-14;Concepcion del Uruguay
-15;Concordia
-16;Cordoba
-17;Corrientes
-18;Eldorado
-19;Formosa
-20;General Pico
-21;Godoy Cruz
-22;Goya
-23;Gualeguaychu
-24;Haedo
-25;La Banda
-26;La Plata
-27;La Rioja
-28;Libertador General San Martin
-29;Mar del Plata
-30;Mendoza
-31;Munro
-32;Neuquen
-33;Obera
-34;Olavarria
-35;Oran
-36;Palpala
-37;Parana
-38;Paso de los Libres
-39;Posadas
-40;Rafaela
-41;Rawson
-42;Resistencia
-43;Rio Cuarto
-44;Rio Gallegos
-45;Rio Grande
-46;Rosario
-47;Saenz Peña
-48;Salta
-49;San Carlos de Bariloche
-50;San Fernando del Valle de Catamarca
-51;San Francisco
-52;San Juan
-53;San Luis
-54;San Martin de los Andes
-55;San Miguel de Tucuman
-56;San Rafael
-57;San Salvador de Jujuy
-58;Santa Fe
-59;Santa Rosa
-60;Santiago del Estero
-61;Sunchales
-62;Tafi Viejo
-63;Tandil
-64;Tartagal
-65;Trelew
-66;Tres Arroyos
-67;Ushuaia
-68;Venado Tuerto
-69;Viedma
-70;Villa angela
-71;Villa Carlos Paz
-72;Villa Mercedes
+ciudad_id,ciudad_nombre
+1,Andalgala
+2,Bahia Blanca
+3,Belen
+4,CABA
+5,Caleta Olivia
+6,Caucete
+7,Centenario
+8,Chilecito
+9,Chimbas
+10,Cipolletti
+11,Clorinda
+12,Comodoro Rivadavia
+13,Concepcion
+14,Concepcion del Uruguay
+15,Concordia
+16,Cordoba
+17,Corrientes
+18,Eldorado
+19,Formosa
+20,General Pico
+21,Godoy Cruz
+22,Goya
+23,Gualeguaychu
+24,Haedo
+25,La Banda
+26,La Plata
+27,La Rioja
+28,Libertador General San Martin
+29,Mar del Plata
+30,Mendoza
+31,Munro
+32,Neuquen
+33,Obera
+34,Olavarria
+35,Oran
+36,Palpala
+37,Parana
+38,Paso de los Libres
+39,Posadas
+40,Rafaela
+41,Rawson
+42,Resistencia
+43,Rio Cuarto
+44,Rio Gallegos
+45,Rio Grande
+46,Rosario
+47,Saenz Peï¿½a
+48,Salta
+49,San Carlos de Bariloche
+50,San Fernando del Valle de Catamarca
+51,San Francisco
+52,San Juan
+53,San Luis
+54,San Martin de los Andes
+55,San Miguel de Tucuman
+56,San Rafael
+57,San Salvador de Jujuy
+58,Santa Fe
+59,Santa Rosa
+60,Santiago del Estero
+61,Sunchales
+62,Tafi Viejo
+63,Tandil
+64,Tartagal
+65,Trelew
+66,Tres Arroyos
+67,Ushuaia
+68,Venado Tuerto
+69,Viedma
+70,Villa angela
+71,Villa Carlos Paz
+72,Villa Mercedes

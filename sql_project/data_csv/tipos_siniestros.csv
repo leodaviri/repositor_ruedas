@@ -1,10 +1,10 @@
-siniestro_tipo_id;siniestro_tipo_descripcion
-AUCH;Rueda auxilio llanta chapa
-POCH;Rueda posicion llanta chapa
-AUAL;Rueda auxilio llanta aleacion
-POAL;Rueda posicion llanta aleacion
-AUTE;Rueda auxilio temporal
-AUPOCH;Rueda auxilio y rueda posicion llanta chapa
-AUCHPOAL;Rueda auxilio llanta chapa y rueda posicion llanta aleacion
-AUPOAL;Rueda auxilio y rueda posicion llanta aleacion
-AUTEPOAL;Rueda auxilio temporal y rueda posicion aleacion
+siniestro_tipo_id,siniestro_tipo_descripcion
+AUCH,Rueda auxilio llanta chapa
+POCH,Rueda posicion llanta chapa
+AUAL,Rueda auxilio llanta aleacion
+POAL,Rueda posicion llanta aleacion
+AUTE,Rueda auxilio temporal
+AUPOCH,Rueda auxilio y rueda posicion llanta chapa
+AUCHPOAL,Rueda auxilio llanta chapa y rueda posicion llanta aleacion
+AUPOAL,Rueda auxilio y rueda posicion llanta aleacion
+AUTEPOAL,Rueda auxilio temporal y rueda posicion aleacion
