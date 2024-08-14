@@ -23,7 +23,7 @@ FIELDS TERMINATED BY ','
 ENCLOSED BY '"'
 LINES TERMINATED BY '\n'
 IGNORE 1 ROWS
-(factura_id, factura_tipo, factura_fecha, factura_pdv, factura_nro
+(factura_id, factura_tipo, factura_fecha, factura_pdv, factura_nro,
 rueda_item, rueda_precio, rueda_cantidad, factura_precio);
 
 LOAD DATA LOCAL INFILE '/sql_project/data_csv/facturas_tipos.csv'
