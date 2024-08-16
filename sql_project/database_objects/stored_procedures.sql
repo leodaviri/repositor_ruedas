@@ -43,6 +43,22 @@ BEGIN
         SET MESSAGE_TEXT = 'Debe indicar un vehículo';
     END IF;
 
+    -- Determinamos campos para insertar nuevo registro
+    INSERT INTO siniestros (
+        siniestro_nro, siniestro_fecha, siniestro_tipo, cantidad_ruedas,
+        seguro_cia, poliza_nro, licitador, vehiculo, observaciones)
+        VALUES (
+        p_siniestro_nro, p_siniestro_fecha, p_siniestro_tipo, p_cantidad_ruedas,
+        p_seguro_cia, p_poliza_nro, p_licitador, p_vehiculo, p_observaciones
+       );
+     
+    -- Mostramos el último registro insertado
+    SELECT * FROM siniestros
+    ORDER BY siniestro_fecha DESC
+    LIMIT 1;
+END //
+DELIMITER ;
+
 
 -- Para que la inserción funcione, hubo que agregar un valor genérico en 'facturas'
 
