@@ -20,8 +20,6 @@
 
 ___
 
-[CÓDIGO](https://github.com/leodaviri/repositor_ruedas/tree/main#c%C3%B3mo-correr-mi-c%C3%B3digo)
-
 #### PROBLEMA:
 
 Importante grupo concesionario necesita el desarrollo y estructura de una base de datos que permita optimizar informes sobre las reposiciones de ruedas a compañías de seguros. Requiere el tratado de información relevante sobre los siniestros, más específicamente sobre los vehículos más afectados y la segmentación de cada seguro a fin de poder mantener un inventario adecuado a las circunstancias.
