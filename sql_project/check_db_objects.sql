@@ -29,7 +29,7 @@ ORDER BY
 SELECT 
     TABLE_NAME AS Tabla, 
     COLUMN_NAME AS Columna, 
-    CONSTRAINT_NAME AS Restricción, 
+    CONSTRAINT_NAME AS Restriccion, 
     REFERENCED_TABLE_NAME AS Referencia_tabla, 
     REFERENCED_COLUMN_NAME AS Referencia_columna
 FROM 

@@ -15,7 +15,13 @@ BEGIN
     -- Obtener la fecha del siniestro correspondiente
     SELECT siniestro_fecha INTO siniestro_fecha
     FROM siniestros
-    WHERE siniestro_nro = NEW.siniestro_nro;
+    WHERE factura_nro = 'Pendiente'
+    AND siniestro_id = (
+        SELECT siniestro_id 
+        FROM siniestros 
+        WHERE factura_nro = 'Pendiente' 
+        ORDER BY siniestro_fecha DESC 
+        LIMIT 1);
     
     -- Verificar que la fecha de la factura no sea anterior a la fecha del siniestro
     IF NEW.factura_fecha < siniestro_fecha THEN
@@ -24,7 +30,6 @@ BEGIN
     END IF;
 END //
 DELIMITER ;
-
 
 -- Trigger para evitar errores de tipeo, en éste caso, la cantidad de ruedas máxima de todo vehículo
 
@@ -49,7 +54,6 @@ DELIMITER ;
 
 DROP TRIGGER IF EXISTS repositor_ruedas.asegurado_tel;
 
-DELIMITER //
 CREATE TRIGGER repositor_ruedas.asegurado_tel
 AFTER INSERT ON asegurados
 FOR EACH ROW
@@ -60,5 +64,4 @@ BEGIN
         SIGNAL SQLSTATE '01000'
         SET MESSAGE_TEXT = 'Recuerde registrar un contacto telefónico';
     END IF;
-END //
-DELIMITER ;
+END;
