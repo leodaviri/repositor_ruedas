@@ -8,7 +8,9 @@ SET GLOBAL local_infile = TRUE;
 
 SET foreign_key_checks = 0;
 
--- Procedemos a importar datos considerando el orden en que fueron creadas las tablas
+-- Procedemos a importar datos
+-- Se considera el orden correcto de constrains respecto a las tablas de hechos
+-- Se setean en las mismas, las fechas y nulos
 
 LOAD DATA LOCAL INFILE '/sql_project/data_csv/facturas_tipos.csv'
 INTO TABLE facturas_tipos
