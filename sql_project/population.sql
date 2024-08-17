@@ -4,27 +4,11 @@ USE repositor_ruedas;
 
 SET GLOBAL local_infile = TRUE;
 
+-- Desactivamos temporalmente la verificación de claves foráneas durante la importación
+
+SET foreign_key_checks = 0;
 
 -- Procedemos a importar datos considerando el orden en que fueron creadas las tablas
-
-LOAD DATA LOCAL INFILE '/sql_project/data_csv/siniestros.csv'
-INTO TABLE siniestros
-FIELDS TERMINATED BY ',' 
-ENCLOSED BY '"'
-LINES TERMINATED BY '\r\n'
-IGNORE 1 ROWS
-(siniestro_id, siniestro_nro, siniestro_fecha, factura_nro,
-siniestro_tipo, cantidad_ruedas, seguro_cia, poliza_nro,
-licitador, vehiculo, observaciones);
-
-LOAD DATA LOCAL INFILE '/sql_project/data_csv/facturas.csv'
-INTO TABLE facturas
-FIELDS TERMINATED BY ',' 
-ENCLOSED BY '"'
-LINES TERMINATED BY '\r\n'
-IGNORE 1 ROWS
-(factura_id, factura_tipo, factura_fecha, factura_pdv, factura_nro,
-rueda_item, rueda_precio, rueda_cantidad, factura_precio);
 
 LOAD DATA LOCAL INFILE '/sql_project/data_csv/facturas_tipos.csv'
 INTO TABLE facturas_tipos
@@ -33,6 +17,28 @@ ENCLOSED BY '"'
 LINES TERMINATED BY '\r\n'
 IGNORE 1 ROWS
 (factura_tipo_id, factura_tipo_descripcion);
+
+LOAD DATA LOCAL INFILE '/sql_project/data_csv/facturas.csv'
+INTO TABLE facturas
+FIELDS TERMINATED BY ',' 
+ENCLOSED BY '"'
+LINES TERMINATED BY '\r\n'
+IGNORE 1 ROWS
+(factura_id, factura_tipo, @factura_fecha, factura_pdv, factura_nro,
+rueda_item, rueda_precio, rueda_cantidad, factura_precio)
+SET factura_fecha = STR_TO_DATE(@factura_fecha, '%Y-%m-%d');
+
+LOAD DATA LOCAL INFILE '/sql_project/data_csv/siniestros.csv'
+INTO TABLE siniestros
+FIELDS TERMINATED BY ',' 
+ENCLOSED BY '"'
+LINES TERMINATED BY '\r\n'
+IGNORE 1 ROWS
+(siniestro_id, siniestro_nro, @siniestro_fecha, factura_nro,
+siniestro_tipo, cantidad_ruedas, seguro_cia, poliza_nro,
+licitador, vehiculo, @observaciones)
+SET siniestro_fecha = STR_TO_DATE(@siniestro_fecha, '%Y-%m-%d'),
+    observaciones = NULLIF(@observaciones, '');
 
 LOAD DATA LOCAL INFILE '/sql_project/data_csv/tipos_siniestros.csv'
 INTO TABLE tipos_siniestros
@@ -147,3 +153,7 @@ ENCLOSED BY '"'
 LINES TERMINATED BY '\r\n'
 IGNORE 1 ROWS
 (id_facturas, id_ruedas, cantidad);
+
+-- Activamos nuevamente la verificación de claves foráneas
+
+SET foreign_key_checks = 1;
