@@ -302,6 +302,18 @@ SELECT * FROM repositor_ruedas.view_cia_prom;
 ```
 **(la propia vista ordena de forma ascendente para considerar estrategias alternativas sobre los clientes menos frecuentes)*
 
+5. #### `VIEW_VEHICULOS`
+    - Vista para consultar las descripciones de vehículos registrados.
+    - Implica joins en las 4 tablas de vehículos involucradas.
+
+    - Columnas:
+        - Marca
+        - Modelo
+        - utilidad
+    - Ejemplo de uso:
+```sql
+SELECT * FROM repositor_ruedas.view_vehiculos;
+```
 ___
 ### TRIGGERS:
 
@@ -448,6 +460,20 @@ CALL agregar_factura(
     220000,    -- rueda_precio
     2          -- rueda_cantidad
     );
+```
+3. #### `AGREGAR_VEHICULO`
+
+    - Optimiza el ingreso de un nuevo vehículo, ya que con sólo 3 datos se actualizan 4 tablas:
+    	- vehiculos
+     	- marcas_veh
+      	- modelos
+      	- utilidades
+    - Si ya existe una marca/modelo/utilidad con ese nombre, se actualiza el registro existente y se obtiene el ID del campo actualizado utilizando LAST_INSERT_ID(marca_id/modelo_id/utilidad_id).
+    - Finalmente se retornan los ID correspondientes en las 4 tablas
+    
+    - Ejemplo de uso:
+```sql
+CALL agregar_vehiculo('Audi', 'A6', 'Particular');
 ```
 
 ___
