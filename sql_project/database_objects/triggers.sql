@@ -31,6 +31,7 @@ BEGIN
 END //
 DELIMITER ;
 
+
 -- Trigger para evitar errores de tipeo, en éste caso, la cantidad de ruedas máxima de todo vehículo
 
 DROP TRIGGER IF EXISTS repositor_ruedas.cant_x_siniestro;

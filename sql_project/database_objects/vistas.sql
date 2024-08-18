@@ -109,3 +109,24 @@ GROUP BY
     Compania
 ORDER BY 
     Promedio_orden ASC;
+
+
+-- Vista para consultar las descripciones de vehículos registrados
+-- Implica joins en las 4 tablas de vehículos involucradas
+    
+CREATE OR REPLACE VIEW 
+	repositor_ruedas.view_vehiculos
+AS
+SELECT 
+    mv.marca_nombre AS Marca,
+    m.modelo_descripcion AS Modelo,
+    u.utilidad_descripcion AS Utilidad
+FROM vehiculos AS v
+JOIN marcas_veh AS mv
+	ON v.vehiculo_marca = mv.marca_id
+JOIN modelos AS m
+	ON v.vehiculo_modelo = m.modelo_id
+JOIN utilidades AS u
+	ON v.vehiculo_utilidad = u.utilidad_id
+ORDER BY 
+Marca, Modelo, Utilidad;

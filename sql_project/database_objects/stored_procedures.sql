@@ -59,18 +59,10 @@ BEGIN
 END //
 DELIMITER ;
 
+-- Mostramos las advertencias
+SHOW WARNINGS;
 
--- Para que la inserción funcione, hubo que agregar un valor genérico en 'facturas'
-
-INSERT INTO facturas
-(factura_id, factura_tipo, factura_pdv, factura_nro,
-rueda_item, rueda_precio, rueda_cantidad, factura_precio)
-VALUES
-('Pendiente', 'FA', 0, 0, 0, 0, 0, 0);
-
-
-
--- Procedimiento para ingresar una nueva factura
+-- Procedimiento TRANSACCIONAL (TCL) para ingresar una nueva factura
 -- Dicho registro además actualizará campos en 'siniestros' y 'link_facturas_ruedas'
 
 DROP PROCEDURE IF EXISTS repositor_ruedas.agregar_factura;
@@ -88,7 +80,10 @@ BEGIN
     DECLARE v_siniestro_existente INT;
     DECLARE v_factura_id VARCHAR(20);
     DECLARE v_factura_precio DECIMAL(10, 2);
-
+	
+    -- Inicio de TCL
+    START TRANSACTION;
+    
     -- Verificamos si el siniestro existe y si el campo factura_nro es 'Pendiente'
     SELECT COUNT(*) INTO v_siniestro_existente
     FROM siniestros
@@ -98,11 +93,18 @@ BEGIN
     IF v_siniestro_existente = 0 THEN
         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Siniestro inexistente, por favor corrobore';
     ELSE
+		-- Creamos un savepoint posterior a la confirmación
+		SAVEPOINT siniestro_confirmado;
+        
         -- Construimos el ID de la factura
         SET v_factura_id = CONCAT(p_factura_tipo, '-', p_factura_pdv, '-', p_factura_nro);
 
         -- Determinamos validaciones con mensajes de errores
         IF p_factura_tipo IS NULL OR p_factura_tipo = '' THEN
+			
+            -- Revertimos la transacción hasta la confirmación del siniestro
+			ROLLBACK TO SAVEPOINT siniestro_confirmado;
+            
             SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Debe asignar tipo de factura';
         ELSEIF p_factura_pdv IS NULL THEN
             SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Debe indicar punto de venta';
@@ -120,7 +122,7 @@ BEGIN
             INSERT INTO facturas (factura_id, factura_tipo, factura_fecha, factura_pdv,
                 factura_nro, rueda_item, rueda_precio, rueda_cantidad, factura_precio)
             VALUES (v_factura_id, p_factura_tipo, CURRENT_TIMESTAMP, p_factura_pdv,
-                p_factura_nro, p_rueda_item, p_rueda_precio, p_rueda_cantidad, v_factura_precio );
+                p_factura_nro, p_rueda_item, p_rueda_precio, p_rueda_cantidad, v_factura_precio);
 
             -- Actualizamos el campo factura_nro en la tabla siniestros
             UPDATE siniestros
@@ -132,6 +134,9 @@ BEGIN
                 id_facturas, id_ruedas, cantidad)
             VALUES (v_factura_id, p_rueda_item, p_rueda_cantidad);
 
+            -- Confirmamos la transacción correcta
+            COMMIT;
+
             -- Mostramos el último registro insertado
             SELECT * FROM facturas
             ORDER BY factura_fecha DESC
@@ -140,3 +145,61 @@ BEGIN
     END IF;
 END //
 DELIMITER ;
+
+-- Mostramos las advertencias
+SHOW WARNINGS;
+
+
+-- Procedimiento para ingresar un nuevo vehículo
+-- Implica la actualización de 4 tablas
+-- Si ya existe una marca/modelo/utilidad con ese nombre, se actualiza el registro existente
+-- y se obtiene el ID del campo actualizado utilizando LAST_INSERT_ID(marca_id/modelo_id/utilidad_id)
+
+DROP PROCEDURE IF EXISTS agregar_vehiculo;
+
+DELIMITER //
+CREATE PROCEDURE agregar_vehiculo(
+    IN p_marca_nombre VARCHAR(50),
+    IN p_modelo_descripcion VARCHAR(100),
+    IN p_utilidad_descripcion VARCHAR(100)
+)
+BEGIN
+    DECLARE v_marca_id INT;
+    DECLARE v_modelo_id INT;
+    DECLARE v_utilidad_id INT;
+    DECLARE v_vehiculo_id INT;
+    
+    -- Insertar u obtener marca_id
+    INSERT INTO marcas_veh (marca_nombre)
+    VALUES (p_marca_nombre)
+    ON DUPLICATE KEY UPDATE marca_id = LAST_INSERT_ID(marca_id);
+    SET v_marca_id = LAST_INSERT_ID();
+    
+    -- Insertar u obtener modelo_id
+    INSERT INTO modelos (modelo_descripcion)
+    VALUES (p_modelo_descripcion)
+    ON DUPLICATE KEY UPDATE modelo_id = LAST_INSERT_ID(modelo_id);
+    SET v_modelo_id = LAST_INSERT_ID();
+    
+    -- Insertar u obtener utilidad_id
+    INSERT INTO utilidades (utilidad_descripcion)
+    VALUES (p_utilidad_descripcion)
+    ON DUPLICATE KEY UPDATE utilidad_id = LAST_INSERT_ID(utilidad_id);
+    SET v_utilidad_id = LAST_INSERT_ID();
+    
+    -- Insertar en la tabla vehiculos
+    INSERT INTO vehiculos (vehiculo_marca, vehiculo_modelo, vehiculo_utilidad)
+    VALUES (v_marca_id, v_modelo_id, v_utilidad_id);
+    SET v_vehiculo_id = LAST_INSERT_ID();
+    
+    -- Devolución de los IDs insertados y/oo actualizados
+    SELECT
+		v_vehiculo_id AS vehiculo_id,
+		v_marca_id AS marca_id, 
+        v_modelo_id AS modelo_id,
+		v_utilidad_id AS utilidad_id;
+END //
+DELIMITER ;
+
+-- Mostramos las advertencias
+SHOW WARNINGS;
