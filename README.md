@@ -18,7 +18,7 @@
 
 **Aplicación/Interfaz:** [DBeaver](https://dbeaver.io/)
 
-**Herramientas adicionales:** [Excel](https://www.microsoft.com/es-ar/microsoft-365/excel), [Claude AI](https://claude.ai/), [Gemini AI](https://gemini.google.com/app), [VSCode](https://code.visualstudio.com/), [Docker](https://www.docker.com/)
+**Herramientas adicionales:** [Excel](https://www.microsoft.com/es-ar/microsoft-365/excel) | [Claude AI](https://claude.ai/) | [Gemini AI](https://gemini.google.com/app) | [VSCode](https://code.visualstudio.com/) | [Docker](https://www.docker.com/)
 
 ___
 
