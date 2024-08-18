@@ -256,6 +256,28 @@ ALTER TABLE link_facturas_ruedas
 ALTER TABLE link_facturas_ruedas
 	ADD CONSTRAINT fk_ruedas_facturas
 	FOREIGN KEY (id_facturas) REFERENCES facturas(factura_id);
+
+
+-- CORROBORACIÓN OPCIONAL
+-- Se puede chequear cada una de las tablas creadas con el comando EXPLAIN o DESCRIBE
+
+DESCRIBE asegurados;
+DESCRIBE ciudades;
+DESCRIBE facturas;
+DESCRIBE facturas_tipos;
+DESCRIBE licitadores;
+DESCRIBE link_facturas_ruedas;
+DESCRIBE marcas_cub;
+DESCRIBE marcas_veh;
+DESCRIBE modelos;
+DESCRIBE polizas;
+DESCRIBE provincias;
+DESCRIBE ruedas;
+DESCRIBE seguros;
+DESCRIBE siniestros;
+DESCRIBE tipos_siniestros;
+DESCRIBE utilidades;
+DESCRIBE vehiculos;
 	
 
 -- IMPORTACIÓNDE DATOS

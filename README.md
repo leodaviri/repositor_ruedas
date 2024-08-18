@@ -640,3 +640,5 @@ ___
 También está la posibilidad de ver y descargar el script con el código completo del proyecto finalizado en el siguiente link:
 
 * [click aquí](https://github.com/leodaviri/repositor_ruedas/blob/main/sql_project/Repositor_ruedas_Iriarte_Leonardo.sql)
+
+El mismo contiene además los ejemplos de uso de funciones, triggers, vistas y procedimientos, así como otras queries que sirven para corroborar detalles específicos, las cuales no fueron incluídas en los archivos .sql para no perjudicar el funcionamiento de los comandos en terminal.
