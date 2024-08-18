@@ -114,18 +114,3 @@ SET DEFAULT ROLE 'CONTACTO' TO 'RubenM'@'%', 'LucasN'@'%';
 -- Actualizamos los privilegios
 
 FLUSH PRIVILEGES;
-
-
--- Corroboramos los roles asignados en cada usuario
-
-SHOW GRANTS FOR 'LeoDI'@'%';
-SHOW GRANTS FOR 'JesiB'@'%';
-SHOW GRANTS FOR 'AndreC'@'%';
-SHOW GRANTS FOR 'FedeZ'@'%';
-SHOW GRANTS FOR 'HugoQ'@'%';
-SHOW GRANTS FOR 'CrisA'@'%';
-SHOW GRANTS FOR 'ReneB'@'%';
-SHOW GRANTS FOR 'SantiG'@'%';
-SHOW GRANTS FOR 'MatiK'@'%';
-SHOW GRANTS FOR 'RubenM'@'%';
-SHOW GRANTS FOR 'LucasN'@'%';

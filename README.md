@@ -522,9 +522,101 @@ CALL agregar_vehiculo(
 
 
 ___
-### USUARIOS Y ROLES:
+### ROLES Y USUARIOS:
 
+Para ésta sección se determina la creación de 4 roles:
 
+1. #### `SISTEMA`
+
+    - Sistema tiene TODOS los permisos sobre la base de datos.
+    - Se encargará de todas las gestiones sobre estructura y códigos, corrección, depuración y actualización.
+
+    - Usuarios:
+
+    ```sql
+    'LeoDI'@'%'
+    'JesiB'@'%'
+    ```
+
+2. #### `ADMIN`
+
+    - Administración posee todos los permisos para DML sobre 4 tablas específicas:
+        - siniestros
+        - tipos_siniestros
+        - facturas
+        - facturas_tipos
+
+    - También podrán ejecutar 2 funciones y 2 procedimientos:
+        - *funcion* - ganancia_neta
+        - *funcion* - porcent_licitador
+        - *proced* - ingreso_siniestro 
+        - *proced* - agregar_factura
+
+    - Serán los encargados de ingresos de registros sobre las tablas de hechos, así como actualizaciones y correcciones.
+
+    - Usuarios:
+    
+    ```sql
+    'AndreC'@'%'
+    'FedeZ'@'%'
+    'HugoQ'@'%'
+    ```
+
+3. #### `DEPOSITO`
+
+    - Depósito posee todos los permisos para DML sobre 6 tablas específicas:
+        - ruedas
+        - marcas_cub
+        - vehiculos
+        - marcas_veh
+        - modelos
+        - utilidades
+
+    - También podrán ejecutar 1 función y 1 procedimiento:
+        - *funcion* - cant_x_cia 
+        - *proced* - agregar_vehiculo
+
+    - Su rol principal será mantener actualizados los registros que tengan relación a vehículos y ruedas, con el fin de mantener un stock acorde al historial que brinda la base de datos.
+
+    - Usuarios:
+    
+    ```sql
+    'CrisA'@'%'
+    'ReneB'@'%'
+    'SantiG'@'%'
+    'MatiK'@'%'
+    ```
+
+4. #### `CONTACTO`
+
+    - Dicho sector será el encargado de manter el contacto tanto con personas, como con entidades.
+
+    - Solamente podrá visualizar 4 tablas:
+        - seguros
+        - licitadores
+        - asegurados
+        - polizas
+    
+    - También tendrá acceso a 1 vista:
+        - view_reincidencias
+
+    - No podrán ejecutar DML, se restringe su acceso a consultas de información de las respectivas dablas.
+    
+    - Usuarios:
+    
+    ```sql
+    'RubenM'@'%'
+    'LucasN'@'%'
+    ```
+
+Una vez creados los roles, usarios y asignaciones, se activan los roles y se actualizan los privilegios con los siguientes respectivos comandos:
+
+```sql
+SET DEFAULT ROLE '{ROL}' TO '{USER1}'@'%', '{USER2}@'%';
+    (1 código por cada rol)
+    
+FLUSH PRIVILEGES;
+```
 ___
 ### CÓMO CORRER MI CÓDIGO:
 
@@ -546,4 +638,5 @@ ___
 [Pre entrega 02](https://github.com/leodaviri/repositor_ruedas/blob/main/versiones_previas/Repositor_ruedas_Iriarte_Leonardo(v2).sql)
 
 También está la posibilidad de ver y descargar el script con el código completo del proyecto finalizado en el siguiente link:
+
 * [click aquí](https://github.com/leodaviri/repositor_ruedas/blob/main/sql_project/Repositor_ruedas_Iriarte_Leonardo.sql)
