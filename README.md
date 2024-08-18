@@ -539,9 +539,11 @@ Ingresar en la sección codespaces y en la terminal, utilizar los comandos:
 - `make backup-db` para realizar un backup de mi base de datos
 - `make access-db` para acceder a la base de datos
 
-También está la posibilidad de ver el script con el código completo en el siguiente link: [click aquí](https://github.com/leodaviri/repositor_ruedas/blob/main/pre_entrega_02/Repositor_ruedas_Iriarte_Leonardo(v2).sql)
 ___
 ### VERSIONES PREVIAS:
 
 [Pre entrega 01](https://github.com/leodaviri/repositor_ruedas/blob/main/versiones_previas/Repositor_ruedas_Iriarte_Leonardo(v1).sql)\
 [Pre entrega 02](https://github.com/leodaviri/repositor_ruedas/blob/main/versiones_previas/Repositor_ruedas_Iriarte_Leonardo(v2).sql)
+
+También está la posibilidad de ver y descargar el script con el código completo del proyecto finalizado en el siguiente link:
+* [click aquí](https://github.com/leodaviri/repositor_ruedas/blob/main/sql_project/Repositor_ruedas_Iriarte_Leonardo.sql)
