@@ -221,10 +221,28 @@ Para la correcta importación de datos desde archivos planos, es necesario previ
 local_infile=1
 ```
 Los permisos fueron activados mediante 2 comandos adicionales:
-* **SET GLOBAL local_infile = TRUE;** (en el script).
-* **local-infile=1** posterior a los datos de inicio en server (consola, cmd).
+```sql
+SET GLOBAL local_infile = TRUE;
+(en el script)
+```
+```
+local-infile=1
+(compando posterior a los datos de inicio en server -terminal-)
+```
+También fue necesario desactivar temporalmente la verificación de claves foráneas durante la importación, reactivándola posteriormente.
+Ejemplo de estructura:
+```sql
+SET foreign_key_checks = 0;
 
-Posterior a la habilitación, se procede a ejecutar el mismo comando de importación local por cada tabla y en el orden en que fueron creadas las mismas:
+...
+(importación de datos)
+...
+
+SET foreign_key_checks = 1;
+```
+
+Se ejecutan las importaciones locales ejecutando un comando por cada tabla y en el orden de relevancia según los constraints.
+Ejemplo de formato habitual de los comandos:
 ```sql
 LOAD DATA LOCAL INFILE 'ruta/al/archivo/nombre_archivo.csv'
 INTO TABLE nombre_tabla
@@ -232,6 +250,24 @@ FIELDS TERMINATED BY ','
 LINES TERMINATED BY '\r\n'
 IGNORE 1 LINES;
 ```
+
+En los casos de las tablas de hechos (*siniestros* / *facturas*) fué necesario setear los formatos de fecha y posibles existencias de nulos, a fin de evitar inconvenientes con la terminal.
+Ejemplo del comando modificado:
+```sql
+LOAD DATA LOCAL INFILE '/sql_project/data_csv/siniestros.csv'
+INTO TABLE siniestros
+FIELDS TERMINATED BY ',' 
+ENCLOSED BY '"'
+LINES TERMINATED BY '\r\n'
+IGNORE 1 ROWS
+(siniestro_id, siniestro_nro, @siniestro_fecha, factura_nro,
+siniestro_tipo, cantidad_ruedas, seguro_cia, poliza_nro,
+licitador, vehiculo, @observaciones)
+SET siniestro_fecha = STR_TO_DATE(@siniestro_fecha, '%Y-%m-%d'),
+    observaciones = NULLIF(@observaciones, '');
+```
+
+
 ___
 ### OBJETOS DE LA BASE DE DATOS:
 
