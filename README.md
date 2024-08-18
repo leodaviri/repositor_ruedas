@@ -479,8 +479,10 @@ CALL ingreso_siniestro(
 ```
 2. #### `AGREGAR_FACTURA`
 
+    - Éste procedimiento es TRANSACCIONAL (TCL).
     - Optimiza el ingreso de una nueva factura, ya que no sólo permite la inserción en la tabla 'facturas', sino que además considera el nro de siniestro al que corresponde, previamente cargado en su respectiva tabla y actualiza el campo de la tabla 'siniestros', es decir, pasa de estar en FC 'Pendiente' a llevar el nro de FC que estamos asignando.
-    - Inicialmente valida que el siniestro exista y que tenga estado 'Pendiente' en FC, caso contrario devuelve un mensaje SQLSTATE '45000' como 'Siniestro inexistente'.
+    - Inicialmente valida que el siniestro exista y que tenga estado de 'Pendiente' en FC, caso contrario devuelve un mensaje SQLSTATE '45000' como 'Siniestro inexistente'.
+    - En caso de que exista, se crea un *savepoint* al cual se redirigirá un *rollback* en caso de que no se completen los campos pertinentes de la tabla 'facturas'.
     - Agiliza el proceso ya que el valor en ID (PK) se concatena de forma automática, así como también se automatiza el valor del campo que determina el precio final de la factura.
     - Lo más importante es que además de actualizar el nro de FC en la tabla 'siniestros', actualiza los registros completos en la tabla link que existe entre ambas.
     - Por último, también devuelve una query simple que muestra la carga exitosa del registro.
