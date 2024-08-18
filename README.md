@@ -474,7 +474,7 @@ CALL ingreso_siniestro(
     '30-50004946-0', 		-- seguro_cia
     167559,			-- poliza_nro
     2, 				-- licitador
-    33,				-- vehiculo
+    33				-- vehiculo
     );
 ```
 2. #### `AGREGAR_FACTURA`
