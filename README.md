@@ -362,14 +362,14 @@ ___
     - Ejemplo de uso y mensaje SIGNAL SQLSTATE '45000':
 ```sql
 CALL agregar_factura(
-    1259,			-- nro factura
+    1259,			        -- nro factura
     '2024-07-10 00:00:00'	-- VALOR ERRÓNEO
-    'FA',			-- tipo FC
-    3,				-- punto de venta
-    69055,			-- FC nro
-    51,				-- rueda item
-    1880000,			-- precio
-    1				-- cantidad
+    'FA',			        -- tipo FC
+    3,				        -- punto de venta
+    69055,			        -- FC nro
+    51,				        -- rueda item
+    1880000,			    -- precio
+    1				        -- cantidad
 );
 
 ERROR 1644 (45000): La fecha de la factura no puede ser anterior a la fecha del siniestro.
@@ -469,14 +469,14 @@ ___
     - Ejemplo de uso:
 ```sql
 CALL ingreso_siniestro(
-    2003506792, 		-- siniestro_nro
+    2003506792, 		    -- siniestro_nro
     '2024-08-02 12:45:00', 	-- siniestro_fecha
-    'AUCH',			-- siniestro_tipo
-    4, 				-- cantidad_ruedas
+    'AUCH',			        -- siniestro_tipo
+    4, 				        -- cantidad_ruedas
     '30-50004946-0', 		-- seguro_cia
-    167559,			-- poliza_nro
-    2, 				-- licitador
-    33				-- vehiculo
+    167559,			        -- poliza_nro
+    2, 				        -- licitador
+    33				        -- vehiculo
     );
 ```
 2. #### `AGREGAR_FACTURA`
@@ -514,11 +514,16 @@ CALL agregar_factura(
     - Ejemplo de uso:
 ```sql
 CALL agregar_vehiculo(
-'Audi',		-- Marca
-'A6',		-- Modelo
+'Audi',		    -- Marca
+'A6',		    -- Modelo
 'Particular'	-- Utilidad
 );
 ```
+
+
+___
+### USUARIOS Y ROLES:
+
 
 ___
 ### CÓMO CORRER MI CÓDIGO:
@@ -538,5 +543,5 @@ También está la posibilidad de ver el script con el código completo en el sig
 ___
 ### VERSIONES PREVIAS:
 
-[Pre entrega 01](https://github.com/leodaviri/repositor_ruedas/tree/main/pre_entrega_01)\
-[Pre entrega 02](https://github.com/leodaviri/repositor_ruedas/tree/main/pre_entrega_02)
+[Pre entrega 01](https://github.com/leodaviri/repositor_ruedas/blob/main/versiones_previas/Repositor_ruedas_Iriarte_Leonardo(v1).sql)\
+[Pre entrega 02](https://github.com/leodaviri/repositor_ruedas/blob/main/versiones_previas/Repositor_ruedas_Iriarte_Leonardo(v2).sql)
