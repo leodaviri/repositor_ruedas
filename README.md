@@ -18,6 +18,8 @@
 
 **Aplicación/Interfaz:** [DBeaver](https://dbeaver.io/)
 
+**Herramientas adicionales:** [Excel](https://www.microsoft.com/es-ar/microsoft-365/excel), [Claude AI](https://claude.ai/), [Gemini AI](https://gemini.google.com/app), [VSCode](https://code.visualstudio.com/), [Docker](https://www.docker.com/)
+
 ___
 
 #### PROBLEMA:
@@ -525,7 +527,7 @@ ___
    make
 ```
 
-En la terminal, colocar los comandos:
+Ingresar en la sección codespaces y en la terminal, utilizar los comandos:
 - `make` _si te da un error de que no conexion al socket, volver al correr el comando `make`_
 - `make clean-db` limpiar la base de datos
 - `make test-db` para mirar los datos de cada tabla
