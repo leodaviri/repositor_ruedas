@@ -11,14 +11,14 @@ CREATE ROLE 'SISTEMA', 'ADMIN', 'DEPOSITO', 'CONTACTO';
 
 -- SISTEMA
 -- Todos los permisos
-GRANT ALL ON repositor_ruedas.* TO 'SISTEMA';
+GRANT ALL PRIVILEGES ON repositor_ruedas.* TO 'SISTEMA';
 
 -- ADMIN
 -- DML sobre 4 tablas
-GRANT SELECT, INSERT, UPDATE, DELETE ON repositor_ruedas.siniestros TO 'ADMIN';
-GRANT SELECT, INSERT, UPDATE, DELETE ON repositor_ruedas.tipos_siniestros TO 'ADMIN';
-GRANT SELECT, INSERT, UPDATE, DELETE ON repositor_ruedas.facturas TO 'ADMIN';
-GRANT SELECT, INSERT, UPDATE, DELETE ON repositor_ruedas.facturas_tipos TO 'ADMIN';
+GRANT SELECT, INSERT, UPDATE ON repositor_ruedas.siniestros TO 'ADMIN';
+GRANT SELECT, INSERT, UPDATE ON repositor_ruedas.tipos_siniestros TO 'ADMIN';
+GRANT SELECT, INSERT, UPDATE ON repositor_ruedas.facturas TO 'ADMIN';
+GRANT SELECT, INSERT, UPDATE ON repositor_ruedas.facturas_tipos TO 'ADMIN';
 
 -- Ejecución en 2 funciones y 2 procedimientos
 GRANT EXECUTE ON FUNCTION repositor_ruedas.ganancia_neta TO 'ADMIN';
@@ -62,53 +62,75 @@ GRANT SELECT ON repositor_ruedas.view_reincidencias TO 'CONTACTO';
 -- Crearemos usuarios
 
 DROP USER IF EXISTS
-	'LeoDI'@'%', 'JesiB'@'%',
-	'AndreC'@'%', 'FedeZ'@'%', 'HugoQ'@'%',
-	'CrisA'@'%', 'ReneB'@'%', 'SantiG'@'%', 'MatiK'@'%',
-	'RubenM'@'%', 'LucasN'@'%';
+	'LeoDI'@'localhost', 'JesiB'@'localhost',
+	'AndreC'@'localhost', 'FedeZ'@'localhost', 'HugoQ'@'localhost',
+	'CrisA'@'localhost', 'ReneB'@'localhost', 'SantiG'@'localhost', 'MatiK'@'localhost',
+	'RubenM'@'localhost', 'LucasN'@'localhost';
 	
 	
 -- SISTEMA
-CREATE USER 'LeoDI'@'%' IDENTIFIED BY 'sys123';
-CREATE USER 'JesiB'@'%' IDENTIFIED BY 'sys456';
+CREATE USER 'LeoDI'@'localhost' IDENTIFIED BY 'sys123'
+	FAILED_LOGIN_ATTEMPTS 3 PASSWORD_LOCK_TIME 3
+	PASSWORD EXPIRE INTERVAL 180 DAY;
+CREATE USER 'JesiB'@'localhost' IDENTIFIED BY 'sys456'
+	FAILED_LOGIN_ATTEMPTS 3 PASSWORD_LOCK_TIME 3
+	PASSWORD EXPIRE INTERVAL 180 DAY;
 
 -- ADMIN
-CREATE USER 'AndreC'@'%' IDENTIFIED BY 'adm01';
-CREATE USER 'FedeZ'@'%' IDENTIFIED BY 'adm02';
-CREATE USER 'HugoQ'@'%' IDENTIFIED BY 'adm03';
+CREATE USER 'AndreC'@'localhost' IDENTIFIED BY 'adm01'
+	FAILED_LOGIN_ATTEMPTS 3 PASSWORD_LOCK_TIME 3
+	PASSWORD EXPIRE INTERVAL 90 DAY;
+CREATE USER 'FedeZ'@'localhost' IDENTIFIED BY 'adm02'
+	FAILED_LOGIN_ATTEMPTS 3 PASSWORD_LOCK_TIME 3
+	PASSWORD EXPIRE INTERVAL 90 DAY;
+CREATE USER 'HugoQ'@'localhost' IDENTIFIED BY 'adm03'
+	FAILED_LOGIN_ATTEMPTS 3 PASSWORD_LOCK_TIME 3
+	PASSWORD EXPIRE INTERVAL 90 DAY;
 
 -- DEPOSITO
-CREATE USER 'CrisA'@'%' IDENTIFIED BY 'dep01';
-CREATE USER 'ReneB'@'%' IDENTIFIED BY 'dep02';
-CREATE USER 'SantiG'@'%' IDENTIFIED BY 'dep03';
-CREATE USER 'MatiK'@'%' IDENTIFIED BY 'dep04';
+CREATE USER 'CrisA'@'localhost' IDENTIFIED BY 'dep01'
+	FAILED_LOGIN_ATTEMPTS 3 PASSWORD_LOCK_TIME 3
+	PASSWORD EXPIRE INTERVAL 90 DAY;
+CREATE USER 'ReneB'@'localhost' IDENTIFIED BY 'dep02'
+	FAILED_LOGIN_ATTEMPTS 3 PASSWORD_LOCK_TIME 3
+	PASSWORD EXPIRE INTERVAL 90 DAY;
+CREATE USER 'SantiG'@'localhost' IDENTIFIED BY 'dep03'
+	FAILED_LOGIN_ATTEMPTS 3 PASSWORD_LOCK_TIME 3
+	PASSWORD EXPIRE INTERVAL 90 DAY;
+CREATE USER 'MatiK'@'localhost' IDENTIFIED BY 'dep04'
+	FAILED_LOGIN_ATTEMPTS 3 PASSWORD_LOCK_TIME 3
+	PASSWORD EXPIRE INTERVAL 90 DAY;
 
 -- CONTACTO
-CREATE USER 'RubenM'@'%' IDENTIFIED BY 'con01';
-CREATE USER 'LucasN'@'%' IDENTIFIED BY 'con02';
+CREATE USER 'RubenM'@'localhost' IDENTIFIED BY 'con01'
+	FAILED_LOGIN_ATTEMPTS 3 PASSWORD_LOCK_TIME 3
+	PASSWORD EXPIRE INTERVAL 90 DAY;
+CREATE USER 'LucasN'@'localhost' IDENTIFIED BY 'con02'
+	FAILED_LOGIN_ATTEMPTS 3 PASSWORD_LOCK_TIME 3
+	PASSWORD EXPIRE INTERVAL 90 DAY;
 
 
 -- Otorgamos roles
 
 GRANT 'SISTEMA' TO
-	'LeoDI'@'%', 'JesiB'@'%';
+	'LeoDI'@'localhost', 'JesiB'@'localhost';
 	
 GRANT 'ADMIN' TO
-	'AndreC'@'%', 'FedeZ'@'%', 'HugoQ'@'%';
+	'AndreC'@'localhost', 'FedeZ'@'localhost', 'HugoQ'@'localhost';
 	
 GRANT 'DEPOSITO' TO
-	'CrisA'@'%', 'ReneB'@'%', 'SantiG'@'%', 'MatiK'@'%';
+	'CrisA'@'localhost', 'ReneB'@'localhost', 'SantiG'@'localhost', 'MatiK'@'localhost';
 	
 GRANT 'CONTACTO' TO
-	'RubenM'@'%', 'LucasN'@'%';
+	'RubenM'@'localhost', 'LucasN'@'localhost';
 	
 
 -- Activación de roles por defecto
 
-SET DEFAULT ROLE 'SISTEMA' TO 'LeoDI'@'%', 'JesiB'@'%';
-SET DEFAULT ROLE 'ADMIN' TO 'AndreC'@'%', 'FedeZ'@'%', 'HugoQ'@'%';
-SET DEFAULT ROLE 'DEPOSITO' TO 'CrisA'@'%', 'ReneB'@'%', 'SantiG'@'%', 'MatiK'@'%';
-SET DEFAULT ROLE 'CONTACTO' TO 'RubenM'@'%', 'LucasN'@'%';
+SET DEFAULT ROLE 'SISTEMA' TO 'LeoDI'@'localhost', 'JesiB'@'localhost';
+SET DEFAULT ROLE 'ADMIN' TO 'AndreC'@'localhost', 'FedeZ'@'localhost', 'HugoQ'@'localhost';
+SET DEFAULT ROLE 'DEPOSITO' TO 'CrisA'@'localhost', 'ReneB'@'localhost', 'SantiG'@'localhost', 'MatiK'@'localhost';
+SET DEFAULT ROLE 'CONTACTO' TO 'RubenM'@'localhost', 'LucasN'@'localhost';
 
 
 -- Actualizamos los privilegios
