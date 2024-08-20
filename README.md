@@ -524,13 +524,14 @@ CALL agregar_vehiculo(
 ___
 ### ROLES Y USUARIOS:
 
-Para ésta sección se determina la creación de 4 roles:
+Para ésta sección se determina la creación de 4 roles que representan las áreas encargadas:
 
 1. #### `SISTEMA`
 
     - Sistema tiene TODOS los permisos sobre la base de datos.
-    - Se asignan conexión desde cualquier host ('%').
     - Se encargará de todas las gestiones sobre estructura y códigos, corrección, depuración y actualización.
+    - Posee conexión desde cualquier host ('%').
+    - Contraseña: intentos fallidos = 2 / bloqueo de cuenta = 2 días.
 
     - Usuarios:
 
@@ -555,6 +556,7 @@ Para ésta sección se determina la creación de 4 roles:
 
     - Serán los encargados de ingresos de registros sobre las tablas de hechos, así como actualizaciones y correcciones.
     - Acceso restringido a conexión local ('localhost').
+    - Contraseña: intentos fallidos = 2 / bloqueo de cuenta = 5 días.
 
     - Usuarios:
     
@@ -580,6 +582,7 @@ Para ésta sección se determina la creación de 4 roles:
 
     - Su rol principal será mantener actualizados los registros que tengan relación a vehículos y ruedas, con el fin de mantener un stock acorde al historial que brinda la base de datos.
     - Acceso restringido a conexión local ('localhost').
+    - Contraseña: intentos fallidos = 2 / bloqueo de cuenta = 5 días.
 
     - Usuarios:
     
@@ -605,6 +608,7 @@ Para ésta sección se determina la creación de 4 roles:
 
     - No podrán ejecutar DML, se restringe su acceso a consultas de información de las respectivas dablas.
     - Acceso restringido a conexión local ('localhost').
+    - Contraseña: intentos fallidos = 2 / bloqueo de cuenta = 5 días.
     
     - Usuarios:
     
