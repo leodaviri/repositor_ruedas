@@ -199,6 +199,7 @@ A continuación ennumeramos las tablas y agregamos una breve descripción.
 
 17. #### `LINK_FACTURAS_RUEDAS`
     - Para evitar una relación de muchos a muchos, se crea una tabla vínculo entre **FACTURAS** y **RUEDAS**.
+    - Asignamos en constraint, que en caso de eliminar y/o modificar registros, sea modificación en cascada.
     - Atributos:
         - id_facturas (PK)
         - id_ruedas (PK)
