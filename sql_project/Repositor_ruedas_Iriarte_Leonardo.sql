@@ -239,6 +239,7 @@ ALTER TABLE ruedas
 	
 
 -- Creación de tabla vínculo entre facturas y ruedas para evitar relación de muchos a muchos
+-- Asignamos que en caso de eliminar y/o modificar registros, sea modificación en cascada
 
 CREATE TABLE 
 	IF NOT EXISTS link_facturas_ruedas(
@@ -251,11 +252,15 @@ CREATE TABLE
 
 ALTER TABLE link_facturas_ruedas
 	ADD CONSTRAINT fk_facturas_ruedas
-	FOREIGN KEY (id_ruedas) REFERENCES ruedas(rueda_id);
+	FOREIGN KEY (id_ruedas) REFERENCES ruedas(rueda_id)
+	ON DELETE CASCADE
+	ON UPDATE CASCADE;
 	
 ALTER TABLE link_facturas_ruedas
 	ADD CONSTRAINT fk_ruedas_facturas
-	FOREIGN KEY (id_facturas) REFERENCES facturas(factura_id);
+	FOREIGN KEY (id_facturas) REFERENCES facturas(factura_id)
+	ON DELETE CASCADE
+	ON UPDATE CASCADE;
 
 
 -- Creación de tabla log para guardar registros DML y usuarios
