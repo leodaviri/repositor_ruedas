@@ -841,6 +841,7 @@ DELIMITER //
 CREATE PROCEDURE repositor_ruedas.agregar_factura(
     IN p_siniestro_id INT,
     IN p_factura_tipo VARCHAR(10),
+    IN p_factura_fecha DATETIME,
     IN p_factura_pdv INT,
     IN p_factura_nro INT,
     IN p_rueda_item INT,
@@ -850,6 +851,7 @@ BEGIN
     DECLARE v_siniestro_existente INT;
     DECLARE v_factura_id VARCHAR(20);
     DECLARE v_factura_precio DECIMAL(10, 2);
+    DECLARE v_factura_fecha DATETIME;
 	
     -- Inicio de TCL
     START TRANSACTION;
@@ -888,10 +890,13 @@ BEGIN
             -- Automatizamos el precio final de la factura
             SET v_factura_precio = p_rueda_precio * p_rueda_cantidad;
 
+            -- Si la fecha proporcionada es NULL, usamos la fecha actual
+            SET v_factura_fecha = IFNULL(p_factura_fecha, CURRENT_TIMESTAMP());
+
             -- Determinamos campos para insertar nuevo registro
             INSERT INTO facturas (factura_id, factura_tipo, factura_fecha, factura_pdv,
                 factura_nro, rueda_item, rueda_precio, rueda_cantidad, factura_precio)
-            VALUES (v_factura_id, p_factura_tipo, CURRENT_TIMESTAMP, p_factura_pdv,
+            VALUES (v_factura_id, p_factura_tipo, v_factura_fecha, p_factura_pdv,
                 p_factura_nro, p_rueda_item, p_rueda_precio, p_rueda_cantidad, v_factura_precio);
 
             -- Actualizamos el campo factura_nro en la tabla siniestros
