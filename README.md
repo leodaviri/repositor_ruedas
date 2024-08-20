@@ -751,7 +751,7 @@ mysql -u root -p --host 127.0.0.1 --port 3306 --e "SHOW DATABASES"
 * *(--e ejecuta comandos mysql, en éste caso muestra bases de datos)*
 
 ___
-### CÓMO CORRER MI CÓDIGO:
+### CÓMO CORRER EL CÓDIGO:
 
 ```bash
    make
