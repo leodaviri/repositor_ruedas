@@ -95,3 +95,18 @@ ORDER BY
     EVENT_OBJECT_TABLE, 
     ACTION_TIMING, 
     EVENT_MANIPULATION;
+    
+   
+-- Verificación de roles y usuarios
+
+SELECT
+    FROM_USER AS Roles,
+    TO_USER AS Usuarios,
+    CASE 
+        WHEN FROM_USER = 'SISTEMA' THEN 'Acceso total al sistema'
+        WHEN FROM_USER = 'ADMIN' THEN 'Permisos de administrador'
+        WHEN FROM_USER = 'DEPOSITO' THEN 'Control de depósito'
+        ELSE 'Consultas a info de contacto'
+    END AS Comentario
+FROM mysql.role_edges
+ORDER BY Roles ASC;
