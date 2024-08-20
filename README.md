@@ -20,8 +20,19 @@
 
 **Herramientas adicionales:** [Excel](https://www.microsoft.com/es-ar/microsoft-365/excel) | [Claude AI](https://claude.ai/) | [VSCode](https://code.visualstudio.com/) | [Gemini AI](https://gemini.google.com/app) | [Docker](https://www.docker.com/) | [ChatGPT](https://chatgpt.com/) | [Excalidraw](https://excalidraw.com/)
 
+___
 
-- [TABLAS](#tablas)
+## ÍNDICE:
+
+
+- [1. Tablas](#tablas)
+  - [1.2 Descripción](#descripción-de-tablas)
+  - [1.3 Conexión](#conexión-de-tablas)
+  - [1.4 DER](#diagrama-entidad-relación-der)
+  - [1.5 Validación](#validación)
+- [2. Importación de Datos](#importación-de-datos)
+- [3. Objetos de la Base de DAtos](#objetos-de-la-base-de-datos)
+  - 
 ___
 
 #### PROBLEMA:
