@@ -176,12 +176,23 @@ A continuación ennumeramos las tablas y agregamos una breve descripción.
         - marca_id (PK)
         - marca_descripcion
 
-16. #### `LINK_FACTURAS_RUEDAS`
+17. #### `LINK_FACTURAS_RUEDAS`
     - Para evitar una relación de muchos a muchos, se crea una tabla vínculo entre **FACTURAS** y **RUEDAS**.
     - Atributos:
         - id_facturas (PK)
         - id_ruedas (PK)
         - cantidad
+
+18. #### `LOG`
+    - Tabla creada para registrar las modificaciones DML (UPDATE, INSERT, DELETE) realizadas y los usuarios responsables.
+    - Dicha tabla no requiere constraint y por ahora se asigna, mediante triggers, a la tabla 'siniestros' únicamente a modo de ejemplo.
+    - Atributos:
+        - id_log (PK)
+        - tabla
+        - id_pk
+        - usuario
+        - fecha
+        - operacion
 
 #### CONEXIÓN DE TABLAS:
 
