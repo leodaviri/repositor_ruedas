@@ -24,7 +24,6 @@ ___
 
 ## ÍNDICE:
 
-
 - [1. Tablas](#tablas)
   - [1.2 Descripción](#descripción-de-tablas)
   - [1.3 Conexión](#conexión-de-tablas)
