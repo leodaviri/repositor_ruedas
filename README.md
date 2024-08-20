@@ -465,18 +465,20 @@ ___
     - Posibilita el ingreso de nuevos registros en la tabla 'siniestros', determinando validaciones con mensajes SQLSTATE '45000' para 5 de los 11 atributos.
     - Se determinan los campos a completar y finaliza con una query simple que muestra el último registro.
     - La idea es simplificar el proceso y posibilitar un nulo dentro del campo de nro de factura, ya que es FK pero no siempre se factura al mismo momento.
+    - Al completar los campos 'siniestro_fecha' y 'observaciones' con valor NULL, fecha devolverá CURRENT_TIMESTAMP() y observaciones quedará vacío. 
     
     - Ejemplo de uso:
 ```sql
 CALL ingreso_siniestro(
     2003506792, 		-- siniestro_nro
-    '2024-08-02 12:45:00', 	-- siniestro_fecha
+    NULL,		 	-- siniestro_fecha (por defecto, fecha actual)
     'AUCH',			-- siniestro_tipo
     4, 				-- cantidad_ruedas
     '30-50004946-0', 		-- seguro_cia
     167559,			-- poliza_nro
     2, 				-- licitador
-    33				-- vehiculo
+    33,				-- vehiculo
+    NULL,			-- observaciones
     );
 ```
 2. #### `AGREGAR_FACTURA`
