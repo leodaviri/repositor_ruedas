@@ -20,6 +20,8 @@
 
 **Herramientas adicionales:** [Excel](https://www.microsoft.com/es-ar/microsoft-365/excel) | [Claude AI](https://claude.ai/) | [VSCode](https://code.visualstudio.com/) | [Gemini AI](https://gemini.google.com/app) | [Docker](https://www.docker.com/) | [ChatGPT](https://chatgpt.com/) | [Excalidraw](https://excalidraw.com/)
 
+
+- [TABLAS](#tablas)
 ___
 
 #### PROBLEMA:
