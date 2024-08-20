@@ -264,4 +264,4 @@ CREATE TABLE
     operacion VARCHAR(10) NOT NULL COMMENT 'Tipo de operación DML'
     PRIMARY KEY (id_log))
     COMMENT 'Tabla log que guarda las modificaciones y usuarios responsables'
-	);
+    ;
