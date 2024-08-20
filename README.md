@@ -462,7 +462,7 @@ CALL ingreso_siniestro(
     167559,			-- poliza_nro
     2, 				-- licitador
     33,				-- vehiculo
-    NULL,			-- observaciones
+    NULL			-- observaciones
     );
 ```
 2. #### `AGREGAR_FACTURA`
@@ -523,7 +523,7 @@ CALL agregar_factura(
     51,				-- rueda item
     1880000,			-- precio
     1				-- cantidad
-);
+    );
 
 ERROR 1644 (45000): La fecha de la factura no puede ser anterior a la fecha del siniestro.
 ```
