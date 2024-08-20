@@ -343,8 +343,10 @@ SELECT * FROM repositor_ruedas.view_ruedas
         - Asegurado
     - Ejemplo de uso:
 ```sql
-SELECT * FROM repositor_ruedas.view_reincidencias
-	ORDER BY reincidencias DESC;
+SELECT *
+    FROM repositor_ruedas.view_reincidencias
+    ORDER BY reincidencias DESC
+    LIMIT 20;
 ```
 4. #### `VIEW_SINIESTROS_VEHICULOS`
     - Vista para control de reposiciones, ayudará a determinar las compras a concecionarias oficiales considerando marca y modelo de vehículos.
@@ -397,8 +399,9 @@ SELECT
     factura_id AS Factura,
     factura_precio AS Precio,
     repositor_ruedas.ganancia_neta(factura_precio) AS Ganancia_neta
-FROM 
-    facturas;
+    FROM 
+    facturas
+    LIMIT 20;
 ```
 2. #### `CANT_X_CIA`
 
