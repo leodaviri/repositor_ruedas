@@ -481,6 +481,7 @@ CALL ingreso_siniestro(
 CALL agregar_factura(
     1256,      -- siniestro_id
     'FA',      -- factura_tipo
+    NULL,      -- factura_fecha (DEFALUT CURRENT)
     3,         -- factura_pdv
     69050,     -- factura_nro
     60,        -- rueda_item
