@@ -18,7 +18,7 @@
 
 **Aplicación/Interfaz:** [DBeaver](https://dbeaver.io/)
 
-**Herramientas adicionales:** [Excel](https://www.microsoft.com/es-ar/microsoft-365/excel) | [Claude AI](https://claude.ai/) | [Gemini AI](https://gemini.google.com/app) | [VSCode](https://code.visualstudio.com/) | [Docker](https://www.docker.com/)
+**Herramientas adicionales:** [Excel](https://www.microsoft.com/es-ar/microsoft-365/excel) | [Claude AI](https://claude.ai/) | [VSCode](https://code.visualstudio.com/) | [Gemini AI](https://gemini.google.com/app) | [Docker](https://www.docker.com/) | [ChatGPT](https://chatgpt.com/) | [Excalidraw](https://excalidraw.com/)
 
 ___
 
@@ -417,8 +417,8 @@ Recuerde registrar un contacto telefónico
 ```
 #### TRIGGERS DML:
 
-Para la siguiente utilidad, creamos una serie de 3 triggers los cuales van a registrar ejecuciones DML sobre la tabla 'siniestros' y se guardarán en la tabla 'LOG'.
-La cantidad de 3 es porque SQL solamente permite a un trigger ejecutarse sobre una sola acción DML, por lo cual será 1 trigger para cada acción (INSERT, UPDATE, DELETE).
+Para la siguiente utilidad, creamos una serie de 3 triggers los cuales van a registrar ejecuciones DML sobre la tabla 'siniestros' y se guardarán en la tabla 'LOG'.\
+La cantidad de 3 es porque SQL solamente permite a un trigger ejecutarse sobre una sola acción DML, por lo cual será 1 trigger para cada acción (INSERT, UPDATE, DELETE).\
 Se puede aplicar la misma modalida a todas las tablas, pero requiere 3 triggers adicionales por cada una.
 
 4. #### `SINIESTROS_INSERT_LOG`
@@ -707,6 +707,41 @@ Ingresar en la sección codespaces y en la terminal, utilizar los comandos:
 - `make test-db` para mirar los datos de cada tabla
 - `make backup-db` para realizar un backup de mi base de datos
 - `make access-db` para acceder a la base de datos
+
+___
+### BACKUP | DUMP:
+
+Al haber trabajado con motor MySQL e interfaz DBeaver, se realizan exportaciones desde ambos programas.\
+En MySQL se ejecuta la modalidad 'Export to Self-contained File', que devuelve 1 sólo script completo.\
+En DBeaver se utiliza la opción 'Lock All Tables' para obtener el mismo resultado.\
+Ambos archivos backup se pueden corroborar en la carpeta [backup_dum](sql_project/backup_dump) en éste repositorio.\
+
+También se puede ejecutar el siguiente paso a paso en terminal:
+
+```
+mysqldump --version
+```
+* *(corrobora la versión mysql)*
+```
+mysqldump --help
+```
+* *(muestra la ayuda y opciones disponibles para el comando dump)*
+```
+mysqldump -u root -p --host 127.0.0.1 --port 3306 --databases repositor_ruedas > bk.repositor.sql
+```
+* *(conexión y nombre de archivo dump a exportar)*
+```
+nvim bk.repositor.sql
+```
+* *(abre el archivo bk.repositor.sql en el editor de texto nvim=Neovim)*
+```
+mysql -u root -p --host 127.0.0.1 --port 3306 --databases repositor_ruedas < bk.repositor.sql
+```
+* *(conexión y nombre de archivo a importar/restaurar)*
+```
+mysql -u root -p --host 127.0.0.1 --port 3306 --e "SHOW DATABASES"
+```
+* *(--e ejecuta comandos mysql, en éste caso muestra bases de datos)*
 
 ___
 ### VERSIONES PREVIAS:
