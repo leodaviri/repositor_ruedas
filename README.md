@@ -478,7 +478,7 @@ CALL ingreso_siniestro(
     - Ejemplo de uso:
 ```sql
 CALL agregar_factura(
-    1258,      -- siniestro_id
+    1256,      -- siniestro_id
     'FA',      -- factura_tipo
     3,         -- factura_pdv
     69050,     -- factura_nro
@@ -514,8 +514,22 @@ ___
 
     - Ejemplo de uso y mensaje SIGNAL SQLSTATE '45000':
 ```sql
+-- primero ingresamos un nuevo siniestro
+CALL ingreso_siniestro(
+    2331984, 		-- siniestro_nro
+    NULL, 		-- siniestro_fecha
+    'AUPOCH',		-- siniestro_tipo
+    2, 			-- cantidad_ruedas
+    '30-50001770-4', 	-- seguro_cia
+    8902726,		-- poliza_nro
+    1, 			-- licitador
+    18,			-- vehiculo
+    NULL
+    );
+
+-- ahora forzamos el error
 CALL agregar_factura(
-    1259,			-- nro factura
+    1257,			-- nro factura
     '2024-07-10 00:00:00'	-- VALOR ERRÓNEO
     'FA',			-- tipo FC
     3,				-- punto de venta
