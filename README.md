@@ -31,8 +31,16 @@ ___
   - [1.4 DER](#diagrama-entidad-relación-der)
   - [1.5 Validación](#validación)
 - [2. Importación de Datos](#importación-de-datos)
-- [3. Objetos de la Base de DAtos](#objetos-de-la-base-de-datos)
-  - 
+- [3. Objetos de la Base de Datos](#objetos-de-la-base-de-datos)
+  - [3.2 Vistas](#vistas)
+  - [3.3 Triggers](#triggers)
+  - [3.4 Funciones](#funciones)
+  - [3.5 Procedimientos](#procedimientos)
+- [4 Roles y Usuarios](#roles-y-usuarios)
+- [5 Backup | Dump](#backup--dump)
+- [6 Cómo correr el Código](#cómo-correr-mi-código)
+- [7 Versiones Previas](#versiones-previas)
+
 ___
 
 #### PROBLEMA:
@@ -708,20 +716,6 @@ Visualización de roles y usuarios ya creados en DBeaver:
 <img src="https://github.com/leodaviri/repositor_ruedas/blob/main/imagenes/Rol_Users.jpg?raw=true">
 
 ___
-### CÓMO CORRER MI CÓDIGO:
-
-```bash
-   make
-```
-
-Ingresar en la sección codespaces y en la terminal, utilizar los comandos:
-- `make` _si te da un error de que no conexion al socket, volver al correr el comando `make`_
-- `make clean-db` limpiar la base de datos
-- `make test-db` para mirar los datos de cada tabla
-- `make backup-db` para realizar un backup de mi base de datos
-- `make access-db` para acceder a la base de datos
-
-___
 ### BACKUP | DUMP:
 
 Al haber trabajado con motor MySQL e interfaz DBeaver, se realizan exportaciones desde ambos programas.\
@@ -755,6 +749,20 @@ mysql -u root -p --host 127.0.0.1 --port 3306 --databases repositor_ruedas < bk.
 mysql -u root -p --host 127.0.0.1 --port 3306 --e "SHOW DATABASES"
 ```
 * *(--e ejecuta comandos mysql, en éste caso muestra bases de datos)*
+
+___
+### CÓMO CORRER MI CÓDIGO:
+
+```bash
+   make
+```
+
+Ingresar en la sección codespaces y en la terminal, utilizar los comandos:
+- `make` _si te da un error de que no conexion al socket, volver al correr el comando `make`_
+- `make clean-db` limpiar la base de datos
+- `make test-db` para mirar los datos de cada tabla
+- `make backup-db` para realizar un backup de mi base de datos
+- `make access-db` para acceder a la base de datos
 
 ___
 ### VERSIONES PREVIAS:
