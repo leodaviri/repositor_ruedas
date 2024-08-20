@@ -71,6 +71,10 @@ END;
 -- Trigger para registrar acciones DML en tabla 'log' y usuarios responsables
 -- Se crean en total 3 triggers para abarcar todas las acciones
 
+DROP TRIGGER IF EXISTS repositor_ruedas.siniestros_insert_log;
+DROP TRIGGER IF EXISTS repositor_ruedas.siniestros_update_log;
+DROP TRIGGER IF EXISTS repositor_ruedas.siniestros_delete_log;
+
 DELIMITER //
 -- Trigger para INSERT
 CREATE TRIGGER repositor_ruedas.siniestros_insert_log
