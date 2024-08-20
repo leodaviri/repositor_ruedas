@@ -351,7 +351,7 @@ SELECT * FROM repositor_ruedas.view_cia_prom;
 ```
 **(la propia vista ordena de forma ascendente para considerar estrategias alternativas sobre los clientes menos frecuentes)*
 
-5. #### `VIEW_VEHICULOS`
+6. #### `VIEW_VEHICULOS`
     - Vista para consultar las descripciones de vehículos registrados.
     - Implica joins en las 4 tablas de vehículos involucradas.
 
@@ -414,6 +414,57 @@ VALUES
 
 Warning Code: 1000
 Recuerde registrar un contacto telefónico
+```
+#### TRIGGERS DML:
+
+Para la siguiente utilidad, creamos una serie de 3 triggers los cuales van a registrar ejecuciones DML sobre la tabla 'siniestros' y se guardarán en la tabla 'LOG'.
+La cantidad de 3 es porque SQL solamente permite a un trigger ejecutarse sobre una sola acción DML, por lo cual será 1 trigger para cada acción (INSERT, UPDATE, DELETE).
+Se puede aplicar la misma modalida a todas las tablas, pero requiere 3 triggers adicionales por cada una.
+
+4. #### `SINIESTROS_INSERT_LOG`
+
+    - Registra las acciones de inserción de datos en tabla siniestros.
+
+    - Ejemplo de uso:
+```sql
+CALL ingreso_siniestro(
+    2331984, 		-- siniestro_nro
+    NULL,	 	-- siniestro_fecha (DEFAULT CURRENT_TIMESTAMP)
+    'AUCH',		-- siniestro_tipo
+    3, 			-- cantidad_ruedas
+    '30-50001770-4',	-- seguro_cia
+    8902726,		-- poliza_nro
+    1, 			-- licitador
+    18,			-- vehiculo
+    NULL		-- observaciones (sin datos)
+    );
+```
+
+5. #### `SINIESTROS_UPDATE_LOG`
+
+    - Registra las acciones de modificación de datos en tabla siniestros.
+
+    - Ejemplo de uso:
+```sql
+UPDATE siniestros
+SET cantidad_ruedas = 2
+WHERE siniestro_id = 1262; -- ver el id asignado por el CALL
+```
+
+6. #### `SINIESTROS_DELETE_LOG`
+
+    - Registra las acciones de eliminación de datos en tabla siniestros.
+
+    - Ejemplo de uso:
+```sql
+DELETE FROM siniestros
+WHERE siniestro_id = 1262; -- ver el id asignado por el CALL
+```
+
+Finalmente, al ejecutar una query de consulta simple sobre la tabla 'LOG', devolverá los 3 DML ejecutados, con sus respectivos atibutos:
+
+```sql
+SELECT * FROM log;					
 ```
 
 ___
