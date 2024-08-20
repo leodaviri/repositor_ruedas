@@ -62,13 +62,13 @@ GRANT SELECT ON repositor_ruedas.view_reincidencias TO 'CONTACTO';
 	
 -- SISTEMA
 DROP USER IF EXISTS
-	'LeoDI'@'localhost',
-	'JesiB'@'localhost';
+	'LeoDI'@'%',
+	'JesiB'@'%';
 
-CREATE USER 'LeoDI'@'localhost' IDENTIFIED BY 'sys123'
+CREATE USER 'LeoDI'@'%' IDENTIFIED BY 'sys123'
 	FAILED_LOGIN_ATTEMPTS 3 PASSWORD_LOCK_TIME 3
 	PASSWORD EXPIRE INTERVAL 180 DAY;
-CREATE USER 'JesiB'@'localhost' IDENTIFIED BY 'sys456'
+CREATE USER 'JesiB'@'%' IDENTIFIED BY 'sys456'
 	FAILED_LOGIN_ATTEMPTS 3 PASSWORD_LOCK_TIME 3
 	PASSWORD EXPIRE INTERVAL 180 DAY;
 
@@ -121,7 +121,7 @@ CREATE USER 'LucasN'@'localhost' IDENTIFIED BY 'con02'
 -- Otorgamos roles
 
 GRANT 'SISTEMA' TO
-	'LeoDI'@'localhost', 'JesiB'@'localhost';
+	'LeoDI'@'%', 'JesiB'@'%';
 	
 GRANT 'ADMIN' TO
 	'AndreC'@'localhost', 'FedeZ'@'localhost',
@@ -138,8 +138,7 @@ GRANT 'CONTACTO' TO
 -- Activación de roles por defecto
 
 SET DEFAULT ROLE 'SISTEMA'
-	TO 'LeoDI'@'localhost',
-		'JesiB'@'localhost';
+	TO 'LeoDI'@'%', 'JesiB'@'%';
 	
 SET DEFAULT ROLE 'ADMIN'
 	TO 'AndreC'@'localhost',
