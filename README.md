@@ -358,8 +358,10 @@ SELECT *
         - Cant_ruedas
     - Ejemplo de uso:
 ```sql
-SELECT * FROM repositor_ruedas.view_siniestros_vehiculos;
-	ORDER BY cant_ruedas DESC;
+SELECT *
+    FROM repositor_ruedas.view_siniestros_vehiculos;
+    ORDER BY cant_ruedas DESC
+    LIMIT 20;
 ```
 5. #### `VIEW_CIA_PROM`
     - Vista para llevar control del promedio de órdenes que asigna cada seguro. A fines prácticos, considera solamente el último mes de participación.
