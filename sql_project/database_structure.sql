@@ -261,7 +261,7 @@ CREATE TABLE
     id_pk VARCHAR(100) NOT NULL COMMENT 'PK del registro alterado',
     usuario VARCHAR(100) NOT NULL COMMENT 'Nombre del usuario que intervino',
     fecha DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT 'Fecha actual',
-    operacion VARCHAR(10) NOT NULL COMMENT 'Tipo de operación DML'
+    operacion VARCHAR(10) NOT NULL COMMENT 'Tipo de operación DML',
     PRIMARY KEY (id_log))
     COMMENT 'Tabla log que guarda las modificaciones y usuarios responsables'
     ;

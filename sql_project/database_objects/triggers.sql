@@ -75,29 +75,32 @@ DROP TRIGGER IF EXISTS repositor_ruedas.siniestros_insert_log;
 DROP TRIGGER IF EXISTS repositor_ruedas.siniestros_update_log;
 DROP TRIGGER IF EXISTS repositor_ruedas.siniestros_delete_log;
 
-DELIMITER //
 -- Trigger para INSERT
+
 CREATE TRIGGER repositor_ruedas.siniestros_insert_log
 AFTER INSERT ON siniestros
 FOR EACH ROW
 BEGIN
     INSERT INTO log (tabla, id_pk, usuario, operacion)
     VALUES ('siniestros', NEW.siniestro_id, USER(), 'INSERT');
-END//
+END;
+
 -- Trigger para UPDATE
+
 CREATE TRIGGER repositor_ruedas.siniestros_update_log
 AFTER UPDATE ON siniestros
 FOR EACH ROW
 BEGIN
     INSERT INTO log (tabla, id_pk, usuario, operacion)
     VALUES ('siniestros', NEW.siniestro_id, USER(), 'UPDATE');
-END//
+END;
+
 -- Trigger para DELETE
+
 CREATE TRIGGER repositor_ruedas.siniestros_delete_log
 AFTER DELETE ON siniestros
 FOR EACH ROW
 BEGIN
     INSERT INTO log (tabla, id_pk, usuario, operacion)
     VALUES ('siniestros', OLD.siniestro_id, USER(), 'DELETE');
-END//
-DELIMITER ;
+END;

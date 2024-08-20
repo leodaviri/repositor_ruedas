@@ -440,7 +440,8 @@ Recuerde registrar un contacto telefónico
 
 Para la siguiente utilidad, creamos una serie de 3 triggers los cuales van a registrar ejecuciones DML sobre la tabla 'siniestros' y se guardarán en la tabla 'LOG'.\
 La cantidad de 3 es porque SQL solamente permite a un trigger ejecutarse sobre una sola acción DML, por lo cual será 1 trigger para cada acción (INSERT, UPDATE, DELETE).\
-Se puede aplicar la misma modalida a todas las tablas, pero requiere 3 triggers adicionales por cada una.
+Se puede aplicar la misma modalida a todas las tablas, pero requiere 3 triggers adicionales por cada una.\
+Se omiten los ```DELIMITER //``` y ```DELIMITER ;``` ya que no son corridos correctamente en bash, pero al enviar el script directamente al servidor MySQL puede interpretar correctamente la estructura del trigger sin necesidad de cambiar el delimitador.
 
 4. #### `SINIESTROS_INSERT_LOG`
 
