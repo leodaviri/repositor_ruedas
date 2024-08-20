@@ -529,6 +529,7 @@ Para ésta sección se determina la creación de 4 roles:
 1. #### `SISTEMA`
 
     - Sistema tiene TODOS los permisos sobre la base de datos.
+    - Se asignan conexión desde cualquier host ('%').
     - Se encargará de todas las gestiones sobre estructura y códigos, corrección, depuración y actualización.
 
     - Usuarios:
@@ -553,13 +554,14 @@ Para ésta sección se determina la creación de 4 roles:
         - *proced* - agregar_factura
 
     - Serán los encargados de ingresos de registros sobre las tablas de hechos, así como actualizaciones y correcciones.
+    - Acceso restringido a conexión local ('localhost').
 
     - Usuarios:
     
     ```sql
-    'AndreC'@'%'
-    'FedeZ'@'%'
-    'HugoQ'@'%'
+    'AndreC'@'localhost'
+    'FedeZ'@'localhost'
+    'HugoQ'@'localhost'
     ```
 
 3. #### `DEPOSITO`
@@ -577,14 +579,15 @@ Para ésta sección se determina la creación de 4 roles:
         - *proced* - agregar_vehiculo
 
     - Su rol principal será mantener actualizados los registros que tengan relación a vehículos y ruedas, con el fin de mantener un stock acorde al historial que brinda la base de datos.
+    - Acceso restringido a conexión local ('localhost').
 
     - Usuarios:
     
     ```sql
-    'CrisA'@'%'
-    'ReneB'@'%'
-    'SantiG'@'%'
-    'MatiK'@'%'
+    'CrisA'@'localhost'
+    'ReneB'@'localhost'
+    'SantiG'@'localhost'
+    'MatiK'@'localhost'
     ```
 
 4. #### `CONTACTO`
@@ -601,12 +604,13 @@ Para ésta sección se determina la creación de 4 roles:
         - view_reincidencias
 
     - No podrán ejecutar DML, se restringe su acceso a consultas de información de las respectivas dablas.
+    - Acceso restringido a conexión local ('localhost').
     
     - Usuarios:
     
     ```sql
-    'RubenM'@'%'
-    'LucasN'@'%'
+    'RubenM'@'localhost'
+    'LucasN'@'localhost'
     ```
 
 Una vez creados los roles, usarios y asignaciones, se activan los roles y se actualizan los privilegios con los siguientes respectivos comandos:
