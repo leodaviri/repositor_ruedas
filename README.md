@@ -621,6 +621,11 @@ SET DEFAULT ROLE '{ROL}' TO '{USER1}'@'%', '{USER2}@'%';
     
 FLUSH PRIVILEGES;
 ```
+
+Visualización de roles y usuarios ya creados en DBeaver:
+
+<img src="https://github.com/leodaviri/repositor_ruedas/blob/main/imagenes/Rol_Users.jpg?raw=true">
+
 ___
 ### CÓMO CORRER MI CÓDIGO:
 
