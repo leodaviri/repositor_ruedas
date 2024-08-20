@@ -33,9 +33,9 @@ ___
 - [2. Importación de Datos](#importación-de-datos)
 - [3. Objetos de la Base de Datos](#objetos-de-la-base-de-datos)
   - [3.2 Vistas](#vistas)
-  - [3.3 Triggers](#triggers)
-  - [3.4 Funciones](#funciones)
-  - [3.5 Procedimientos](#procedimientos)
+  - [3.3 Funciones](#funciones)
+  - [3.4 Procedimientos](#procedimientos)
+  - [3.5 Triggers](#triggers)
 - [4. Roles y Usuarios](#roles-y-usuarios)
 - [5. Backup | Dump](#backup--dump)
 - [6. Cómo correr el Código](#cómo-correr-el-código)
@@ -385,111 +385,6 @@ SELECT * FROM repositor_ruedas.view_cia_prom;
 SELECT * FROM repositor_ruedas.view_vehiculos;
 ```
 ___
-### TRIGGERS:
-
-1. #### `CHECK_FACTURA_FECHA`
-
-    - Creado sobre tabla 'facturas' para evitar que la fecha de una nueva factura sea anterior a la del siniestro que le corresponde registrado previamente.
-
-    - Ejemplo de uso y mensaje SIGNAL SQLSTATE '45000':
-```sql
-CALL agregar_factura(
-    1259,			-- nro factura
-    '2024-07-10 00:00:00'	-- VALOR ERRÓNEO
-    'FA',			-- tipo FC
-    3,				-- punto de venta
-    69055,			-- FC nro
-    51,				-- rueda item
-    1880000,			-- precio
-    1				-- cantidad
-);
-
-ERROR 1644 (45000): La fecha de la factura no puede ser anterior a la fecha del siniestro.
-```
-2. #### `CANT_X_SINIESTRO`
-
-    - Creado sobre tabla 'siniestros' para evitar errores de tipeo, en éste caso, la cantidad de ruedas máxima de ruedas que pueda poseer cualquier vehículo del segmento trabajado, el cual no incluye transportes o taras más grandes.
-
-    - Ejemplo de uso y mensaje SIGNAL SQLSTATE '45000':
-```sql
-INSERT INTO siniestros
-	(siniestro_nro, siniestro_fecha, siniestro_tipo,
-    cantidad_ruedas, seguro_cia, poliza_nro, licitador,
-    vehiculo)
-VALUES
-	(2554738, NOW(), 'AUPOAL', 6, '30-50004717-4',
-	169601, 2, 11);
-
-ERROR 1644 (45000): La cantidad de ruedas no puede superar las 5 unidades
-```
-3. #### `ASEGURADO_TEL`
-
-    - Creado sobre tabla 'asegurados' con devolución de mensaje de advertencia o warning en caso que no se haya asignado un número de teléfono de contacto.
-
-    - Ejemplo de uso y mensaje SIGNAL SQLSTATE '01000':
-```sql
-INSERT INTO asegurados
-	(asegurado_id, asegurado_nombre, asegurado_apellido)
-VALUES
-	(1260, 'Rosario', 'Pileyra');
-
-Warning Code: 1000
-Recuerde registrar un contacto telefónico
-```
-#### TRIGGERS DML:
-
-Para la siguiente utilidad, creamos una serie de 3 triggers los cuales van a registrar ejecuciones DML sobre la tabla 'siniestros' y se guardarán en la tabla 'LOG'.\
-La cantidad de 3 es porque SQL solamente permite a un trigger ejecutarse sobre una sola acción DML, por lo cual será 1 trigger para cada acción (INSERT, UPDATE, DELETE).\
-Se puede aplicar la misma modalida a todas las tablas, pero requiere 3 triggers adicionales por cada una.\
-Se omiten los ```DELIMITER //``` y ```DELIMITER ;``` ya que no son corridos correctamente en bash, pero al enviar el script directamente al servidor MySQL puede interpretar correctamente la estructura del trigger sin necesidad de cambiar el delimitador.
-
-4. #### `SINIESTROS_INSERT_LOG`
-
-    - Registra las acciones de inserción de datos en tabla siniestros.
-
-    - Ejemplo de uso:
-```sql
-CALL ingreso_siniestro(
-    2331984, 		-- siniestro_nro
-    NULL,	 	-- siniestro_fecha (DEFAULT CURRENT_TIMESTAMP)
-    'AUCH',		-- siniestro_tipo
-    3, 			-- cantidad_ruedas
-    '30-50001770-4',	-- seguro_cia
-    8902726,		-- poliza_nro
-    1, 			-- licitador
-    18,			-- vehiculo
-    NULL		-- observaciones (sin datos)
-    );
-```
-
-5. #### `SINIESTROS_UPDATE_LOG`
-
-    - Registra las acciones de modificación de datos en tabla siniestros.
-
-    - Ejemplo de uso:
-```sql
-UPDATE siniestros
-SET cantidad_ruedas = 2
-WHERE siniestro_id = 1262; -- ver el id asignado por el CALL
-```
-
-6. #### `SINIESTROS_DELETE_LOG`
-
-    - Registra las acciones de eliminación de datos en tabla siniestros.
-
-    - Ejemplo de uso:
-```sql
-DELETE FROM siniestros
-WHERE siniestro_id = 1262; -- ver el id asignado por el CALL
-```
-
-Finalmente, al ejecutar una query de consulta simple sobre la tabla 'LOG', devolverá los 3 DML ejecutados, con sus respectivos atibutos:
-
-```sql
-SELECT * FROM log;					
-```
-
-___
 ### FUNCIONES:
 
 1. #### `GANANCIA_NETA`
@@ -600,13 +495,115 @@ CALL agregar_factura(
     - Ejemplo de uso:
 ```sql
 CALL agregar_vehiculo(
-'Audi',		-- Marca
-'A6',		-- Modelo
-'Particular'	-- Utilidad
+    'Audi',		-- Marca
+    'A6',		-- Modelo
+    'Particular'	-- Utilidad
+    );
+```
+___
+### TRIGGERS:
+
+1. #### `CHECK_FACTURA_FECHA`
+
+    - Creado sobre tabla 'facturas' para evitar que la fecha de una nueva factura sea anterior a la del siniestro que le corresponde registrado previamente.
+
+    - Ejemplo de uso y mensaje SIGNAL SQLSTATE '45000':
+```sql
+CALL agregar_factura(
+    1259,			-- nro factura
+    '2024-07-10 00:00:00'	-- VALOR ERRÓNEO
+    'FA',			-- tipo FC
+    3,				-- punto de venta
+    69055,			-- FC nro
+    51,				-- rueda item
+    1880000,			-- precio
+    1				-- cantidad
 );
+
+ERROR 1644 (45000): La fecha de la factura no puede ser anterior a la fecha del siniestro.
+```
+2. #### `CANT_X_SINIESTRO`
+
+    - Creado sobre tabla 'siniestros' para evitar errores de tipeo, en éste caso, la cantidad de ruedas máxima de ruedas que pueda poseer cualquier vehículo del segmento trabajado, el cual no incluye transportes o taras más grandes.
+
+    - Ejemplo de uso y mensaje SIGNAL SQLSTATE '45000':
+```sql
+INSERT INTO siniestros
+	(siniestro_nro, siniestro_fecha, siniestro_tipo,
+    cantidad_ruedas, seguro_cia, poliza_nro, licitador,
+    vehiculo)
+VALUES
+	(2554738, NOW(), 'AUPOAL', 6, '30-50004717-4',
+	169601, 2, 11);
+
+ERROR 1644 (45000): La cantidad de ruedas no puede superar las 5 unidades
+```
+3. #### `ASEGURADO_TEL`
+
+    - Creado sobre tabla 'asegurados' con devolución de mensaje de advertencia o warning en caso que no se haya asignado un número de teléfono de contacto.
+
+    - Ejemplo de uso y mensaje SIGNAL SQLSTATE '01000':
+```sql
+INSERT INTO asegurados
+	(asegurado_id, asegurado_nombre, asegurado_apellido)
+VALUES
+	(1260, 'Rosario', 'Pileyra');
+
+Warning Code: 1000
+Recuerde registrar un contacto telefónico
+```
+#### TRIGGERS DML:
+
+Para la siguiente utilidad, creamos una serie de 3 triggers los cuales van a registrar ejecuciones DML sobre la tabla 'siniestros' y se guardarán en la tabla 'LOG'.\
+La cantidad de 3 es porque SQL solamente permite a un trigger ejecutarse sobre una sola acción DML, por lo cual será 1 trigger para cada acción (INSERT, UPDATE, DELETE).\
+Se puede aplicar la misma modalida a todas las tablas, pero requiere 3 triggers adicionales por cada una.\
+Se omiten los ```DELIMITER //``` y ```DELIMITER ;``` ya que no son corridos correctamente en bash, pero al enviar el script directamente al servidor MySQL puede interpretar correctamente la estructura del trigger sin necesidad de cambiar el delimitador.
+
+4. #### `SINIESTROS_INSERT_LOG`
+
+    - Registra las acciones de inserción de datos en tabla siniestros.
+
+    - Ejemplo de uso:
+```sql
+CALL ingreso_siniestro(
+    2331984, 		-- siniestro_nro
+    NULL,	 	-- siniestro_fecha (DEFAULT CURRENT_TIMESTAMP)
+    'AUCH',		-- siniestro_tipo
+    3, 			-- cantidad_ruedas
+    '30-50001770-4',	-- seguro_cia
+    8902726,		-- poliza_nro
+    1, 			-- licitador
+    18,			-- vehiculo
+    NULL		-- observaciones (sin datos)
+    );
 ```
 
+5. #### `SINIESTROS_UPDATE_LOG`
 
+    - Registra las acciones de modificación de datos en tabla siniestros.
+
+    - Ejemplo de uso:
+```sql
+UPDATE siniestros
+SET cantidad_ruedas = 2
+WHERE siniestro_id = 1262; -- ver el id asignado por el CALL
+```
+
+6. #### `SINIESTROS_DELETE_LOG`
+
+    - Registra las acciones de eliminación de datos en tabla siniestros.
+
+    - Ejemplo de uso:
+```sql
+DELETE FROM siniestros
+WHERE siniestro_id = 1262; -- ver el id asignado por el CALL
+```
+
+Finalmente, al ejecutar una query de consulta simple sobre la tabla 'LOG', devolverá los 3 DML ejecutados, con sus respectivos atibutos:
+
+```sql
+SELECT * FROM log;					
+```
 ___
 ### ROLES Y USUARIOS:
 
