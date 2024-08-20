@@ -6,7 +6,6 @@
 -- Tutor: Ariel Annone
 -- Repositorio GitHub: https://github.com/leodaviri/repositor_ruedas/
 
-
 -- CREACIÓN DE LA BASE DE DATOS 
 
 DROP DATABASE IF EXISTS repositor_ruedas;
@@ -259,6 +258,21 @@ ALTER TABLE link_facturas_ruedas
 	FOREIGN KEY (id_facturas) REFERENCES facturas(factura_id);
 
 
+-- Creación de tabla log para guardar registros DML y usuarios
+
+CREATE TABLE
+	IF NOT EXISTS log (
+    id_log INT NOT NULL AUTO_INCREMENT,
+    tabla VARCHAR(100) NOT NULL COMMENT 'Nombre de la tabla afectada por el DML',
+    id_pk VARCHAR(100) NOT NULL COMMENT 'PK del registro alterado',
+    usuario VARCHAR(100) NOT NULL COMMENT 'Nombre del usuario que intervino',
+    fecha DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT 'Fecha actual',
+    operacion VARCHAR(10) NOT NULL COMMENT 'Tipo de operación DML'
+    PRIMARY KEY (id_log))
+    COMMENT 'Tabla log que guarda las modificaciones y usuarios responsables'
+    ;
+
+
 -- CORROBORACIÓN OPCIONAL
 -- Se puede chequear cada una de las tablas creadas con el comando EXPLAIN o DESCRIBE
 
@@ -279,6 +293,7 @@ DESCRIBE siniestros;
 DESCRIBE tipos_siniestros;
 DESCRIBE utilidades;
 DESCRIBE vehiculos;
+DESCRIBE log;
 	
 
 -- IMPORTACIÓNDE DATOS
@@ -627,7 +642,7 @@ CALL agregar_factura(
     51,						-- rueda item
     1880000,				-- precio
     1						-- cantidad
-);
+	);
 
 -- ERROR 1644 (45000): La fecha de la factura no puede ser anterior a la fecha del siniestro.
 
@@ -692,8 +707,73 @@ VALUES
 
 -- Warning Code: 1000
 -- Recuerde registrar un contacto telefónico
-    
+
+
+-- Trigger para registrar acciones DML en tabla 'log' y usuarios responsables
+-- Se crean en total 3 triggers para abarcar todas las acciones
+
+DROP TRIGGER IF EXISTS repositor_ruedas.siniestros_insert_log;
+DROP TRIGGER IF EXISTS repositor_ruedas.siniestros_update_log;
+DROP TRIGGER IF EXISTS repositor_ruedas.siniestros_delete_log;
+
+DELIMITER //
+-- Trigger para INSERT
+CREATE TRIGGER repositor_ruedas.siniestros_insert_log
+AFTER INSERT ON siniestros
+FOR EACH ROW
+BEGIN
+    INSERT INTO log (tabla, id_pk, usuario, operacion)
+    VALUES ('siniestros', NEW.siniestro_id, USER(), 'INSERT');
+END//
+-- Trigger para UPDATE
+CREATE TRIGGER repositor_ruedas.siniestros_update_log
+AFTER UPDATE ON siniestros
+FOR EACH ROW
+BEGIN
+    INSERT INTO log (tabla, id_pk, usuario, operacion)
+    VALUES ('siniestros', NEW.siniestro_id, USER(), 'UPDATE');
+END//
+-- Trigger para DELETE
+CREATE TRIGGER repositor_ruedas.siniestros_delete_log
+AFTER DELETE ON siniestros
+FOR EACH ROW
+BEGIN
+    INSERT INTO log (tabla, id_pk, usuario, operacion)
+    VALUES ('siniestros', OLD.siniestro_id, USER(), 'DELETE');
+END//
+DELIMITER ;
+
+-- Ejemplo de uso
+-- Primero insertamos un dato
+
+CALL ingreso_siniestro(
+    2331984, 		-- siniestro_nro
+    NULL, 			-- siniestro_fecha (CURRENT_TIMESTAMP)
+    'AUCH',			-- siniestro_tipo
+    3, 				-- cantidad_ruedas
+    '30-50001770-4',-- seguro_cia
+    8902726,		-- poliza_nro
+    1, 				-- licitador
+    18,				-- vehiculo
+    NULL			-- observaciones
+    );
+
+-- Ahora modificamos
    
+UPDATE siniestros
+SET cantidad_ruedas = 2
+WHERE siniestro_id = 1262;
+
+-- Por último, eliminamos el registro
+
+DELETE FROM siniestros
+WHERE siniestro_id = 1262;
+
+-- Corroboramos la tabla log
+
+SELECT * FROM log;
+
+
 -- CREACIÓN DE FUNCIONES
 
 -- Función que calcula la ganancia neta, restando -21% (iva) y -3% (IIBB)
@@ -872,14 +952,21 @@ BEGIN
         SET MESSAGE_TEXT = 'Debe indicar un vehículo';
     END IF;
 
+	-- Si la fecha no se proporciona, usamos la fecha actual
+	IF p_siniestro_fecha IS NULL THEN
+		SET p_siniestro_fecha = CURRENT_TIMESTAMP();
+	END IF;
+
     -- Determinamos campos para insertar nuevo registro
     INSERT INTO siniestros (
         siniestro_nro, siniestro_fecha, siniestro_tipo, cantidad_ruedas,
         seguro_cia, poliza_nro, licitador, vehiculo, observaciones)
         VALUES (
         p_siniestro_nro, p_siniestro_fecha, p_siniestro_tipo, p_cantidad_ruedas,
-        p_seguro_cia, p_poliza_nro, p_licitador, p_vehiculo, p_observaciones
-       );
+        p_seguro_cia, p_poliza_nro, p_licitador, p_vehiculo,
+	-- Observaciones puede quedar en nulo
+        IFNULL(p_observaciones, '')
+       	);
      
     -- Mostramos el último registro insertado
     SELECT * FROM siniestros
@@ -1105,24 +1192,23 @@ SELECT * FROM vista_vehiculos;
 
 -- CREACIÓN DE ROLES Y ASIGNACIÓN DE USUARIOS
 
--- Crearemos 3 áreas
+-- Crearemos 4 roles que representan las áreas encargadas
 
 DROP ROLE IF EXISTS 'SISTEMA', 'ADMIN', 'DEPOSITO', 'CONTACTO';
-
 CREATE ROLE 'SISTEMA', 'ADMIN', 'DEPOSITO', 'CONTACTO';
 
--- Otorgaremos permisos por área:
+-- Otorgaremos permisos
 
--- SISTEMA
+-- ROL SISTEMA
 -- Todos los permisos
-GRANT ALL ON repositor_ruedas.* TO 'SISTEMA';
+GRANT ALL PRIVILEGES ON repositor_ruedas.* TO 'SISTEMA';
 
--- ADMIN
+-- ROL ADMIN
 -- DML sobre 4 tablas
-GRANT SELECT, INSERT, UPDATE, DELETE ON repositor_ruedas.siniestros TO 'ADMIN';
-GRANT SELECT, INSERT, UPDATE, DELETE ON repositor_ruedas.tipos_siniestros TO 'ADMIN';
-GRANT SELECT, INSERT, UPDATE, DELETE ON repositor_ruedas.facturas TO 'ADMIN';
-GRANT SELECT, INSERT, UPDATE, DELETE ON repositor_ruedas.facturas_tipos TO 'ADMIN';
+GRANT SELECT, INSERT, UPDATE ON repositor_ruedas.siniestros TO 'ADMIN';
+GRANT SELECT, INSERT, UPDATE ON repositor_ruedas.tipos_siniestros TO 'ADMIN';
+GRANT SELECT, INSERT, UPDATE ON repositor_ruedas.facturas TO 'ADMIN';
+GRANT SELECT, INSERT, UPDATE ON repositor_ruedas.facturas_tipos TO 'ADMIN';
 
 -- Ejecución en 2 funciones y 2 procedimientos
 GRANT EXECUTE ON FUNCTION repositor_ruedas.ganancia_neta TO 'ADMIN';
@@ -1134,7 +1220,7 @@ GRANT EXECUTE ON PROCEDURE repositor_ruedas.agregar_factura TO 'ADMIN';
 GRANT SELECT ON repositor_ruedas.view_taxes TO 'ADMIN';
 GRANT SELECT ON repositor_ruedas.view_cia_prom TO 'ADMIN';
 	
--- DEPOSITO
+-- ROL DEPOSITO
 -- DML sobre 6 tablas
 GRANT SELECT, INSERT, UPDATE, DELETE ON ruedas TO 'DEPOSITO';
 GRANT SELECT, INSERT, UPDATE, DELETE ON marcas_cub TO 'DEPOSITO';
@@ -1152,7 +1238,7 @@ GRANT SELECT ON repositor_ruedas.view_ruedas TO 'DEPOSITO';
 GRANT SELECT ON repositor_ruedas.view_siniestros_vehiculos TO 'DEPOSITO';
 GRANT SELECT ON repositor_ruedas.view_vehiculos TO 'DEPOSITO';
 	
--- CONTACTO 
+-- ROL CONTACTO 
 -- Visualización sobre 4 tablas
 GRANT SELECT ON seguros TO 'CONTACTO';
 GRANT SELECT ON licitadores TO 'CONTACTO';
@@ -1163,33 +1249,75 @@ GRANT SELECT ON polizas TO 'CONTACTO';
 GRANT SELECT ON repositor_ruedas.view_reincidencias TO 'CONTACTO';
 
 
--- Crearemos usuarios
-
-DROP USER IF EXISTS
-	'LeoDI'@'%', 'JesiB'@'%',
-	'AndreC'@'%', 'FedeZ'@'%', 'HugoQ'@'%',
-	'CrisA'@'%', 'ReneB'@'%', 'SantiG'@'%', 'MatiK'@'%',
-	'RubenM'@'%', 'LucasN'@'%';
-	
+-- Crearemos los usuarios
 	
 -- SISTEMA
-CREATE USER 'LeoDI'@'%' IDENTIFIED BY 'sys123';
-CREATE USER 'JesiB'@'%' IDENTIFIED BY 'sys456';
+DROP USER IF EXISTS
+	'LeoDI'@'%',
+	'JesiB'@'%';
+
+CREATE USER 'LeoDI'@'%' IDENTIFIED BY 'sys123'
+	FAILED_LOGIN_ATTEMPTS 3
+	PASSWORD_LOCK_TIME 2
+	PASSWORD EXPIRE INTERVAL 180 DAY;
+CREATE USER 'JesiB'@'%' IDENTIFIED BY 'sys456'
+	FAILED_LOGIN_ATTEMPTS 3
+	PASSWORD_LOCK_TIME 2
+	PASSWORD EXPIRE INTERVAL 180 DAY;
 
 -- ADMIN
-CREATE USER 'AndreC'@'%' IDENTIFIED BY 'adm01';
-CREATE USER 'FedeZ'@'%' IDENTIFIED BY 'adm02';
-CREATE USER 'HugoQ'@'%' IDENTIFIED BY 'adm03';
+DROP USER IF EXISTS
+	'AndreC'@'localhost',
+	'FedeZ'@'localhost',
+	'HugoQ'@'localhost';
+
+CREATE USER 'AndreC'@'localhost' IDENTIFIED BY 'adm01'
+	FAILED_LOGIN_ATTEMPTS 3
+	PASSWORD_LOCK_TIME 5
+	PASSWORD EXPIRE INTERVAL 90 DAY;
+CREATE USER 'FedeZ'@'localhost' IDENTIFIED BY 'adm02'
+	FAILED_LOGIN_ATTEMPTS 3
+	PASSWORD_LOCK_TIME 5
+	PASSWORD EXPIRE INTERVAL 90 DAY;
+CREATE USER 'HugoQ'@'localhost' IDENTIFIED BY 'adm03'
+	FAILED_LOGIN_ATTEMPTS 3
+	PASSWORD_LOCK_TIME 2
+	PASSWORD EXPIRE INTERVAL 90 DAY;
 
 -- DEPOSITO
-CREATE USER 'CrisA'@'%' IDENTIFIED BY 'dep01';
-CREATE USER 'ReneB'@'%' IDENTIFIED BY 'dep02';
-CREATE USER 'SantiG'@'%' IDENTIFIED BY 'dep03';
-CREATE USER 'MatiK'@'%' IDENTIFIED BY 'dep04';
+DROP USER IF EXISTS
+	'CrisA'@'localhost', 'ReneB'@'localhost',
+	'SantiG'@'localhost', 'MatiK'@'localhost';
+	
+CREATE USER 'CrisA'@'localhost' IDENTIFIED BY 'dep01'
+	FAILED_LOGIN_ATTEMPTS 3
+	PASSWORD_LOCK_TIME 5
+	PASSWORD EXPIRE INTERVAL 90 DAY;
+CREATE USER 'ReneB'@'localhost' IDENTIFIED BY 'dep02'
+	FAILED_LOGIN_ATTEMPTS 3
+	PASSWORD_LOCK_TIME 5
+	PASSWORD EXPIRE INTERVAL 90 DAY;
+CREATE USER 'SantiG'@'localhost' IDENTIFIED BY 'dep03'
+	FAILED_LOGIN_ATTEMPTS 3
+	PASSWORD_LOCK_TIME 5
+	PASSWORD EXPIRE INTERVAL 90 DAY;
+CREATE USER 'MatiK'@'localhost' IDENTIFIED BY 'dep04'
+	FAILED_LOGIN_ATTEMPTS 3
+	PASSWORD_LOCK_TIME 5
+	PASSWORD EXPIRE INTERVAL 90 DAY;
 
 -- CONTACTO
-CREATE USER 'RubenM'@'%' IDENTIFIED BY 'con01';
-CREATE USER 'LucasN'@'%' IDENTIFIED BY 'con02';
+DROP USER IF EXISTS
+	'RubenM'@'localhost', 'LucasN'@'localhost';
+
+CREATE USER 'RubenM'@'localhost' IDENTIFIED BY 'con01'
+	FAILED_LOGIN_ATTEMPTS 3
+	PASSWORD_LOCK_TIME 5
+	PASSWORD EXPIRE INTERVAL 90 DAY;
+CREATE USER 'LucasN'@'localhost' IDENTIFIED BY 'con02'
+	FAILED_LOGIN_ATTEMPTS 3
+	PASSWORD_LOCK_TIME 5
+	PASSWORD EXPIRE INTERVAL 90 DAY;
 
 
 -- Otorgamos roles
@@ -1198,22 +1326,37 @@ GRANT 'SISTEMA' TO
 	'LeoDI'@'%', 'JesiB'@'%';
 	
 GRANT 'ADMIN' TO
-	'AndreC'@'%', 'FedeZ'@'%', 'HugoQ'@'%';
+	'AndreC'@'localhost', 'FedeZ'@'localhost',
+	'HugoQ'@'localhost';
 	
 GRANT 'DEPOSITO' TO
-	'CrisA'@'%', 'ReneB'@'%', 'SantiG'@'%', 'MatiK'@'%';
+	'CrisA'@'localhost', 'ReneB'@'localhost',
+	'SantiG'@'localhost', 'MatiK'@'localhost';
 	
 GRANT 'CONTACTO' TO
-	'RubenM'@'%', 'LucasN'@'%';
+	'RubenM'@'localhost', 'LucasN'@'localhost';
 	
 
 -- Activación de roles por defecto
 
-SET DEFAULT ROLE 'SISTEMA' TO 'LeoDI'@'%', 'JesiB'@'%';
-SET DEFAULT ROLE 'ADMIN' TO 'AndreC'@'%', 'FedeZ'@'%', 'HugoQ'@'%';
-SET DEFAULT ROLE 'DEPOSITO' TO 'CrisA'@'%', 'ReneB'@'%', 'SantiG'@'%', 'MatiK'@'%';
-SET DEFAULT ROLE 'CONTACTO' TO 'RubenM'@'%', 'LucasN'@'%';
-
+SET DEFAULT ROLE 'SISTEMA'
+	TO 'LeoDI'@'%',
+		'JesiB'@'%';
+	
+SET DEFAULT ROLE 'ADMIN'
+	TO 'AndreC'@'localhost',
+		'FedeZ'@'localhost',
+		'HugoQ'@'localhost';
+	
+SET DEFAULT ROLE 'DEPOSITO'
+	TO 'CrisA'@'localhost',
+		'ReneB'@'localhost',
+		'SantiG'@'localhost',
+		'MatiK'@'localhost';
+	
+SET DEFAULT ROLE 'CONTACTO'
+	TO 'RubenM'@'localhost',
+		'LucasN'@'localhost';
 
 -- Actualizamos los privilegios
 
@@ -1333,3 +1476,22 @@ ORDER BY
     EVENT_OBJECT_TABLE, 
     ACTION_TIMING, 
     EVENT_MANIPULATION;
+    
+   
+-- Verificación de roles y usuarios
+
+SELECT
+    FROM_USER AS Roles,
+    TO_USER AS Usuarios,
+    CASE 
+        WHEN FROM_USER = 'SISTEMA' THEN 'Desde cualquier host'
+        ELSE 'Dispositivo local'
+    END AS Conexion,
+    CASE 
+        WHEN FROM_USER = 'SISTEMA' THEN 'Acceso total al sistema'
+        WHEN FROM_USER = 'ADMIN' THEN 'Permisos de administrador'
+        WHEN FROM_USER = 'DEPOSITO' THEN 'Control de depósito'
+        ELSE 'Consultas a info de contacto'
+    END AS Comentario
+FROM mysql.role_edges
+ORDER BY Roles ASC;
