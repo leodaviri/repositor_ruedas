@@ -1,19 +1,18 @@
 USE repositor_ruedas;
 
 
--- Crearemos 3 áreas
+-- Crearemos 4 roles que representan las áreas encargadas
 
 DROP ROLE IF EXISTS 'SISTEMA', 'ADMIN', 'DEPOSITO', 'CONTACTO';
-
 CREATE ROLE 'SISTEMA', 'ADMIN', 'DEPOSITO', 'CONTACTO';
 
--- Otorgaremos permisos por área:
+-- Otorgaremos permisos
 
--- SISTEMA
+-- ROL SISTEMA
 -- Todos los permisos
 GRANT ALL PRIVILEGES ON repositor_ruedas.* TO 'SISTEMA';
 
--- ADMIN
+-- ROL ADMIN
 -- DML sobre 4 tablas
 GRANT SELECT, INSERT, UPDATE ON repositor_ruedas.siniestros TO 'ADMIN';
 GRANT SELECT, INSERT, UPDATE ON repositor_ruedas.tipos_siniestros TO 'ADMIN';
@@ -30,7 +29,7 @@ GRANT EXECUTE ON PROCEDURE repositor_ruedas.agregar_factura TO 'ADMIN';
 GRANT SELECT ON repositor_ruedas.view_taxes TO 'ADMIN';
 GRANT SELECT ON repositor_ruedas.view_cia_prom TO 'ADMIN';
 	
--- DEPOSITO
+-- ROL DEPOSITO
 -- DML sobre 6 tablas
 GRANT SELECT, INSERT, UPDATE, DELETE ON ruedas TO 'DEPOSITO';
 GRANT SELECT, INSERT, UPDATE, DELETE ON marcas_cub TO 'DEPOSITO';
@@ -48,7 +47,7 @@ GRANT SELECT ON repositor_ruedas.view_ruedas TO 'DEPOSITO';
 GRANT SELECT ON repositor_ruedas.view_siniestros_vehiculos TO 'DEPOSITO';
 GRANT SELECT ON repositor_ruedas.view_vehiculos TO 'DEPOSITO';
 	
--- CONTACTO 
+-- ROL CONTACTO 
 -- Visualización sobre 4 tablas
 GRANT SELECT ON seguros TO 'CONTACTO';
 GRANT SELECT ON licitadores TO 'CONTACTO';
@@ -59,16 +58,13 @@ GRANT SELECT ON polizas TO 'CONTACTO';
 GRANT SELECT ON repositor_ruedas.view_reincidencias TO 'CONTACTO';
 
 
--- Crearemos usuarios
-
-DROP USER IF EXISTS
-	'LeoDI'@'localhost', 'JesiB'@'localhost',
-	'AndreC'@'localhost', 'FedeZ'@'localhost', 'HugoQ'@'localhost',
-	'CrisA'@'localhost', 'ReneB'@'localhost', 'SantiG'@'localhost', 'MatiK'@'localhost',
-	'RubenM'@'localhost', 'LucasN'@'localhost';
-	
+-- Crearemos los usuarios
 	
 -- SISTEMA
+DROP USER IF EXISTS
+	'LeoDI'@'localhost',
+	'JesiB'@'localhost';
+
 CREATE USER 'LeoDI'@'localhost' IDENTIFIED BY 'sys123'
 	FAILED_LOGIN_ATTEMPTS 3 PASSWORD_LOCK_TIME 3
 	PASSWORD EXPIRE INTERVAL 180 DAY;
@@ -77,6 +73,11 @@ CREATE USER 'JesiB'@'localhost' IDENTIFIED BY 'sys456'
 	PASSWORD EXPIRE INTERVAL 180 DAY;
 
 -- ADMIN
+DROP USER IF EXISTS
+	'AndreC'@'localhost',
+	'FedeZ'@'localhost',
+	'HugoQ'@'localhost';
+
 CREATE USER 'AndreC'@'localhost' IDENTIFIED BY 'adm01'
 	FAILED_LOGIN_ATTEMPTS 3 PASSWORD_LOCK_TIME 3
 	PASSWORD EXPIRE INTERVAL 90 DAY;
@@ -88,6 +89,10 @@ CREATE USER 'HugoQ'@'localhost' IDENTIFIED BY 'adm03'
 	PASSWORD EXPIRE INTERVAL 90 DAY;
 
 -- DEPOSITO
+DROP USER IF EXISTS
+	'CrisA'@'localhost', 'ReneB'@'localhost',
+	'SantiG'@'localhost', 'MatiK'@'localhost';
+	
 CREATE USER 'CrisA'@'localhost' IDENTIFIED BY 'dep01'
 	FAILED_LOGIN_ATTEMPTS 3 PASSWORD_LOCK_TIME 3
 	PASSWORD EXPIRE INTERVAL 90 DAY;
@@ -102,6 +107,9 @@ CREATE USER 'MatiK'@'localhost' IDENTIFIED BY 'dep04'
 	PASSWORD EXPIRE INTERVAL 90 DAY;
 
 -- CONTACTO
+DROP USER IF EXISTS
+	'RubenM'@'localhost', 'LucasN'@'localhost';
+
 CREATE USER 'RubenM'@'localhost' IDENTIFIED BY 'con01'
 	FAILED_LOGIN_ATTEMPTS 3 PASSWORD_LOCK_TIME 3
 	PASSWORD EXPIRE INTERVAL 90 DAY;
@@ -116,10 +124,12 @@ GRANT 'SISTEMA' TO
 	'LeoDI'@'localhost', 'JesiB'@'localhost';
 	
 GRANT 'ADMIN' TO
-	'AndreC'@'localhost', 'FedeZ'@'localhost', 'HugoQ'@'localhost';
+	'AndreC'@'localhost', 'FedeZ'@'localhost',
+	'HugoQ'@'localhost';
 	
 GRANT 'DEPOSITO' TO
-	'CrisA'@'localhost', 'ReneB'@'localhost', 'SantiG'@'localhost', 'MatiK'@'localhost';
+	'CrisA'@'localhost', 'ReneB'@'localhost',
+	'SantiG'@'localhost', 'MatiK'@'localhost';
 	
 GRANT 'CONTACTO' TO
 	'RubenM'@'localhost', 'LucasN'@'localhost';
@@ -127,11 +137,24 @@ GRANT 'CONTACTO' TO
 
 -- Activación de roles por defecto
 
-SET DEFAULT ROLE 'SISTEMA' TO 'LeoDI'@'localhost', 'JesiB'@'localhost';
-SET DEFAULT ROLE 'ADMIN' TO 'AndreC'@'localhost', 'FedeZ'@'localhost', 'HugoQ'@'localhost';
-SET DEFAULT ROLE 'DEPOSITO' TO 'CrisA'@'localhost', 'ReneB'@'localhost', 'SantiG'@'localhost', 'MatiK'@'localhost';
-SET DEFAULT ROLE 'CONTACTO' TO 'RubenM'@'localhost', 'LucasN'@'localhost';
-
+SET DEFAULT ROLE 'SISTEMA'
+	TO 'LeoDI'@'localhost',
+		'JesiB'@'localhost';
+	
+SET DEFAULT ROLE 'ADMIN'
+	TO 'AndreC'@'localhost',
+		'FedeZ'@'localhost',
+		'HugoQ'@'localhost';
+	
+SET DEFAULT ROLE 'DEPOSITO'
+	TO 'CrisA'@'localhost',
+		'ReneB'@'localhost',
+		'SantiG'@'localhost',
+		'MatiK'@'localhost';
+	
+SET DEFAULT ROLE 'CONTACTO'
+	TO 'RubenM'@'localhost',
+		'LucasN'@'localhost';
 
 -- Actualizamos los privilegios
 
