@@ -249,3 +249,19 @@ ALTER TABLE link_facturas_ruedas
 ALTER TABLE link_facturas_ruedas
 	ADD CONSTRAINT fk_ruedas_facturas
 	FOREIGN KEY (id_facturas) REFERENCES facturas(factura_id);
+
+
+-- Creación de tabla log para guardar registros DML y usuarios
+-- No requiere constraints
+
+CREATE TABLE
+	IF NOT EXISTS log (
+    id_log INT NOT NULL AUTO_INCREMENT,
+    tabla VARCHAR(100) NOT NULL COMMENT 'Nombre de la tabla afectada por el DML',
+    id_pk VARCHAR(100) NOT NULL COMMENT 'PK del registro alterado',
+    usuario VARCHAR(100) NOT NULL COMMENT 'Nombre del usuario que intervino',
+    fecha DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT 'Fecha actual',
+    operacion VARCHAR(10) NOT NULL COMMENT 'Tipo de operación DML'
+    PRIMARY KEY (id_log))
+    COMMENT 'Tabla log que guarda las modificaciones y usuarios responsables'
+	);
