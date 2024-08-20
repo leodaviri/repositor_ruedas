@@ -81,6 +81,8 @@ VALUES
 -- Procedimiento TRANSACCIONAL (TCL) para ingresar una nueva factura
 -- Dicho registro además actualizará campos en 'siniestros' y 'link_facturas_ruedas'
 
+DROP PROCEDURE IF EXISTS repositor_ruedas.agregar_factura;
+
 DELIMITER //
 CREATE PROCEDURE repositor_ruedas.agregar_factura(
     IN p_siniestro_id INT,
