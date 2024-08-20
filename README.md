@@ -714,7 +714,7 @@ ___
 Al haber trabajado con motor MySQL e interfaz DBeaver, se realizan exportaciones desde ambos programas.\
 En MySQL se ejecuta la modalidad 'Export to Self-contained File', que devuelve 1 sólo script completo.\
 En DBeaver se utiliza la opción 'Lock All Tables' para obtener el mismo resultado.\
-Ambos archivos backup se pueden corroborar en la carpeta [backup_dum](sql_project/backup_dump) en éste repositorio.\
+Ambos archivos backup se pueden corroborar en la carpeta [backup_dump](sql_project/backup_dump) en éste repositorio.
 
 También se puede ejecutar el siguiente paso a paso en terminal:
 
