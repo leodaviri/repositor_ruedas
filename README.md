@@ -4,6 +4,7 @@
 
 # ESTRUCTURA DE BASE DE DATOS PARA GRUPO CONCESIONARIO
 
+
 **Alumno:** *[Iriarte Leonardo David](https://www.linkedin.com/in/leodaviri/)*
 
 **Comisión:** #57190
@@ -35,10 +36,10 @@ ___
   - [3.3 Triggers](#triggers)
   - [3.4 Funciones](#funciones)
   - [3.5 Procedimientos](#procedimientos)
-- [4 Roles y Usuarios](#roles-y-usuarios)
-- [5 Backup | Dump](#backup--dump)
-- [6 Cómo correr el Código](#cómo-correr-mi-código)
-- [7 Versiones Previas](#versiones-previas)
+- [4. Roles y Usuarios](#roles-y-usuarios)
+- [5. Backup | Dump](#backup--dump)
+- [6. Cómo correr el Código](#cómo-correr-el-código)
+- [7. Versiones Previas](#versiones-previas)
 
 ___
 
