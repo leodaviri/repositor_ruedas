@@ -43,14 +43,21 @@ BEGIN
         SET MESSAGE_TEXT = 'Debe indicar un vehículo';
     END IF;
 
+    -- Si la fecha no se proporciona, usamos la fecha actual
+    IF p_siniestro_fecha IS NULL THEN
+	SET p_siniestro_fecha = CURRENT_TIMESTAMP();
+    END IF;
+
     -- Determinamos campos para insertar nuevo registro
     INSERT INTO siniestros (
         siniestro_nro, siniestro_fecha, siniestro_tipo, cantidad_ruedas,
         seguro_cia, poliza_nro, licitador, vehiculo, observaciones)
         VALUES (
         p_siniestro_nro, p_siniestro_fecha, p_siniestro_tipo, p_cantidad_ruedas,
-        p_seguro_cia, p_poliza_nro, p_licitador, p_vehiculo, p_observaciones
-       );
+        p_seguro_cia, p_poliza_nro, p_licitador, p_vehiculo,
+    -- Observaciones puede quedar en nulo
+        IFNULL(p_observaciones, '')
+       	);
      
     -- Mostramos el último registro insertado
     SELECT * FROM siniestros
