@@ -466,17 +466,19 @@ ___
     - Al ingresar un siniestro, se crea un *savepoint* al cual se redirigirá un *rollback* en caso de que no se completen las validaciones posteriores.
     - Dichas validaciones, corrobora que los datos ingresados en campos FK sean existentes en sus respectivas tablas relacionadas.
     - Se determinan los campos a completar y finaliza con una query simple que muestra el último registro.
-    - La idea es simplificar el proceso y posibilitar un nulo dentro del campo de nro de factura, ya que es FK pero no siempre se factura al mismo momento.
-    - Al completar los campos 'siniestro_fecha' y 'observaciones' con valor NULL, fecha devolverá CURRENT_TIMESTAMP() y observaciones quedará vacío. 
+    - La idea es simplificar el proceso y posibilitar un nulo dentro del campo de nro de factura, ya que es FK pero no siempre se factura al mismo momento o en la misma fecha.
+    - Agiliza el ingreso de registros, ya que 3 de los 11 atributos son valores por defecto:
+    	- *siniestro_id* = AUTO_INCREMENT 
+    	- *Siniestro_fecha* = CURRENT_TIMESTAMP()
+     	- *factura_nro* = 'Pendiente'
     
     - Ejemplo de uso:
 ```sql
 CALL ingreso_siniestro(
     2003506792, 		-- siniestro_nro
-    NULL,		 	-- siniestro_fecha (default CURRENT)
     'POCH',			-- siniestro_tipo
     4, 				-- cantidad_ruedas
-    '30-50004946-0', 		-- seguro_cia
+    '30-50004946-0',		-- seguro_cia
     167559,			-- poliza_nro
     2, 				-- licitador
     33,				-- vehiculo
@@ -489,7 +491,11 @@ CALL ingreso_siniestro(
     - Optimiza el ingreso de una nueva factura, ya que no sólo permite la inserción en la tabla 'facturas', sino que además considera el nro de siniestro al que corresponde, previamente cargado en su respectiva tabla y actualiza el campo de la tabla 'siniestros', es decir, pasa de estar en FC 'Pendiente' a llevar el nro de FC que estamos asignando.
     - Inicialmente valida que el siniestro exista y que tenga estado de 'Pendiente' en FC, caso contrario devuelve un mensaje SQLSTATE '45000' como 'Siniestro inexistente'.
     - En caso de que exista, se crea un *savepoint* al cual se redirigirá un *rollback* en caso de que no se completen los campos pertinentes de la tabla 'facturas'.
-    - Agiliza el proceso ya que el valor en ID (PK) se concatena de forma automática, así como también se automatiza el valor del campo que determina el precio final de la factura.
+    - Agiliza el proceso ya que se automatizan varios atributos:
+    	- El valor en factura_id (PK) es una concatenación entre factura_tipo, factura_pdv y factura_nro.
+     	- El valor en factura_precio es un cálculo simple que multiplica rueda_precio * rueda_cantidad.
+      	- El valor en factura_fecha es por defecto CURRENT_TIMESTAMP().
+      	- El valor en rueda_cantidad lo asigna según el valor correspondiente en cantidad_ruedas de la tabla siniestros.
     - Lo más importante es que además de actualizar el nro de FC en la tabla 'siniestros', actualiza los registros completos en la tabla link que existe entre ambas.
     - Por último, también devuelve una query simple que muestra la carga exitosa del registro.
     
@@ -498,12 +504,10 @@ CALL ingreso_siniestro(
 CALL agregar_factura(
     1253,      -- siniestro_id
     'FA',      -- factura_tipo
-    NULL,      -- factura_fecha (default CURRENT)
     3,         -- factura_pdv
     69050,     -- factura_nro
     60,        -- rueda_item
     220000,    -- rueda_precio
-    4          -- rueda_cantidad
     );
 ```
 
@@ -542,38 +546,27 @@ CALL agregar_vehiculo(
 ___
 ### TRIGGERS:
 
-1. #### `CHECK_FACTURA_FECHA`
+1. #### `VALIDACION_WEB`
 
-    - Creado sobre tabla 'facturas' para evitar que la fecha de una nueva factura sea anterior a la del siniestro que le corresponde registrado previamente.
+    - Creado sobre tabla 'seguros' para asegurar conexión segura a los portales webs donde se gestionan los siniestros y facturas de cada compañía.
 
     - Ejemplo de uso y mensaje SIGNAL SQLSTATE '45000':
 ```sql
--- ingresamos un nuevo siniestro
-CALL ingreso_siniestro(
-    2331984,     	-- siniestro_nro
-    NULL,               -- siniestro_fecha (default CURRENT)
-    'POAL',             -- siniestro_tipo
-    1,                  -- cantidad_ruedas
-    '30-50001770-4',    -- seguro_cia
-    8902726,            -- poliza_nro
-    1,                  -- licitador
-    18,                 -- vehiculo
-    NULL                -- observaciones
-    );
+INSERT INTO seguros
+(seguro_id, seguro_nombre, seguro_alias, seguro_ciudad,
+seguro_provincia, seguro_web, seguro_telefono, seguro_mail)
+VALUES
+('33-12345678-1',
+'Answer Cia de Seguros S.A.',
+'ANSWER',
+4,
+1,
+'www.answer.com',		-- VALOR ERRÓNEO
+1154817808,
+'siniestros@answer.com'
+);
 
--- ingresamos una nueva factura
-CALL agregar_factura(
-    1254,			-- nro factura
-    'FA',			-- tipo FC
-    '2024-07-10 00:00:00',	-- VALOR ERRÓNEO
-    3,				-- punto de venta
-    69055,			-- FC nro
-    51,				-- rueda item
-    1880000,			-- precio
-    1				-- cantidad
-    );
-
-ERROR 1644 (45000): La fecha de la factura no puede ser anterior a la fecha del siniestro.
+ERROR CODE 1644 (45000): Corroborar falta de 'https://', web podría no ser segura
 ```
 2. #### `CANT_X_SINIESTRO`
 
@@ -593,7 +586,7 @@ CALL ingreso_siniestro(
     NULL			-- observaciones
     );
 
-ERROR 1644 (45000): La cantidad de ruedas no puede superar las 5 unidades
+ERROR CODE (45000): La cantidad de ruedas no puede superar las 5 unidades
 ```
 3. #### `ASEGURADO_TEL`
 
@@ -606,8 +599,7 @@ INSERT INTO asegurados
 VALUES
 	(1260, 'Rosario', 'Pileyra');
 
-Warning Code: 1000
-Recuerde registrar un contacto telefónico
+WARNING CODE (1000): Recuerde registrar un contacto telefónico
 ```
 #### TRIGGERS DML:
 
