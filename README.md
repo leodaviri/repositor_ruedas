@@ -447,7 +447,10 @@ ___
 
 1. #### `INGRESO_SINIESTRO`
 
+    - Éste procedimiento es TRANSACCIONAL (TCL).
     - Posibilita el ingreso de nuevos registros en la tabla 'siniestros', determinando validaciones con mensajes SQLSTATE '45000' para 5 de los 11 atributos.
+    - Al ingresar un siniestro, se crea un *savepoint* al cual se redirigirá un *rollback* en caso de que no se completen las validaciones posteriores.
+    - Dichas validaciones, corrobora que los datos ingresados en campos FK sean existentes en sus respectivas tablas relacionadas.
     - Se determinan los campos a completar y finaliza con una query simple que muestra el último registro.
     - La idea es simplificar el proceso y posibilitar un nulo dentro del campo de nro de factura, ya que es FK pero no siempre se factura al mismo momento.
     - Al completar los campos 'siniestro_fecha' y 'observaciones' con valor NULL, fecha devolverá CURRENT_TIMESTAMP() y observaciones quedará vacío. 
