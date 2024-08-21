@@ -294,4 +294,5 @@ CREATE TABLE
     fecha DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT 'Fecha actual',
     operacion VARCHAR(10) NOT NULL COMMENT 'Tipo de operación DML'
     PRIMARY KEY (id_log))
-    COMMENT 'Tabla log que guarda las modificaciones y usuarios responsables';
+    COMMENT 'Tabla log que guarda las modificaciones y usuarios responsables'
+    ;
