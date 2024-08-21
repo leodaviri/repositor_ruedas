@@ -552,13 +552,17 @@ ERROR 1644 (45000): La fecha de la factura no puede ser anterior a la fecha del 
 
     - Ejemplo de uso y mensaje SIGNAL SQLSTATE '45000':
 ```sql
-INSERT INTO siniestros
-	(siniestro_nro, siniestro_fecha, siniestro_tipo,
-    cantidad_ruedas, seguro_cia, poliza_nro, licitador,
-    vehiculo)
-VALUES
-	(2554738, NOW(), 'AUPOAL', 6, '30-50004717-4',
-	169601, 2, 11);
+CALL ingreso_siniestro(
+    2554738,		-- siniestro_nro
+    NULL,		 	-- siniestro_fecha (default CURRENT)
+    'AUPOAL',			-- siniestro_tipo
+    6, 				-- VALOR ERRÓNEO
+    '30-50004717-4', 		-- seguro_cia
+    169601,			-- poliza_nro
+    2, 				-- licitador
+    11,				-- vehiculo
+    NULL			-- observaciones
+    );
 
 ERROR 1644 (45000): La cantidad de ruedas no puede superar las 5 unidades
 ```
