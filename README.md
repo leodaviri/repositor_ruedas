@@ -459,7 +459,7 @@ ___
 ```sql
 CALL ingreso_siniestro(
     2003506792, 		-- siniestro_nro
-    NULL,		 	-- siniestro_fecha (por defecto, fecha actual)
+    NULL,		 	-- siniestro_fecha (default CURRENT)
     'POCH',			-- siniestro_tipo
     4, 				-- cantidad_ruedas
     '30-50004946-0', 		-- seguro_cia
