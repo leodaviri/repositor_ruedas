@@ -767,6 +767,17 @@ Visualización de roles y usuarios ya creados en DBeaver:
 
 <img src="https://github.com/leodaviri/repositor_ruedas/blob/main/imagenes/Rol_Users.jpg?raw=true">
 
+Para cambiar de usuario e iniciar sesión con un usuario específico, los comandos en terminal pueden variar dependiendo si es host local (localhost) o si fuera una conexión remota (%), como ser los usuarios del rol 'SISTEMA' y dichos comandos serían los siguientes:
+
+**Comando 'localhost':**
+```
+mysql -u {nombre_usuario} -p --host 127.0.0.1 --port 3306
+```
+
+**Comando con host remoto:**
+```
+mysql -u {nombre_usuario} -p -h {nombre_host} --port 3306
+```
 ___
 ### BACKUP | DUMP:
 
