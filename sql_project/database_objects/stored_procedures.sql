@@ -1,68 +1,80 @@
 USE repositor_ruedas;
 
 
--- Procedimiento para ingresar nuevo siniestro
+-- Procedimiento TRANSACCIONAL (TCL) para ingresar nuevo siniestro
+-- Corrobora que los datos ingresados en FK sean correctos y no sean nulos
 
 DROP PROCEDURE IF EXISTS repositor_ruedas.ingreso_siniestro;
 
 DELIMITER //
 CREATE PROCEDURE repositor_ruedas.ingreso_siniestro (
-    IN p_siniestro_nro BIGINT,
-    IN p_siniestro_fecha DATETIME,
-    IN p_siniestro_tipo VARCHAR(50),
-    IN p_cantidad_ruedas INT,
-    IN p_seguro_cia VARCHAR(20),
-    IN p_poliza_nro INT,
-    IN p_licitador INT,
-    IN p_vehiculo INT,
-    IN p_observaciones TEXT)    
+	IN p_siniestro_nro BIGINT,
+  	IN p_siniestro_fecha DATETIME,
+  	IN p_siniestro_tipo VARCHAR(50),
+  	IN p_cantidad_ruedas INT,
+  	IN p_seguro_cia VARCHAR(20),
+  	IN p_poliza_nro INT,
+  	IN p_licitador INT,
+  	IN p_vehiculo INT,
+  	IN p_observaciones TEXT)
 BEGIN
-    -- Determinamos validaciones con mensajes de errores
-    IF p_siniestro_nro IS NULL THEN
-        SIGNAL SQLSTATE '45000'
-        SET MESSAGE_TEXT = 'Debe completar nro de siniestro';
-    END IF;
+	-- Inicio de transacción
+  	START TRANSACTION;
 
-    IF p_seguro_cia IS NULL THEN
-        SIGNAL SQLSTATE '45000'
-        SET MESSAGE_TEXT = 'Debe asignar una companía de seguro';
-    END IF;
+  	-- Verificar que los parámetros no sean nulos
+  	IF p_siniestro_nro IS NULL THEN
+   		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Debe completar el número de siniestro';
+  	END IF;
 
-    IF p_poliza_nro IS NULL THEN
-        SIGNAL SQLSTATE '45000'
-        SET MESSAGE_TEXT = 'Debe completar el nro de póliza';
-    END IF;
+ 	-- Crear un savepoint para el número de siniestro
+ 	SAVEPOINT siniestro_ingresado;
+ 
+	-- Verificar que la compañía de seguro exista
+	IF NOT EXISTS (SELECT 1 FROM seguros WHERE seguro_id = p_seguro_cia) THEN
+    	ROLLBACK TO siniestro_ingresado;
+    	SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Seguro inexistente, corrobore';
+  	END IF;
 
-    IF p_licitador IS NULL THEN
-        SIGNAL SQLSTATE '45000'
-        SET MESSAGE_TEXT = 'Debe asignar un ente licitador';
-    END IF;
+	-- Verificar que la póliza exista
+	IF NOT EXISTS (SELECT 1 FROM polizas WHERE poliza_id = p_poliza_nro) THEN
+    	ROLLBACK TO siniestro_ingresado;
+    	SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Póliza inexistente, corrobore';
+  	END IF;
 
-    IF p_vehiculo IS NULL THEN
-        SIGNAL SQLSTATE '45000'
-        SET MESSAGE_TEXT = 'Debe indicar un vehículo';
-    END IF;
+  	-- Verificar que el licitador exista
+  	IF NOT EXISTS (SELECT 1 FROM licitadores WHERE licitador_id = p_licitador) THEN
+    	ROLLBACK TO siniestro_ingresado;
+    	SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Licitador inexistente, corrobore';
+ 	 END IF;
 
-    -- Si la fecha no se proporciona, usamos la fecha actual
-    IF p_siniestro_fecha IS NULL THEN
-	SET p_siniestro_fecha = CURRENT_TIMESTAMP();
-    END IF;
+	-- Verificar que el vehículo exista
+  	IF NOT EXISTS (SELECT 1 FROM vehiculos WHERE vehiculo_id = p_vehiculo) THEN
+    	ROLLBACK TO siniestro_ingresado;
+    	SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Vehículo inexistente, corrobore';
+  	END IF;
 
-    -- Determinamos campos para insertar nuevo registro
-    INSERT INTO siniestros (
-        siniestro_nro, siniestro_fecha, siniestro_tipo, cantidad_ruedas,
-        seguro_cia, poliza_nro, licitador, vehiculo, observaciones)
-        VALUES (
-        p_siniestro_nro, p_siniestro_fecha, p_siniestro_tipo, p_cantidad_ruedas,
-        p_seguro_cia, p_poliza_nro, p_licitador, p_vehiculo,
-    -- Observaciones puede quedar en nulo
-        IFNULL(p_observaciones, '')
-       	);
-     
-    -- Mostramos el último registro insertado
-    SELECT * FROM siniestros
-    ORDER BY siniestro_fecha DESC
-    LIMIT 1;
+	-- Si la fecha no se proporciona, usar la fecha actual
+  	IF p_siniestro_fecha IS NULL THEN
+    	SET p_siniestro_fecha = CURRENT_TIMESTAMP();
+  	END IF;
+
+	-- Insertar el nuevo registro en la tabla siniestros
+	INSERT INTO siniestros (
+    	siniestro_nro, siniestro_fecha, siniestro_tipo, cantidad_ruedas,
+    	seguro_cia, poliza_nro, licitador, vehiculo, observaciones)
+	VALUES (
+		p_siniestro_nro, p_siniestro_fecha, p_siniestro_tipo, p_cantidad_ruedas,
+    	p_seguro_cia, p_poliza_nro, p_licitador, p_vehiculo,
+    	-- Observaciones puede quedar en nulo
+    	IFNULL(p_observaciones, ''));
+
+    -- Confirmamos la transacción correcta
+  	COMMIT;
+  	
+  	-- Mostramos el último registro insertado
+  	SELECT * FROM siniestros
+  	ORDER BY siniestro_fecha DESC
+  	LIMIT 1;
 END //
 DELIMITER ;
 
@@ -78,6 +90,7 @@ VALUES
 ('Pendiente', 'FA', 0, 0, 0, 0, 0, 0);
 
 
+
 -- Procedimiento TRANSACCIONAL (TCL) para ingresar una nueva factura
 -- Dicho registro además actualizará campos en 'siniestros' y 'link_facturas_ruedas'
 
@@ -87,7 +100,6 @@ DELIMITER //
 CREATE PROCEDURE repositor_ruedas.agregar_factura(
     IN p_siniestro_id INT,
     IN p_factura_tipo VARCHAR(10),
-    IN p_factura_fecha DATETIME,
     IN p_factura_pdv INT,
     IN p_factura_nro INT,
     IN p_rueda_item INT,
@@ -97,7 +109,6 @@ BEGIN
     DECLARE v_siniestro_existente INT;
     DECLARE v_factura_id VARCHAR(20);
     DECLARE v_factura_precio DECIMAL(10, 2);
-    DECLARE v_factura_fecha DATETIME;
 	
     -- Inicio de TCL
     START TRANSACTION;
@@ -136,13 +147,10 @@ BEGIN
             -- Automatizamos el precio final de la factura
             SET v_factura_precio = p_rueda_precio * p_rueda_cantidad;
 
-            -- Si la fecha proporcionada es NULL, usamos la fecha actual
-            SET v_factura_fecha = IFNULL(p_factura_fecha, CURRENT_TIMESTAMP());
-
             -- Determinamos campos para insertar nuevo registro
             INSERT INTO facturas (factura_id, factura_tipo, factura_fecha, factura_pdv,
                 factura_nro, rueda_item, rueda_precio, rueda_cantidad, factura_precio)
-            VALUES (v_factura_id, p_factura_tipo, v_factura_fecha, p_factura_pdv,
+            VALUES (v_factura_id, p_factura_tipo, CURRENT_TIMESTAMP, p_factura_pdv,
                 p_factura_nro, p_rueda_item, p_rueda_precio, p_rueda_cantidad, v_factura_precio);
 
             -- Actualizamos el campo factura_nro en la tabla siniestros
