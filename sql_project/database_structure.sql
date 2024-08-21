@@ -1,9 +1,8 @@
--- Creación de bases de datos 
+-- CREACIÓN DE LA BASE DE DATOS 
 
 DROP DATABASE IF EXISTS repositor_ruedas;
 
 CREATE DATABASE IF NOT EXISTS repositor_ruedas;
-
 
 -- Creación de tablas
 
@@ -132,7 +131,7 @@ CREATE TABLE
 CREATE TABLE 
 	IF NOT EXISTS marcas_veh(
 	marca_id INT NOT NULL AUTO_INCREMENT,
-	marca_nombre VARCHAR(50) DEFAULT 'Pendiente asignar marca',
+	marca_nombre VARCHAR(50) DEFAULT 'Pendiente asignar marca';
 	PRIMARY KEY (marca_id))
 	COMMENT 'Marca fabricante del vehículo'
 	;
@@ -140,7 +139,7 @@ CREATE TABLE
 CREATE TABLE 
 	IF NOT EXISTS modelos(
 	modelo_id INT NOT NULL AUTO_INCREMENT,
-	modelo_descripcion VARCHAR(100) DEFAULT 'Pendiente asignar descripcion' COMMENT 'refiere a modelo, NO año de fabricación',
+	modelo_descripcion VARCHAR(100) DEFAULT 'Pendiente asignar descripcion' COMMENT 'refiere a modelo, NO año de fabricación';
 	PRIMARY KEY (modelo_id))
 	COMMENT 'Especificaciones de modelo del vehículo'
 	;
@@ -176,59 +175,87 @@ CREATE TABLE
 
 ALTER TABLE siniestros
 	ADD CONSTRAINT fk_siniestro_tipo
-	FOREIGN KEY (siniestro_tipo) REFERENCES tipos_siniestros(siniestro_tipo_id);
+	FOREIGN KEY (siniestro_tipo)
+	REFERENCES tipos_siniestros(siniestro_tipo_id)
+    ON UPDATE CASCADE;
 
 ALTER TABLE siniestros
 	ADD CONSTRAINT fk_siniestros_facturas
-	FOREIGN KEY (factura_nro) REFERENCES facturas(factura_id);
+	FOREIGN KEY (factura_nro)
+	REFERENCES facturas(factura_id)
+    ON UPDATE CASCADE;
 
 ALTER TABLE siniestros
 	ADD CONSTRAINT fk_siniestros_seguros
-	FOREIGN KEY (seguro_cia) REFERENCES seguros(seguro_id);
+	FOREIGN KEY (seguro_cia)
+	REFERENCES seguros(seguro_id)
+    ON UPDATE CASCADE;
 	
 ALTER TABLE siniestros
 	ADD CONSTRAINT fk_siniestros_polizas
-	FOREIGN KEY (poliza_nro) REFERENCES polizas(poliza_id);
+	FOREIGN KEY (poliza_nro)
+	REFERENCES polizas(poliza_id)
+    ON UPDATE CASCADE;
 	
 ALTER TABLE siniestros
 	ADD CONSTRAINT fk_siniestros_licitadores
-	FOREIGN KEY (licitador) REFERENCES licitadores(licitador_id);
+	FOREIGN KEY (licitador)
+	REFERENCES licitadores(licitador_id)
+    ON UPDATE CASCADE;
 	
 ALTER TABLE siniestros
 	ADD CONSTRAINT fk_siniestros_vehiculos
-	FOREIGN KEY (vehiculo) REFERENCES vehiculos(vehiculo_id);
+	FOREIGN KEY (vehiculo)
+	REFERENCES vehiculos(vehiculo_id)
+    ON UPDATE CASCADE;
 	
 ALTER TABLE seguros
 	ADD CONSTRAINT fk_seguros_ciudades
-	FOREIGN KEY (seguro_ciudad) REFERENCES ciudades(ciudad_id);
+	FOREIGN KEY (seguro_ciudad)
+	REFERENCES ciudades(ciudad_id)
+    ON UPDATE CASCADE;
 	
 ALTER TABLE seguros
 	ADD CONSTRAINT fk_seguros_provincias
-	FOREIGN KEY (seguro_provincia) REFERENCES provincias(provincia_id);
+	FOREIGN KEY (seguro_provincia)
+	REFERENCES provincias(provincia_id)
+    ON UPDATE CASCADE;
 	
 ALTER TABLE polizas
 	ADD CONSTRAINT fk_polizas_asegurados
-	FOREIGN KEY (asegurado) REFERENCES asegurados(asegurado_id);
+	FOREIGN KEY (asegurado)
+	REFERENCES asegurados(asegurado_id)
+    ON UPDATE CASCADE;
 	
 ALTER TABLE vehiculos
 	ADD CONSTRAINT fk_vehiculos_marcas_veh
-	FOREIGN KEY (vehiculo_marca) REFERENCES marcas_veh(marca_id);
+	FOREIGN KEY (vehiculo_marca)
+	REFERENCES marcas_veh(marca_id)
+    ON UPDATE CASCADE;
 	
 ALTER TABLE vehiculos
 	ADD CONSTRAINT fk_vehiculos_modelos
-	FOREIGN KEY (vehiculo_modelo) REFERENCES modelos(modelo_id);
+	FOREIGN KEY (vehiculo_modelo)
+	REFERENCES modelos(modelo_id)
+    ON UPDATE CASCADE;
 	
 ALTER TABLE vehiculos
 	ADD CONSTRAINT fk_vehiculo_utilidades
-	FOREIGN KEY (vehiculo_utilidad) REFERENCES utilidades(utilidad_id);
+	FOREIGN KEY (vehiculo_utilidad)
+	REFERENCES utilidades(utilidad_id)
+    ON UPDATE CASCADE;
 	
 ALTER TABLE facturas
 	ADD CONSTRAINT fk_facturas_tipos
-	FOREIGN KEY (factura_tipo) REFERENCES facturas_tipos(factura_tipo_id);
+	FOREIGN KEY (factura_tipo)
+	REFERENCES facturas_tipos(factura_tipo_id)
+    ON UPDATE CASCADE;
 	
 ALTER TABLE ruedas
 	ADD CONSTRAINT fk_ruedas_marcas
-	FOREIGN KEY (cubierta_marca) REFERENCES marcas_cub(marca_id);
+	FOREIGN KEY (cubierta_marca)
+	REFERENCES marcas_cub(marca_id)
+    ON UPDATE CASCADE;
 	
 
 -- Creación de tabla vínculo entre facturas y ruedas para evitar relación de muchos a muchos
@@ -245,19 +272,18 @@ CREATE TABLE
 
 ALTER TABLE link_facturas_ruedas
 	ADD CONSTRAINT fk_facturas_ruedas
-	FOREIGN KEY (id_ruedas) REFERENCES ruedas(rueda_id)
+	FOREIGN KEY (id_facturas) REFERENCES facturas(factura_id)
 	ON DELETE CASCADE
 	ON UPDATE CASCADE;
 	
 ALTER TABLE link_facturas_ruedas
 	ADD CONSTRAINT fk_ruedas_facturas
-	FOREIGN KEY (id_facturas) REFERENCES facturas(factura_id)
+	FOREIGN KEY (id_ruedas) REFERENCES ruedas(rueda_id)
 	ON DELETE CASCADE
 	ON UPDATE CASCADE;
 
 
 -- Creación de tabla log para guardar registros DML y usuarios
--- No requiere constraints
 
 CREATE TABLE
 	IF NOT EXISTS log (
@@ -266,7 +292,6 @@ CREATE TABLE
     id_pk VARCHAR(100) NOT NULL COMMENT 'PK del registro alterado',
     usuario VARCHAR(100) NOT NULL COMMENT 'Nombre del usuario que intervino',
     fecha DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT 'Fecha actual',
-    operacion VARCHAR(10) NOT NULL COMMENT 'Tipo de operación DML',
+    operacion VARCHAR(10) NOT NULL COMMENT 'Tipo de operación DML'
     PRIMARY KEY (id_log))
-    COMMENT 'Tabla log que guarda las modificaciones y usuarios responsables'
-    ;
+    COMMENT 'Tabla log que guarda las modificaciones y usuarios responsables';
