@@ -766,11 +766,12 @@ ___
 ```
 
 Ingresar en la sección codespaces y en la terminal, utilizar los comandos:
-- `make` _si te da un error de que no conexion al socket, volver al correr el comando `make`_
-- `make clean-db` limpiar la base de datos
+- `make` _si te da un error de que no conexion al socket, volver al correr el comando `make`_\
+  *(quizás haya que ejecutar make varias veces para que importe los datos en tablas 'siniestros' y 'facturas')*
 - `make test-db` para mirar los datos de cada tabla
-- `make backup-db` para realizar un backup de mi base de datos
 - `make access-db` para acceder a la base de datos
+- `make backup-db` para realizar un backup de mi base de datos
+- `make clean-db` limpiar la base de datos
 
 ___
 ### VERSIONES PREVIAS:
