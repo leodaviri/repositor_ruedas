@@ -1,28 +1,20 @@
 USE repositor_ruedas;
 
 
--- Trigger para evitar que la fecha de factura sea anterior a la del siniestro registrado
+-- Trigger para verificar conexión segura a cada portal proveedor de cada compañía
 
-DROP TRIGGER IF EXISTS repositor_ruedas.check_factura_fecha;
+DROP TRIGGER IF EXISTS repositor_ruedas.validacion_web;
 
 DELIMITER //
-CREATE TRIGGER repositor_ruedas.check_factura_fecha
-BEFORE INSERT ON facturas
+CREATE TRIGGER repositor_ruedas.validacion_web
+BEFORE INSERT
+ON seguros
 FOR EACH ROW
 BEGIN
-    DECLARE siniestro_fecha DATETIME;
-
-    -- Obtener la fecha del siniestro correspondiente
-    SELECT siniestro_fecha INTO siniestro_fecha
-    FROM siniestros
-    WHERE factura_nro = NEW.factura_id
-    ORDER BY siniestro_fecha DESC
-    LIMIT 1;
-
-    -- Verificar que la fecha de la factura no sea anterior a la fecha del siniestro
-    IF NEW.factura_fecha < siniestro_fecha THEN
-        SIGNAL SQLSTATE '45000'
-        SET MESSAGE_TEXT = 'La fecha de la factura no puede ser anterior a la fecha del siniestro.';
+    -- Verificar si la columna seguro_web o licitador_web comienza con 'https://'
+    IF NEW.seguro_web IS NOT NULL
+	AND NEW.seguro_web NOT LIKE 'https://%' THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Corroborar falta de ''https://'', web podría no ser segura';
     END IF;
 END //
 DELIMITER ;
