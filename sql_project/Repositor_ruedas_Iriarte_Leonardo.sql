@@ -2,6 +2,7 @@
 
 -- Alumno: Iriarte Leonardo David
 -- Comisión: #57190
+-- Plataforma: Coderhouse
 -- Proofesor: Anderson M. Torres
 -- Tutor: Ariel Annone
 -- Repositorio GitHub: https://github.com/leodaviri/repositor_ruedas/
@@ -183,59 +184,87 @@ CREATE TABLE
 
 ALTER TABLE siniestros
 	ADD CONSTRAINT fk_siniestro_tipo
-	FOREIGN KEY (siniestro_tipo) REFERENCES tipos_siniestros(siniestro_tipo_id);
+	FOREIGN KEY (siniestro_tipo)
+	REFERENCES tipos_siniestros(siniestro_tipo_id)
+    ON UPDATE CASCADE;
 
 ALTER TABLE siniestros
 	ADD CONSTRAINT fk_siniestros_facturas
-	FOREIGN KEY (factura_nro) REFERENCES facturas(factura_id);
+	FOREIGN KEY (factura_nro)
+	REFERENCES facturas(factura_id)
+    ON UPDATE CASCADE;
 
 ALTER TABLE siniestros
 	ADD CONSTRAINT fk_siniestros_seguros
-	FOREIGN KEY (seguro_cia) REFERENCES seguros(seguro_id);
+	FOREIGN KEY (seguro_cia)
+	REFERENCES seguros(seguro_id)
+    ON UPDATE CASCADE;
 	
 ALTER TABLE siniestros
 	ADD CONSTRAINT fk_siniestros_polizas
-	FOREIGN KEY (poliza_nro) REFERENCES polizas(poliza_id);
+	FOREIGN KEY (poliza_nro)
+	REFERENCES polizas(poliza_id)
+    ON UPDATE CASCADE;
 	
 ALTER TABLE siniestros
 	ADD CONSTRAINT fk_siniestros_licitadores
-	FOREIGN KEY (licitador) REFERENCES licitadores(licitador_id);
+	FOREIGN KEY (licitador)
+	REFERENCES licitadores(licitador_id)
+    ON UPDATE CASCADE;
 	
 ALTER TABLE siniestros
 	ADD CONSTRAINT fk_siniestros_vehiculos
-	FOREIGN KEY (vehiculo) REFERENCES vehiculos(vehiculo_id);
+	FOREIGN KEY (vehiculo)
+	REFERENCES vehiculos(vehiculo_id)
+    ON UPDATE CASCADE;
 	
 ALTER TABLE seguros
 	ADD CONSTRAINT fk_seguros_ciudades
-	FOREIGN KEY (seguro_ciudad) REFERENCES ciudades(ciudad_id);
+	FOREIGN KEY (seguro_ciudad)
+	REFERENCES ciudades(ciudad_id)
+    ON UPDATE CASCADE;
 	
 ALTER TABLE seguros
 	ADD CONSTRAINT fk_seguros_provincias
-	FOREIGN KEY (seguro_provincia) REFERENCES provincias(provincia_id);
+	FOREIGN KEY (seguro_provincia)
+	REFERENCES provincias(provincia_id)
+    ON UPDATE CASCADE;
 	
 ALTER TABLE polizas
 	ADD CONSTRAINT fk_polizas_asegurados
-	FOREIGN KEY (asegurado) REFERENCES asegurados(asegurado_id);
+	FOREIGN KEY (asegurado)
+	REFERENCES asegurados(asegurado_id)
+    ON UPDATE CASCADE;
 	
 ALTER TABLE vehiculos
 	ADD CONSTRAINT fk_vehiculos_marcas_veh
-	FOREIGN KEY (vehiculo_marca) REFERENCES marcas_veh(marca_id);
+	FOREIGN KEY (vehiculo_marca)
+	REFERENCES marcas_veh(marca_id)
+    ON UPDATE CASCADE;
 	
 ALTER TABLE vehiculos
 	ADD CONSTRAINT fk_vehiculos_modelos
-	FOREIGN KEY (vehiculo_modelo) REFERENCES modelos(modelo_id);
+	FOREIGN KEY (vehiculo_modelo)
+	REFERENCES modelos(modelo_id)
+    ON UPDATE CASCADE;
 	
 ALTER TABLE vehiculos
 	ADD CONSTRAINT fk_vehiculo_utilidades
-	FOREIGN KEY (vehiculo_utilidad) REFERENCES utilidades(utilidad_id);
+	FOREIGN KEY (vehiculo_utilidad)
+	REFERENCES utilidades(utilidad_id)
+    ON UPDATE CASCADE;
 	
 ALTER TABLE facturas
 	ADD CONSTRAINT fk_facturas_tipos
-	FOREIGN KEY (factura_tipo) REFERENCES facturas_tipos(factura_tipo_id);
+	FOREIGN KEY (factura_tipo)
+	REFERENCES facturas_tipos(factura_tipo_id)
+    ON UPDATE CASCADE;
 	
 ALTER TABLE ruedas
 	ADD CONSTRAINT fk_ruedas_marcas
-	FOREIGN KEY (cubierta_marca) REFERENCES marcas_cub(marca_id);
+	FOREIGN KEY (cubierta_marca)
+	REFERENCES marcas_cub(marca_id)
+    ON UPDATE CASCADE;
 	
 
 -- Creación de tabla vínculo entre facturas y ruedas para evitar relación de muchos a muchos
@@ -748,7 +777,6 @@ DROP PROCEDURE IF EXISTS repositor_ruedas.ingreso_siniestro;
 DELIMITER //
 CREATE PROCEDURE repositor_ruedas.ingreso_siniestro (
 	IN p_siniestro_nro BIGINT,
-  	IN p_siniestro_fecha DATETIME,
   	IN p_siniestro_tipo VARCHAR(50),
   	IN p_cantidad_ruedas INT,
   	IN p_seguro_cia VARCHAR(20),
@@ -792,17 +820,12 @@ BEGIN
     	SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Vehículo inexistente, corrobore';
   	END IF;
 
-	-- Si la fecha no se proporciona, usar la fecha actual
-  	IF p_siniestro_fecha IS NULL THEN
-    	SET p_siniestro_fecha = CURRENT_TIMESTAMP();
-  	END IF;
-
 	-- Insertar el nuevo registro en la tabla siniestros
 	INSERT INTO siniestros (
     	siniestro_nro, siniestro_fecha, siniestro_tipo, cantidad_ruedas,
     	seguro_cia, poliza_nro, licitador, vehiculo, observaciones)
 	VALUES (
-		p_siniestro_nro, p_siniestro_fecha, p_siniestro_tipo, p_cantidad_ruedas,
+		p_siniestro_nro, CURRENT_TIMESTAMP(), p_siniestro_tipo, p_cantidad_ruedas,
     	p_seguro_cia, p_poliza_nro, p_licitador, p_vehiculo,
     	-- Observaciones puede quedar en nulo
     	IFNULL(p_observaciones, ''));
@@ -832,7 +855,6 @@ VALUES
 
 CALL ingreso_siniestro(
     2003506792, 	-- siniestro_nro
-    NULL,		 	-- siniestro_fecha (default CURRENT)
     'POCH',			-- siniestro_tipo
     4, 				-- cantidad_ruedas
     '30-50004946-0',-- seguro_cia
@@ -853,16 +875,15 @@ DELIMITER //
 CREATE PROCEDURE repositor_ruedas.agregar_factura(
     IN p_siniestro_id INT,
     IN p_factura_tipo VARCHAR(10),
-    IN p_factura_fecha DATETIME,
     IN p_factura_pdv INT,
     IN p_factura_nro INT,
     IN p_rueda_item INT,
-    IN p_rueda_precio DECIMAL(10, 2),
-    IN p_rueda_cantidad INT)
+    IN p_rueda_precio DECIMAL(10, 2))
 BEGIN
     DECLARE v_siniestro_existente INT;
     DECLARE v_factura_id VARCHAR(20);
     DECLARE v_factura_precio DECIMAL(10, 2);
+    DECLARE v_rueda_cantidad INT;
 	
     -- Inicio de TCL
     START TRANSACTION;
@@ -879,6 +900,11 @@ BEGIN
     ELSE
 		-- Creamos un savepoint posterior a la confirmación
 		SAVEPOINT siniestro_confirmado;
+
+        -- Obtenemos la cantidad de ruedas del siniestro
+        SELECT cantidad_ruedas INTO v_rueda_cantidad
+        FROM siniestros
+        WHERE siniestro_id = p_siniestro_id;
         
         -- Construimos el ID de la factura
         SET v_factura_id = CONCAT(p_factura_tipo, '-', p_factura_pdv, '-', p_factura_nro);
@@ -902,15 +928,10 @@ BEGIN
             -- Automatizamos el precio final de la factura
             SET v_factura_precio = p_rueda_precio * p_rueda_cantidad;
 
-			-- Si la fecha no se proporciona, usar la fecha actual
-  			IF p_factura_fecha IS NULL THEN
-    			SET p_factura_fecha = CURRENT_TIMESTAMP();
-  			END IF;
-
             -- Determinamos campos para insertar nuevo registro
             INSERT INTO facturas (factura_id, factura_tipo, factura_fecha, factura_pdv,
                 factura_nro, rueda_item, rueda_precio, rueda_cantidad, factura_precio)
-            VALUES (v_factura_id, p_factura_tipo, CURRENT_TIMESTAMP, p_factura_pdv,
+            VALUES (v_factura_id, p_factura_tipo, CURRENT_TIMESTAMP(), p_factura_pdv,
                 p_factura_nro, p_rueda_item, p_rueda_precio, p_rueda_cantidad, v_factura_precio);
 
             -- Actualizamos el campo factura_nro en la tabla siniestros
@@ -947,12 +968,10 @@ SET SQL_SAFE_UPDATES = 0;
 CALL agregar_factura(
     1253,      -- siniestro_id
     'FA',      -- factura_tipo
-    NULL,      -- factura_fecha (default CURRENT)
     3,         -- factura_pdv
     69050,     -- factura_nro
     60,        -- rueda_item
     220000,    -- rueda_precio
-    4          -- rueda_cantidad
     );
 
 SET SQL_SAFE_UPDATES = 1;
@@ -969,6 +988,17 @@ LIMIT 10;
 
 SELECT * FROM link_facturas_ruedas
 WHERE id_facturas = 'FA-3-69050';
+
+-- ACLARACIÓN
+-- Si bien la sintaxis 'START TRANSACTION' es suficiente para que cualquier motor SQL comprenda la transacción como tal,
+-- en algunos casos particulares quizás requiera la desactivación y posterior activación del 'autocommit'
+-- Ejemplo de uso manipulando autocommit:
+
+SET @@autocommit = FALSE; -- desactivado
+
+--- ejecución de TCL
+
+SET @@autocommit = TRUE; -- activado
 
 
 
@@ -1041,61 +1071,41 @@ SELECT * FROM vista_vehiculos;
    
 -- CREACIÓN DE TRIGGERS
    
--- Trigger para evitar que la fecha de factura sea anterior a la del siniestro registrado
+-- Trigger para verificar conexión segura a cada portal proveedor de cada compañía
 
-DROP TRIGGER IF EXISTS repositor_ruedas.check_factura_fecha;
+DROP TRIGGER IF EXISTS repositor_ruedas.validacion_web;
 
 DELIMITER //
-CREATE TRIGGER repositor_ruedas.check_factura_fecha
-BEFORE INSERT ON facturas
+CREATE TRIGGER repositor_ruedas.validacion_web
+BEFORE INSERT
+ON seguros
 FOR EACH ROW
 BEGIN
-    DECLARE siniestro_fecha DATETIME;
-
-    -- Obtener la fecha del siniestro correspondiente
-    SELECT siniestro_fecha INTO siniestro_fecha
-    FROM siniestros
-    WHERE factura_nro = NEW.factura_id
-    ORDER BY siniestro_fecha DESC
-    LIMIT 1;
-
-    -- Verificar que la fecha de la factura no sea anterior a la fecha del siniestro
-    IF NEW.factura_fecha < siniestro_fecha THEN
-        SIGNAL SQLSTATE '45000'
-        SET MESSAGE_TEXT = 'La fecha de la factura no puede ser anterior a la fecha del siniestro.';
+    -- Verificar si la columna seguro_web o licitador_web comienza con 'https://'
+    IF NEW.seguro_web IS NOT NULL
+	AND NEW.seguro_web NOT LIKE 'https://%' THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Corroborar falta de ''https://'', web podría no ser segura';
     END IF;
 END //
 DELIMITER ;
+    
+-- Ejemplo de uso
 
--- Ejemplo de uso con el procedimiento correspondiente para ingresar una factura
+INSERT INTO seguros
+(seguro_id, seguro_nombre, seguro_alias, seguro_ciudad,
+seguro_provincia, seguro_web, seguro_telefono, seguro_mail)
+VALUES
+('33-12345678-1',
+'Answer Cia de Seguros S.A.',
+'ANSWER',
+4,
+1,
+'www.answer.com',		-- valor erróneo
+1154817808,
+'siniestros@answer.com'
+);
 
--- ingresamos un nuevo siniestro
-CALL ingreso_siniestro(
-    2331984,     		-- siniestro_nro
-    NULL,               -- siniestro_fecha (default CURRENT)
-    'POAL',             -- siniestro_tipo
-    1,                  -- cantidad_ruedas
-    '30-50001770-4',    -- seguro_cia
-    8902726,            -- poliza_nro
-    1,                  -- licitador
-    18,                 -- vehiculo
-    NULL                -- observaciones
-    );
-
--- ingresamos una nueva factura
-CALL agregar_factura(
-    1254,					-- nro factura
-    'FA',					-- tipo FC
-    '2024-07-10 00:00:00',	-- VALOR ERRÓNEO
-    3,						-- punto de venta
-    69055,					-- FC nro
-    51,						-- rueda item
-    1880000,				-- precio
-    1						-- cantidad
-    );
-
--- ERROR 1644 (45000): La fecha de la factura no puede ser anterior a la fecha del siniestro.
-
+-- ERROR CODE 1644 (45000): Corroborar falta de 'https://', web podría no ser segura
 
 
 -- Trigger para evitar errores de tipeo, en éste caso, la cantidad de ruedas máxima de todo vehículo
@@ -1126,7 +1136,7 @@ VALUES
 	(2554738, NOW(), 'AUPOAL', 6, '30-50004717-4',
 	169601, 2, 11);
 
--- ERROR 1644 (45000): La cantidad de ruedas no puede superar las 5 unidades
+-- ERROR CODE 1644 (45000): La cantidad de ruedas no puede superar las 5 unidades
 	
 
 
