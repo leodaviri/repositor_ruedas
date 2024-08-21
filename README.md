@@ -460,7 +460,7 @@ ___
 CALL ingreso_siniestro(
     2003506792, 		-- siniestro_nro
     NULL,		 	-- siniestro_fecha (por defecto, fecha actual)
-    'AUCH',			-- siniestro_tipo
+    'POCH',			-- siniestro_tipo
     4, 				-- cantidad_ruedas
     '30-50004946-0', 		-- seguro_cia
     167559,			-- poliza_nro
@@ -482,14 +482,14 @@ CALL ingreso_siniestro(
     - Ejemplo de uso:
 ```sql
 CALL agregar_factura(
-    1256,      -- siniestro_id
+    1253,      -- siniestro_id
     'FA',      -- factura_tipo
     NULL,      -- factura_fecha (default CURRENT)
     3,         -- factura_pdv
     69050,     -- factura_nro
     60,        -- rueda_item
     220000,    -- rueda_precio
-    2          -- rueda_cantidad
+    4          -- rueda_cantidad
     );
 ```
 3. #### `AGREGAR_VEHICULO`
@@ -519,10 +519,24 @@ ___
 
     - Ejemplo de uso y mensaje SIGNAL SQLSTATE '45000':
 ```sql
+-- ingresamos un nuevo siniestro
+CALL ingreso_siniestro(
+    2331984,     		-- siniestro_nro
+    NULL,               -- siniestro_fecha (default CURRENT)
+    'POAL',             -- siniestro_tipo
+    1,                  -- cantidad_ruedas
+    '30-50001770-4',    -- seguro_cia
+    8902726,            -- poliza_nro
+    1,                  -- licitador
+    18,                 -- vehiculo
+    NULL                -- observaciones
+    );
+
+-- ingresamos una nueva factura
 CALL agregar_factura(
-    1257,			-- nro factura
+    1254,			-- nro factura
     'FA',			-- tipo FC
-    '2024-07-10 00:00:00'	-- VALOR ERRÓNEO
+    '2024-07-10 00:00:00',	-- VALOR ERRÓNEO
     3,				-- punto de venta
     69055,			-- FC nro
     51,				-- rueda item
