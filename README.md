@@ -13,6 +13,8 @@
 
 **Tutor:** Ariel Annone
 
+**Plataforma educativa:** [Coderhouse](https://www.coderhouse.com/)
+
 **Lenguaje utilizado:** [SQL](https://es.wikipedia.org/wiki/SQL)
 
 **Sistema de Gestión:** [MySQL](https://dev.mysql.com/)
@@ -784,12 +786,20 @@ ___
 ```
 
 Ingresar en la sección codespaces y en la terminal, utilizar los comandos:
-- `make` _si te da un error de que no conexion al socket, volver al correr el comando `make`_\
-  *(quizás haya que ejecutar make varias veces para que importe los datos en tablas 'siniestros' y 'facturas')*
+- `make` _si te da un error de que no conexion al socket, volver al correr el comando `make`_
 - `make test-db` para mirar los datos de cada tabla
 - `make access-db` para acceder a la base de datos
 - `make backup-db` para realizar un backup de mi base de datos
 - `make clean-db` limpiar la base de datos
+
+**ACLARACIÓN:**
+
+Quizás haya que ejecutar make varias veces para que importe los datos en las tablas de hecho 'siniestros' y 'facturas'.\
+En mi caso, más de la mitad de las veces no los importa y a veces importa en una tabla si y la otra no.\
+Utilizo la terminal en Codespaces y/o VScode desde que empezamos a crear los objetos, antes de la 2da pre entrega y si bien la 'falla' o dificultad es recurrente y no hubo modificación en makefile que lo optimize, la importación se termina concretando.\
+He aquí un print de pantalla reciente que muestra los datos finalmente importados:
+
+<img src="https://github.com/leodaviri/repositor_ruedas/blob/main/imagenes/IMPORT_OK.jpg?raw=true">
 
 ___
 ### VERSIONES PREVIAS:
