@@ -403,6 +403,11 @@ SELECT * FROM repositor_ruedas.view_cia_prom;
 ```sql
 SELECT * FROM repositor_ruedas.view_vehiculos;
 ```
+
+Visualización de vistas ya creados en DBeaver:
+
+<img src="https://github.com/leodaviri/repositor_ruedas/blob/main/imagenes/Vistas.jpg?raw=true">
+
 ___
 ### FUNCIONES:
 
