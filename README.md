@@ -820,7 +820,7 @@ Ingresar en la sección codespaces y en la terminal, utilizar los comandos:
 
 Quizás haya que ejecutar make varias veces para que importe los datos en las tablas de hecho 'siniestros' y 'facturas'.\
 En mi caso, más de la mitad de las veces no los importa y a veces importa en una tabla si y la otra no.\
-Utilizo la terminal en Codespaces y/o VScode desde que empezamos a crear los objetos, antes de la 2da pre entrega y si bien la 'falla' o dificultad es recurrente y no hubo modificación en makefile que lo optimize, la importación se termina concretando.\
+Utilizando la terminal en Codespaces y/o VScode el error puede ser recurrente, pero la importación se termina concretando.\
 He aquí un print de pantalla reciente que muestra los datos finalmente importados:
 
 <img src="https://github.com/leodaviri/repositor_ruedas/blob/main/imagenes/IMPORT_OK.jpg?raw=true">
