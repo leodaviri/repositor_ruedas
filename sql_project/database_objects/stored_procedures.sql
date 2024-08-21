@@ -100,6 +100,7 @@ DELIMITER //
 CREATE PROCEDURE repositor_ruedas.agregar_factura(
     IN p_siniestro_id INT,
     IN p_factura_tipo VARCHAR(10),
+    IN p_factura_fecha DATETIME,
     IN p_factura_pdv INT,
     IN p_factura_nro INT,
     IN p_rueda_item INT,
@@ -116,7 +117,8 @@ BEGIN
     -- Verificamos si el siniestro existe y si el campo factura_nro es 'Pendiente'
     SELECT COUNT(*) INTO v_siniestro_existente
     FROM siniestros
-    WHERE siniestro_id = p_siniestro_id AND factura_nro = 'Pendiente';
+    WHERE siniestro_id = p_siniestro_id
+	AND factura_nro = 'Pendiente';
 
     -- Validamos la existencia de dicho siniestro
     IF v_siniestro_existente = 0 THEN
@@ -146,6 +148,11 @@ BEGIN
         ELSE
             -- Automatizamos el precio final de la factura
             SET v_factura_precio = p_rueda_precio * p_rueda_cantidad;
+
+		-- Si la fecha no se proporciona, usar la fecha actual
+  		IF p_factura_fecha IS NULL THEN
+    		SET p_factura_fecha = CURRENT_TIMESTAMP();
+  		END IF;
 
             -- Determinamos campos para insertar nuevo registro
             INSERT INTO facturas (factura_id, factura_tipo, factura_fecha, factura_pdv,
@@ -221,7 +228,7 @@ BEGIN
     VALUES (v_marca_id, v_modelo_id, v_utilidad_id);
     SET v_vehiculo_id = LAST_INSERT_ID();
     
-    -- Devolución de los IDs insertados y/oo actualizados
+    -- Devolución de los IDs insertados y/o actualizados
     SELECT
 		v_vehiculo_id AS vehiculo_id,
 		v_marca_id AS marca_id, 
