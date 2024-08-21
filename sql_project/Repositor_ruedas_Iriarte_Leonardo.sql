@@ -1165,8 +1165,7 @@ INSERT INTO asegurados
 VALUES
 	(1260, 'Rosario', 'Pileyra');
 
--- Warning Code: 1000
--- Recuerde registrar un contacto telefónico
+-- WARNING CODE (1000): Recuerde registrar un contacto telefónico
 
 
 -- Trigger para registrar acciones DML en tabla 'log' y usuarios responsables
