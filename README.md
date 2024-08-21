@@ -276,7 +276,10 @@ SET GLOBAL local_infile = TRUE;
 ```
 ```
 local-infile=1
-(compando posterior a los datos de inicio en server -terminal-)
+(compando posterior a los datos de inicio en bash -terminal-)
+
+ejemplo de comando completo
+mysql -u root -p --host localhost --port 3306 --local-infile=1
 ```
 También fue necesario desactivar temporalmente la verificación de claves foráneas durante la importación, reactivándola posteriormente.
 Ejemplo de estructura:
