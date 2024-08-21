@@ -494,6 +494,21 @@ CALL agregar_factura(
     4          -- rueda_cantidad
     );
 ```
+
+**ACLARACIÓN SOBRE EJECUCIÓN TCL:**
+
+Si bien la sintaxis 'START TRANSACTION' es suficiente para que cualquier motor SQL comprenda la transacción como tal, en algunos casos particulares quizás requiera la desactivación y posterior activación del 'autocommit'.\
+Ejemplo de uso manipulando autocommit:
+
+```sql
+SET @@autocommit = FALSE; -- desactivado
+
+--- ejecución de TCL
+
+SET @@autocommit = TRUE; -- activado
+```
+
+
 3. #### `AGREGAR_VEHICULO`
 
     - Optimiza el ingreso de un nuevo vehículo, ya que con sólo 3 datos se actualizan 4 tablas:
