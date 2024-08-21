@@ -220,7 +220,19 @@ A continuación ennumeramos las tablas y agregamos una breve descripción.
 
 #### CONEXIÓN DE TABLAS:
 
-En la imagen de puede ver las estructuras de tablas, la definición de PK y FK, la conexión entre las mismas y los tipos de valores designados en cada campo. Se organiza de manera calculada, la tabla de hechos principal (*SINIESTROS*) al centro y el resto alrededor, las vinculaciones entre tablas externas se pueden notar fácilmente ya que no se cruza ninguna flecha, todo ello a fin de que sea visualmente prolija y comprensible.
+Los 'CONSTRAINTS' o restricciones entre llaves foráneas (FK), se construyen de manera tal que no puedan eliminarse registros de una tabla cuyos valores exista en otra relacionada, pero se sentencia que si se puedan modificar dichas FK y la modificación sea en 'cascada', de manera tal que se actualizará en el resto de tablas comprometidas.\
+Ejemplo de constraint:
+
+```sql
+ALTER TABLE siniestros
+	ADD CONSTRAINT fk_siniestro_tipo
+	FOREIGN KEY (siniestro_tipo)
+	REFERENCES tipos_siniestros(siniestro_tipo_id)
+    	ON UPDATE CASCADE;
+```
+
+En la imagen de puede ver las estructuras de tablas, la definición de PK y FK, la conexión entre las mismas y los tipos de valores designados en cada campo.\
+Se organiza de manera calculada, la tabla de hechos principal (*SINIESTROS*) al centro y el resto alrededor, las vinculaciones entre tablas externas se pueden notar fácilmente ya que no se cruza ninguna flecha, todo ello a fin de que sea visualmente prolija y comprensible.
 
 **para una vista ampliada de la imagen se puede hacer click en la misma.*
 
