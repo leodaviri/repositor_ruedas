@@ -13,7 +13,7 @@
 
 **Tutor:** Ariel Annone
 
-**Plataforma educativa:** [Coderhouse](https://www.coderhouse.com/)
+**Plataforma:** [Coderhouse](https://www.coderhouse.com/)
 
 **Lenguaje utilizado:** [SQL](https://es.wikipedia.org/wiki/SQL)
 
