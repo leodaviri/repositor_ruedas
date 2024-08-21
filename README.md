@@ -523,7 +523,7 @@ ___
 ```sql
 -- ingresamos un nuevo siniestro
 CALL ingreso_siniestro(
-    2331984,     		-- siniestro_nro
+    2331984,     	-- siniestro_nro
     NULL,               -- siniestro_fecha (default CURRENT)
     'POAL',             -- siniestro_tipo
     1,                  -- cantidad_ruedas
@@ -555,7 +555,7 @@ ERROR 1644 (45000): La fecha de la factura no puede ser anterior a la fecha del 
     - Ejemplo de uso y mensaje SIGNAL SQLSTATE '45000':
 ```sql
 CALL ingreso_siniestro(
-    2554738,		-- siniestro_nro
+    2554738,			-- siniestro_nro
     NULL,		 	-- siniestro_fecha (default CURRENT)
     'AUPOAL',			-- siniestro_tipo
     6, 				-- VALOR ERRÓNEO
