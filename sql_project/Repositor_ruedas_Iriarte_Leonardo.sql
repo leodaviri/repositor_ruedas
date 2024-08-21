@@ -252,13 +252,13 @@ CREATE TABLE
 
 ALTER TABLE link_facturas_ruedas
 	ADD CONSTRAINT fk_facturas_ruedas
-	FOREIGN KEY (id_ruedas) REFERENCES ruedas(rueda_id)
+	FOREIGN KEY (id_facturas) REFERENCES facturas(factura_id)
 	ON DELETE CASCADE
 	ON UPDATE CASCADE;
 	
 ALTER TABLE link_facturas_ruedas
 	ADD CONSTRAINT fk_ruedas_facturas
-	FOREIGN KEY (id_facturas) REFERENCES facturas(factura_id)
+	FOREIGN KEY (id_ruedas) REFERENCES ruedas(rueda_id)
 	ON DELETE CASCADE
 	ON UPDATE CASCADE;
 
@@ -275,7 +275,7 @@ CREATE TABLE
     operacion VARCHAR(10) NOT NULL COMMENT 'Tipo de operación DML'
     PRIMARY KEY (id_log))
     COMMENT 'Tabla log que guarda las modificaciones y usuarios responsables'
-    ;
+	;
 
 
 -- CORROBORACIÓN OPCIONAL
@@ -604,6 +604,177 @@ ORDER BY
 Marca, Modelo, Utilidad;
     
    
+-- CREACIÓN DE TRIGGERS
+   
+-- Trigger para evitar que la fecha de factura sea anterior a la del siniestro registrado
+
+DROP TRIGGER IF EXISTS repositor_ruedas.check_factura_fecha;
+
+DELIMITER //
+CREATE TRIGGER repositor_ruedas.check_factura_fecha
+BEFORE INSERT ON facturas
+FOR EACH ROW
+BEGIN
+    DECLARE siniestro_fecha DATETIME;
+
+    -- Obtener la fecha del siniestro correspondiente
+    SELECT siniestro_fecha INTO siniestro_fecha
+    FROM siniestros
+    WHERE factura_nro = NEW.factura_id
+    ORDER BY siniestro_fecha DESC
+    LIMIT 1;
+
+    -- Verificar que la fecha de la factura no sea anterior a la fecha del siniestro
+    IF NEW.factura_fecha < siniestro_fecha THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'La fecha de la factura no puede ser anterior a la fecha del siniestro.';
+    END IF;
+END //
+DELIMITER ;
+
+-- Ejemplo de uso con el procedimiento correspondiente para ingresar una factura
+
+CALL agregar_factura(
+    1259,				  	-- nro factura
+    '2024-07-10 00:00:00'	-- VALOR ERRÓNEO
+    'FA',				  	-- tipo FC
+    3,					  	-- punto de venta
+    69055,					-- FC nro
+    51,						-- rueda item
+    1880000,				-- precio
+    1						-- cantidad
+	);
+
+-- ERROR 1644 (45000): La fecha de la factura no puede ser anterior a la fecha del siniestro.
+
+
+
+-- Trigger para evitar errores de tipeo, en éste caso, la cantidad de ruedas máxima de todo vehículo
+
+DROP TRIGGER IF EXISTS repositor_ruedas.cant_x_siniestro;
+
+DELIMITER //
+CREATE TRIGGER repositor_ruedas.cant_x_siniestro
+AFTER INSERT ON siniestros
+FOR EACH ROW
+BEGIN
+    -- Verificamos que la cantidad no supere 5
+    IF NEW.cantidad_ruedas > 5 THEN
+        -- Devuelve el mensaje de error
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'La cantidad de ruedas no puede superar las 5 unidades';
+    END IF;
+END //
+DELIMITER ;	
+
+-- Ejemplo de uso
+
+INSERT INTO siniestros
+	(siniestro_nro, siniestro_fecha, siniestro_tipo,
+    cantidad_ruedas, seguro_cia, poliza_nro, licitador,
+    vehiculo)
+VALUES
+	(2554738, NOW(), 'AUPOAL', 6, '30-50004717-4',
+	169601, 2, 11);
+
+-- ERROR 1644 (45000): La cantidad de ruedas no puede superar las 5 unidades
+	
+
+
+-- Trigger con devolución de mensaje de advertencia sobre teléfono de asegurado
+
+DROP TRIGGER IF EXISTS repositor_ruedas.asegurado_tel;
+
+DELIMITER //
+CREATE TRIGGER repositor_ruedas.asegurado_tel
+AFTER INSERT ON asegurados
+FOR EACH ROW
+BEGIN
+    -- Verifica si el campo asegurado_telefono está vacío
+    IF NEW.asegurado_telefono IS NULL OR NEW.asegurado_telefono = '' THEN
+        -- Lanza una advertencia con el mensaje especificado
+        SIGNAL SQLSTATE '01000'
+        SET MESSAGE_TEXT = 'Recuerde registrar un contacto telefónico';
+    END IF;
+END //
+DELIMITER ;
+
+-- Ejemplo de uso
+
+INSERT INTO asegurados
+	(asegurado_id, asegurado_nombre, asegurado_apellido)
+VALUES
+	(1260, 'Rosario', 'Pileyra');
+
+-- Warning Code: 1000
+-- Recuerde registrar un contacto telefónico
+
+
+-- Trigger para registrar acciones DML en tabla 'log' y usuarios responsables
+-- Se crean en total 3 triggers para abarcar todas las acciones
+
+DROP TRIGGER IF EXISTS repositor_ruedas.siniestros_insert_log;
+DROP TRIGGER IF EXISTS repositor_ruedas.siniestros_update_log;
+DROP TRIGGER IF EXISTS repositor_ruedas.siniestros_delete_log;
+
+DELIMITER //
+-- Trigger para INSERT
+CREATE TRIGGER repositor_ruedas.siniestros_insert_log
+AFTER INSERT ON siniestros
+FOR EACH ROW
+BEGIN
+    INSERT INTO log (tabla, id_pk, usuario, operacion)
+    VALUES ('siniestros', NEW.siniestro_id, USER(), 'INSERT');
+END//
+-- Trigger para UPDATE
+CREATE TRIGGER repositor_ruedas.siniestros_update_log
+AFTER UPDATE ON siniestros
+FOR EACH ROW
+BEGIN
+    INSERT INTO log (tabla, id_pk, usuario, operacion)
+    VALUES ('siniestros', NEW.siniestro_id, USER(), 'UPDATE');
+END//
+-- Trigger para DELETE
+CREATE TRIGGER repositor_ruedas.siniestros_delete_log
+AFTER DELETE ON siniestros
+FOR EACH ROW
+BEGIN
+    INSERT INTO log (tabla, id_pk, usuario, operacion)
+    VALUES ('siniestros', OLD.siniestro_id, USER(), 'DELETE');
+END//
+DELIMITER ;
+
+-- Ejemplo de uso
+-- Primero insertamos un dato
+
+CALL ingreso_siniestro(
+    2331984, 		-- siniestro_nro
+    NULL, 			-- siniestro_fecha (CURRENT_TIMESTAMP)
+    'AUCH',			-- siniestro_tipo
+    3, 				-- cantidad_ruedas
+    '30-50001770-4',-- seguro_cia
+    8902726,		-- poliza_nro
+    1, 				-- licitador
+    18,				-- vehiculo
+    NULL			-- observaciones
+    );
+
+-- Ahora modificamos
+   
+UPDATE siniestros
+SET cantidad_ruedas = 2
+WHERE siniestro_id = 1262;
+
+-- Por último, eliminamos el registro
+
+DELETE FROM siniestros
+WHERE siniestro_id = 1262;
+
+-- Corroboramos la tabla log
+
+SELECT * FROM log;
+
+
 -- CREACIÓN DE FUNCIONES
 
 -- Función que calcula la ganancia neta, restando -21% (iva) y -3% (IIBB)
@@ -740,68 +911,80 @@ ORDER BY
    
 -- CREACIÓN DE PROCEDIMIENTOS
 
--- Procedimiento para ingresar nuevo siniestro
+-- Procedimiento TRANSACCIONAL (TCL) para ingresar nuevo siniestro
+-- Corrobora que los datos ingresados en FK sean correctos y no sean nulos
 
 DROP PROCEDURE IF EXISTS repositor_ruedas.ingreso_siniestro;
 
 DELIMITER //
 CREATE PROCEDURE repositor_ruedas.ingreso_siniestro (
-    IN p_siniestro_nro BIGINT,
-    IN p_siniestro_fecha DATETIME,
-    IN p_siniestro_tipo VARCHAR(50),
-    IN p_cantidad_ruedas INT,
-    IN p_seguro_cia VARCHAR(20),
-    IN p_poliza_nro INT,
-    IN p_licitador INT,
-    IN p_vehiculo INT,
-    IN p_observaciones TEXT)    
+	IN p_siniestro_nro BIGINT,
+  	IN p_siniestro_fecha DATETIME,
+  	IN p_siniestro_tipo VARCHAR(50),
+  	IN p_cantidad_ruedas INT,
+  	IN p_seguro_cia VARCHAR(20),
+  	IN p_poliza_nro INT,
+  	IN p_licitador INT,
+  	IN p_vehiculo INT,
+  	IN p_observaciones TEXT)
 BEGIN
-    -- Determinamos validaciones con mensajes de errores
-    IF p_siniestro_nro IS NULL THEN
-        SIGNAL SQLSTATE '45000'
-        SET MESSAGE_TEXT = 'Debe completar nro de siniestro';
-    END IF;
+	-- Inicio de transacción
+  	START TRANSACTION;
 
-    IF p_seguro_cia IS NULL THEN
-        SIGNAL SQLSTATE '45000'
-        SET MESSAGE_TEXT = 'Debe asignar una companía de seguro';
-    END IF;
+  	-- Verificar que los parámetros no sean nulos
+  	IF p_siniestro_nro IS NULL THEN
+   		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Debe completar el número de siniestro';
+  	END IF;
 
-    IF p_poliza_nro IS NULL THEN
-        SIGNAL SQLSTATE '45000'
-        SET MESSAGE_TEXT = 'Debe completar el nro de póliza';
-    END IF;
+ 	-- Crear un savepoint para el número de siniestro
+ 	SAVEPOINT siniestro_ingresado;
+ 
+	-- Verificar que la compañía de seguro exista
+	IF NOT EXISTS (SELECT 1 FROM seguros WHERE seguro_id = p_seguro_cia) THEN
+    	ROLLBACK TO siniestro_ingresado;
+    	SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Seguro inexistente, corrobore';
+  	END IF;
 
-    IF p_licitador IS NULL THEN
-        SIGNAL SQLSTATE '45000'
-        SET MESSAGE_TEXT = 'Debe asignar un ente licitador';
-    END IF;
+	-- Verificar que la póliza exista
+	IF NOT EXISTS (SELECT 1 FROM polizas WHERE poliza_id = p_poliza_nro) THEN
+    	ROLLBACK TO siniestro_ingresado;
+    	SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Póliza inexistente, corrobore';
+  	END IF;
 
-    IF p_vehiculo IS NULL THEN
-        SIGNAL SQLSTATE '45000'
-        SET MESSAGE_TEXT = 'Debe indicar un vehículo';
-    END IF;
+  	-- Verificar que el licitador exista
+  	IF NOT EXISTS (SELECT 1 FROM licitadores WHERE licitador_id = p_licitador) THEN
+    	ROLLBACK TO siniestro_ingresado;
+    	SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Licitador inexistente, corrobore';
+ 	 END IF;
 
-	-- Si la fecha no se proporciona, usamos la fecha actual
-	IF p_siniestro_fecha IS NULL THEN
-		SET p_siniestro_fecha = CURRENT_TIMESTAMP();
-	END IF;
+	-- Verificar que el vehículo exista
+  	IF NOT EXISTS (SELECT 1 FROM vehiculos WHERE vehiculo_id = p_vehiculo) THEN
+    	ROLLBACK TO siniestro_ingresado;
+    	SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Vehículo inexistente, corrobore';
+  	END IF;
 
-    -- Determinamos campos para insertar nuevo registro
-    INSERT INTO siniestros (
-        siniestro_nro, siniestro_fecha, siniestro_tipo, cantidad_ruedas,
-        seguro_cia, poliza_nro, licitador, vehiculo, observaciones)
-        VALUES (
-        p_siniestro_nro, p_siniestro_fecha, p_siniestro_tipo, p_cantidad_ruedas,
-        p_seguro_cia, p_poliza_nro, p_licitador, p_vehiculo,
-	-- Observaciones puede quedar en nulo
-        IFNULL(p_observaciones, '')
-       	);
-     
-    -- Mostramos el último registro insertado
-    SELECT * FROM siniestros
-    ORDER BY siniestro_fecha DESC
-    LIMIT 1;
+	-- Si la fecha no se proporciona, usar la fecha actual
+  	IF p_siniestro_fecha IS NULL THEN
+    	SET p_siniestro_fecha = CURRENT_TIMESTAMP();
+  	END IF;
+
+	-- Insertar el nuevo registro en la tabla siniestros
+	INSERT INTO siniestros (
+    	siniestro_nro, siniestro_fecha, siniestro_tipo, cantidad_ruedas,
+    	seguro_cia, poliza_nro, licitador, vehiculo, observaciones)
+	VALUES (
+		p_siniestro_nro, p_siniestro_fecha, p_siniestro_tipo, p_cantidad_ruedas,
+    	p_seguro_cia, p_poliza_nro, p_licitador, p_vehiculo,
+    	-- Observaciones puede quedar en nulo
+    	IFNULL(p_observaciones, ''));
+
+    -- Confirmamos la transacción correcta
+  	COMMIT;
+  	
+  	-- Mostramos el último registro insertado
+  	SELECT * FROM siniestros
+  	ORDER BY siniestro_fecha DESC
+  	LIMIT 1;
 END //
 DELIMITER ;
 
@@ -819,16 +1002,16 @@ VALUES
 -- Llamamos al procedimiento
 
 CALL ingreso_siniestro(
-    2003506792, 			-- siniestro_nro
-    '2024-08-02 12:45:00', 	-- siniestro_fecha
-    'AUCH',				 	-- siniestro_tipo
-    4, 						-- cantidad_ruedas
-    '30-50004946-0', 		-- seguro_cia
-    167559,					-- poliza_nro
-    2, 						-- licitador
-    33,						-- vehiculo
-    'Reposición concretada' -- observaciones
-);
+    2003506792, 		-- siniestro_nro
+    NULL,		 		-- siniestro_fecha (por defecto, fecha actual)
+    'AUCH',				-- siniestro_tipo
+    4, 					-- cantidad_ruedas
+    '30-50004946-0', 	-- seguro_cia
+    167559,				-- poliza_nro
+    2, 					-- licitador
+    33,					-- vehiculo
+    NULL				-- observaciones
+    );
 
 
 
@@ -931,14 +1114,15 @@ SHOW WARNINGS;
 SET SQL_SAFE_UPDATES = 0;
 
 CALL agregar_factura(
-    1258,      -- siniestro_id
+    1256,      -- siniestro_id
     'FA',      -- factura_tipo
+    NULL,      -- factura_fecha (default CURRENT)
     3,         -- factura_pdv
     69050,     -- factura_nro
     60,        -- rueda_item
     220000,    -- rueda_precio
     2          -- rueda_cantidad
-);
+    );
 
 SET SQL_SAFE_UPDATES = 1;
 
@@ -1023,181 +1207,6 @@ CALL agregar_vehiculo(
 
 SELECT * FROM vista_vehiculos;
 
-
-
--- CREACIÓN DE TRIGGERS
-   
--- Trigger para evitar que la fecha de factura sea anterior a la del siniestro registrado
-
-DROP TRIGGER IF EXISTS repositor_ruedas.check_factura_fecha;
-
-DELIMITER //
-CREATE TRIGGER repositor_ruedas.check_factura_fecha
-BEFORE INSERT ON facturas
-FOR EACH ROW
-BEGIN
-    DECLARE siniestro_fecha DATETIME;
-
-    -- Obtener la fecha del siniestro correspondiente
-    SELECT siniestro_fecha INTO siniestro_fecha
-    FROM siniestros
-    WHERE factura_nro = 'Pendiente'
-    AND siniestro_id = (
-        SELECT siniestro_id 
-        FROM siniestros 
-        WHERE factura_nro = 'Pendiente' 
-        ORDER BY siniestro_fecha DESC 
-        LIMIT 1);
-    
-    -- Verificar que la fecha de la factura no sea anterior a la fecha del siniestro
-    IF NEW.factura_fecha < siniestro_fecha THEN
-        SIGNAL SQLSTATE '45000'
-        SET MESSAGE_TEXT = 'La fecha de la factura no puede ser anterior a la fecha del siniestro.';
-    END IF;
-END //
-DELIMITER ;
-
--- Ejemplo de uso con el procedimiento correspondiente para ingresar una factura
-
-CALL agregar_factura(
-    1259,				  	-- nro factura
-    '2024-07-10 00:00:00'	-- VALOR ERRÓNEO
-    'FA',				  	-- tipo FC
-    3,					  	-- punto de venta
-    69055,					-- FC nro
-    51,						-- rueda item
-    1880000,				-- precio
-    1						-- cantidad
-	);
-
--- ERROR 1644 (45000): La fecha de la factura no puede ser anterior a la fecha del siniestro.
-
-
-
--- Trigger para evitar errores de tipeo, en éste caso, la cantidad de ruedas máxima de todo vehículo
-
-DROP TRIGGER IF EXISTS repositor_ruedas.cant_x_siniestro;
-
-DELIMITER //
-CREATE TRIGGER repositor_ruedas.cant_x_siniestro
-AFTER INSERT ON siniestros
-FOR EACH ROW
-BEGIN
-    -- Verificamos que la cantidad no supere 5
-    IF NEW.cantidad_ruedas > 5 THEN
-        -- Devuelve el mensaje de error
-        SIGNAL SQLSTATE '45000'
-        SET MESSAGE_TEXT = 'La cantidad de ruedas no puede superar las 5 unidades';
-    END IF;
-END //
-DELIMITER ;
-
--- Ejemplo de uso
-
-INSERT INTO siniestros
-	(siniestro_nro, siniestro_fecha, siniestro_tipo,
-    cantidad_ruedas, seguro_cia, poliza_nro, licitador,
-    vehiculo)
-VALUES
-	(2554738, NOW(), 'AUPOAL', 6, '30-50004717-4',
-	169601, 2, 11);
-
--- ERROR 1644 (45000): La cantidad de ruedas no puede superar las 5 unidades
-	
-
-
--- Trigger con devolución de mensaje de advertencia sobre teléfono de asegurado
-
-DROP TRIGGER IF EXISTS repositor_ruedas.asegurado_tel;
-
-DELIMITER //
-CREATE TRIGGER repositor_ruedas.asegurado_tel
-AFTER INSERT ON asegurados
-FOR EACH ROW
-BEGIN
-    -- Verifica si el campo asegurado_telefono está vacío
-    IF NEW.asegurado_telefono IS NULL OR NEW.asegurado_telefono = '' THEN
-        -- Lanza una advertencia con el mensaje especificado
-        SIGNAL SQLSTATE '01000'
-        SET MESSAGE_TEXT = 'Recuerde registrar un contacto telefónico';
-    END IF;
-END //
-DELIMITER ;
-
--- Ejemplo de uso
-
-INSERT INTO asegurados
-	(asegurado_id, asegurado_nombre, asegurado_apellido)
-VALUES
-	(1260, 'Rosario', 'Pileyra');
-
--- Warning Code: 1000
--- Recuerde registrar un contacto telefónico
-
-
--- Trigger para registrar acciones DML en tabla 'log' y usuarios responsables
--- Se crean en total 3 triggers para abarcar todas las acciones
-
-DROP TRIGGER IF EXISTS repositor_ruedas.siniestros_insert_log;
-DROP TRIGGER IF EXISTS repositor_ruedas.siniestros_update_log;
-DROP TRIGGER IF EXISTS repositor_ruedas.siniestros_delete_log;
-
-DELIMITER //
--- Trigger para INSERT
-CREATE TRIGGER repositor_ruedas.siniestros_insert_log
-AFTER INSERT ON siniestros
-FOR EACH ROW
-BEGIN
-    INSERT INTO log (tabla, id_pk, usuario, operacion)
-    VALUES ('siniestros', NEW.siniestro_id, USER(), 'INSERT');
-END//
--- Trigger para UPDATE
-CREATE TRIGGER repositor_ruedas.siniestros_update_log
-AFTER UPDATE ON siniestros
-FOR EACH ROW
-BEGIN
-    INSERT INTO log (tabla, id_pk, usuario, operacion)
-    VALUES ('siniestros', NEW.siniestro_id, USER(), 'UPDATE');
-END//
--- Trigger para DELETE
-CREATE TRIGGER repositor_ruedas.siniestros_delete_log
-AFTER DELETE ON siniestros
-FOR EACH ROW
-BEGIN
-    INSERT INTO log (tabla, id_pk, usuario, operacion)
-    VALUES ('siniestros', OLD.siniestro_id, USER(), 'DELETE');
-END//
-DELIMITER ;
-
--- Ejemplo de uso
--- Primero insertamos un dato
-
-CALL ingreso_siniestro(
-    2331984, 		-- siniestro_nro
-    NULL, 			-- siniestro_fecha (CURRENT_TIMESTAMP)
-    'AUCH',			-- siniestro_tipo
-    3, 				-- cantidad_ruedas
-    '30-50001770-4',-- seguro_cia
-    8902726,		-- poliza_nro
-    1, 				-- licitador
-    18,				-- vehiculo
-    NULL			-- observaciones
-    );
-
--- Ahora modificamos
-   
-UPDATE siniestros
-SET cantidad_ruedas = 2
-WHERE siniestro_id = 1262;
-
--- Por último, eliminamos el registro
-
-DELETE FROM siniestros
-WHERE siniestro_id = 1262;
-
--- Corroboramos la tabla log
-
-SELECT * FROM log;
 
 
 -- CREACIÓN DE ROLES Y ASIGNACIÓN DE USUARIOS
