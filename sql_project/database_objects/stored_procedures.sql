@@ -9,7 +9,6 @@ DROP PROCEDURE IF EXISTS repositor_ruedas.ingreso_siniestro;
 DELIMITER //
 CREATE PROCEDURE repositor_ruedas.ingreso_siniestro (
 	IN p_siniestro_nro BIGINT,
-  	IN p_siniestro_fecha DATETIME,
   	IN p_siniestro_tipo VARCHAR(50),
   	IN p_cantidad_ruedas INT,
   	IN p_seguro_cia VARCHAR(20),
@@ -53,17 +52,12 @@ BEGIN
     	SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Vehículo inexistente, corrobore';
   	END IF;
 
-	-- Si la fecha no se proporciona, usar la fecha actual
-  	IF p_siniestro_fecha IS NULL THEN
-    	SET p_siniestro_fecha = CURRENT_TIMESTAMP();
-  	END IF;
-
 	-- Insertar el nuevo registro en la tabla siniestros
 	INSERT INTO siniestros (
     	siniestro_nro, siniestro_fecha, siniestro_tipo, cantidad_ruedas,
     	seguro_cia, poliza_nro, licitador, vehiculo, observaciones)
 	VALUES (
-		p_siniestro_nro, p_siniestro_fecha, p_siniestro_tipo, p_cantidad_ruedas,
+		p_siniestro_nro, CURRENT_TIMESTAMP(), p_siniestro_tipo, p_cantidad_ruedas,
     	p_seguro_cia, p_poliza_nro, p_licitador, p_vehiculo,
     	-- Observaciones puede quedar en nulo
     	IFNULL(p_observaciones, ''));
@@ -100,16 +94,15 @@ DELIMITER //
 CREATE PROCEDURE repositor_ruedas.agregar_factura(
     IN p_siniestro_id INT,
     IN p_factura_tipo VARCHAR(10),
-    IN p_factura_fecha DATETIME,
     IN p_factura_pdv INT,
     IN p_factura_nro INT,
     IN p_rueda_item INT,
-    IN p_rueda_precio DECIMAL(10, 2),
-    IN p_rueda_cantidad INT)
+    IN p_rueda_precio DECIMAL(10, 2))
 BEGIN
     DECLARE v_siniestro_existente INT;
     DECLARE v_factura_id VARCHAR(20);
     DECLARE v_factura_precio DECIMAL(10, 2);
+    DECLARE v_rueda_cantidad INT;
 	
     -- Inicio de TCL
     START TRANSACTION;
@@ -126,6 +119,11 @@ BEGIN
     ELSE
 		-- Creamos un savepoint posterior a la confirmación
 		SAVEPOINT siniestro_confirmado;
+
+        -- Obtenemos la cantidad de ruedas del siniestro
+        SELECT cantidad_ruedas INTO v_rueda_cantidad
+        FROM siniestros
+        WHERE siniestro_id = p_siniestro_id;
         
         -- Construimos el ID de la factura
         SET v_factura_id = CONCAT(p_factura_tipo, '-', p_factura_pdv, '-', p_factura_nro);
@@ -149,15 +147,10 @@ BEGIN
             -- Automatizamos el precio final de la factura
             SET v_factura_precio = p_rueda_precio * p_rueda_cantidad;
 
-		-- Si la fecha no se proporciona, usar la fecha actual
-  		IF p_factura_fecha IS NULL THEN
-    		SET p_factura_fecha = CURRENT_TIMESTAMP();
-  		END IF;
-
             -- Determinamos campos para insertar nuevo registro
             INSERT INTO facturas (factura_id, factura_tipo, factura_fecha, factura_pdv,
                 factura_nro, rueda_item, rueda_precio, rueda_cantidad, factura_precio)
-            VALUES (v_factura_id, p_factura_tipo, CURRENT_TIMESTAMP, p_factura_pdv,
+            VALUES (v_factura_id, p_factura_tipo, CURRENT_TIMESTAMP(), p_factura_pdv,
                 p_factura_nro, p_rueda_item, p_rueda_precio, p_rueda_cantidad, v_factura_precio);
 
             -- Actualizamos el campo factura_nro en la tabla siniestros
