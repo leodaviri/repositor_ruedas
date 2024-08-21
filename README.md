@@ -828,6 +828,9 @@ He aquí un print de pantalla reciente que muestra los datos finalmente importad
 ___
 ### VERSIONES PREVIAS:
 
+Ésta sección sirve a modo de comparación, permite ver el progreso y los cambios cambios implementados a lo largo de la cursada.\
+Dichos cambios fueron necesarios a modo de depuración, para optimizar el funcionamiento de las ejecuciones.
+
 [Pre entrega 01](https://github.com/leodaviri/repositor_ruedas/blob/main/versiones_previas/Repositor_ruedas_Iriarte_Leonardo(v1).sql)\
 [Pre entrega 02](https://github.com/leodaviri/repositor_ruedas/blob/main/versiones_previas/Repositor_ruedas_Iriarte_Leonardo(v2).sql)
 
