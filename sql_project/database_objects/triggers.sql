@@ -15,14 +15,10 @@ BEGIN
     -- Obtener la fecha del siniestro correspondiente
     SELECT siniestro_fecha INTO siniestro_fecha
     FROM siniestros
-    WHERE factura_nro = 'Pendiente'
-    AND siniestro_id = (
-        SELECT siniestro_id 
-        FROM siniestros 
-        WHERE factura_nro = 'Pendiente' 
-        ORDER BY siniestro_fecha DESC 
-        LIMIT 1);
-    
+    WHERE factura_nro = NEW.factura_id
+    ORDER BY siniestro_fecha DESC
+    LIMIT 1;
+
     -- Verificar que la fecha de la factura no sea anterior a la fecha del siniestro
     IF NEW.factura_fecha < siniestro_fecha THEN
         SIGNAL SQLSTATE '45000'
@@ -70,6 +66,7 @@ END;
 
 -- Trigger para registrar acciones DML en tabla 'log' y usuarios responsables
 -- Se crean en total 3 triggers para abarcar todas las acciones
+-- No requiere 'delimiters' por su estructura y su correcta ejecución en bash
 
 DROP TRIGGER IF EXISTS repositor_ruedas.siniestros_insert_log;
 DROP TRIGGER IF EXISTS repositor_ruedas.siniestros_update_log;
