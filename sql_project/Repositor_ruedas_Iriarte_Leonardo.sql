@@ -1034,7 +1034,6 @@ BEGIN
     DECLARE v_siniestro_existente INT;
     DECLARE v_factura_id VARCHAR(20);
     DECLARE v_factura_precio DECIMAL(10, 2);
-    DECLARE v_factura_fecha DATETIME;
 	
     -- Inicio de TCL
     START TRANSACTION;
@@ -1042,7 +1041,8 @@ BEGIN
     -- Verificamos si el siniestro existe y si el campo factura_nro es 'Pendiente'
     SELECT COUNT(*) INTO v_siniestro_existente
     FROM siniestros
-    WHERE siniestro_id = p_siniestro_id AND factura_nro = 'Pendiente';
+    WHERE siniestro_id = p_siniestro_id
+	AND factura_nro = 'Pendiente';
 
     -- Validamos la existencia de dicho siniestro
     IF v_siniestro_existente = 0 THEN
@@ -1073,13 +1073,15 @@ BEGIN
             -- Automatizamos el precio final de la factura
             SET v_factura_precio = p_rueda_precio * p_rueda_cantidad;
 
-            -- Si la fecha proporcionada es NULL, usamos la fecha actual
-            SET v_factura_fecha = IFNULL(p_factura_fecha, CURRENT_TIMESTAMP());
+			-- Si la fecha no se proporciona, usar la fecha actual
+  			IF p_factura_fecha IS NULL THEN
+    			SET p_factura_fecha = CURRENT_TIMESTAMP();
+  			END IF;
 
             -- Determinamos campos para insertar nuevo registro
             INSERT INTO facturas (factura_id, factura_tipo, factura_fecha, factura_pdv,
                 factura_nro, rueda_item, rueda_precio, rueda_cantidad, factura_precio)
-            VALUES (v_factura_id, p_factura_tipo, v_factura_fecha, p_factura_pdv,
+            VALUES (v_factura_id, p_factura_tipo, CURRENT_TIMESTAMP, p_factura_pdv,
                 p_factura_nro, p_rueda_item, p_rueda_precio, p_rueda_cantidad, v_factura_precio);
 
             -- Actualizamos el campo factura_nro en la tabla siniestros
